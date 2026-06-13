@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arch4.dev/schemas/architecture-index.schema.json",
+  "title": "ArchitectureIndex",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "projectRoot",
+    "elements",
+    "relationships",
+    "views",
+    "diagnostics"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string" },
+    "projectRoot": { "type": "string" },
+    "elements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "entityId",
+          "name",
+          "paths",
+          "views",
+          "contributors",
+          "recentCommits"
+        ],
+        "properties": {
+          "entityId": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "description": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "paths": { "type": "array", "items": { "type": "string" } },
+          "owners": { "type": "array", "items": { "type": "string" } },
+          "confidence": { "type": "string" },
+          "openQuestions": { "type": "array", "items": { "type": "string" } },
+          "notes": { "type": "object" },
+          "views": { "type": "array", "items": { "type": "string" } },
+          "contributors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "commits"],
+              "properties": {
+                "name": { "type": "string" },
+                "email": { "type": "string" },
+                "commits": { "type": "number" }
+              }
+            }
+          },
+          "recentCommits": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["hash", "subject", "author", "date"],
+              "properties": {
+                "hash": { "type": "string" },
+                "subject": { "type": "string" },
+                "author": { "type": "string" },
+                "date": { "type": "string" }
+              }
+            }
+          },
+          "contextPath": { "type": "string" }
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "views"],
+        "properties": {
+          "id": { "type": "string" },
+          "sourceEntityId": { "type": "string" },
+          "targetEntityId": { "type": "string" },
+          "label": { "type": "string" },
+          "technology": { "type": "string" },
+          "views": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "views": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type", "dataPath"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "dataPath": { "type": "string" },
+          "subjectEntityId": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "diagnostics": { "type": "array" }
+  }
+}

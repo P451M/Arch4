@@ -1,0 +1,1547 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "1970-01-01T00:00:00.000Z",
+  "projectRoot": "/Users/paul/Repos/Arch4/arch4",
+  "elements": [
+    {
+      "entityId": "aiAgent",
+      "name": "AI Agent",
+      "type": "person",
+      "description": "Updates architecture models and retrieves architecture context during agent workflows.",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "paths": [
+        ".cursor/commands/**",
+        ".cursor/skills/**"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers",
+        "Arch4SystemContext"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/aiAgent.md"
+    },
+    {
+      "entityId": "arch4",
+      "name": "Arch4",
+      "type": "softwareSystem",
+      "description": "Enriched C4 architecture maps for Cursor repositories.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [
+        "packages/**",
+        "docs/**",
+        "scripts/**",
+        ".arch4/**"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {
+        "modelingConvention": "Internal npm packages are modeled as containers because no stronger runtime deployment boundary is evidenced in this monorepo."
+      },
+      "views": [
+        "Arch4SystemContext"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.md"
+    },
+    {
+      "entityId": "arch4.arch4Cli",
+      "name": "Arch4 CLI",
+      "type": "container",
+      "description": "Terminal CLI for init, validate, render, index, context, and doctor commands.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "packages/cli/**"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers",
+        "Arch4ExtensionComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Cli.md"
+    },
+    {
+      "entityId": "arch4.arch4Cli.cliCommands",
+      "name": "CLI Commands",
+      "type": "component",
+      "description": "Command routing and workspace artifact orchestration.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/cli/src/commands.ts",
+        "packages/cli/src/index.ts",
+        "packages/cli/src/args.ts"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4CliComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Cli.cliCommands.md"
+    },
+    {
+      "entityId": "arch4.arch4Cli.cliContext",
+      "name": "CLI Context",
+      "type": "component",
+      "description": "Maps changed files to architecture elements and renders compact context.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/cli/src/context.ts"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4CliComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Cli.cliContext.md"
+    },
+    {
+      "entityId": "arch4.arch4Cli.cliIndexer",
+      "name": "CLI Indexer",
+      "type": "component",
+      "description": "Builds architecture index and context markdown from rendered views and entity metadata.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/cli/src/indexer.ts"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4CliComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Cli.cliIndexer.md"
+    },
+    {
+      "entityId": "arch4.arch4Cli.cliRuntime",
+      "name": "CLI Runtime",
+      "type": "component",
+      "description": "Resolves bundled Java, Structurizr CLI, and platform runtime manifests.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/cli/src/runtime.ts",
+        "packages/cli/src/repo-files.ts"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4CliComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Cli.cliRuntime.md"
+    },
+    {
+      "entityId": "arch4.arch4Core",
+      "name": "Arch4 Core",
+      "type": "container",
+      "description": "Shared contracts, workspace layout, JSON helpers, and validation.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "packages/core/**"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Core.md"
+    },
+    {
+      "entityId": "arch4.arch4Extension",
+      "name": "Arch4 Cursor Extension",
+      "type": "container",
+      "description": "Cursor extension host, explorer tree, commands, and architecture map webview.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "packages/cursor-extension/**"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Extension.md"
+    },
+    {
+      "entityId": "arch4.arch4Extension.extensionArtifacts",
+      "name": "Extension Artifacts",
+      "type": "component",
+      "description": "Installs and removes Arch4-owned Cursor rules, skills, and commands.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/cursor-extension/src/workspace-artifacts.ts"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4ExtensionComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Extension.extensionArtifacts.md"
+    },
+    {
+      "entityId": "arch4.arch4Extension.extensionHost",
+      "name": "Extension Host",
+      "type": "component",
+      "description": "Registers commands, tree provider, file watchers, and CLI orchestration.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/cursor-extension/src/extension.ts",
+        "packages/cursor-extension/src/workspace-json.ts"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4ExtensionComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Extension.extensionHost.md"
+    },
+    {
+      "entityId": "arch4.arch4Extension.extensionWebview",
+      "name": "Extension Webview",
+      "type": "component",
+      "description": "Hosts interactive architecture map UI in a Cursor webview panel.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/cursor-extension/src/webview/**",
+        "packages/cursor-extension/src/webview.css"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4ExtensionComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Extension.extensionWebview.md"
+    },
+    {
+      "entityId": "arch4.arch4Layout",
+      "name": "Arch4 Layout",
+      "type": "container",
+      "description": "Diagram layout engine using dagre graph layout.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "packages/layout/**"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers",
+        "Arch4RendererComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Layout.md"
+    },
+    {
+      "entityId": "arch4.arch4Renderer",
+      "name": "Arch4 Renderer",
+      "type": "container",
+      "description": "Structurizr export normalization, layout application, and rendered view output.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "packages/renderer-structurizr/**"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4CliComponents",
+        "Arch4Containers"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Renderer.md"
+    },
+    {
+      "entityId": "arch4.arch4Renderer.rendererExport",
+      "name": "Renderer Export",
+      "type": "component",
+      "description": "Invokes Structurizr CLI validate and export.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/renderer-structurizr/src/process.ts"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4RendererComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Renderer.rendererExport.md"
+    },
+    {
+      "entityId": "arch4.arch4Renderer.rendererLayout",
+      "name": "Renderer Layout",
+      "type": "component",
+      "description": "Applies layout configuration and manual positions to diagram specs.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/renderer-structurizr/src/layout.ts"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4RendererComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Renderer.rendererLayout.md"
+    },
+    {
+      "entityId": "arch4.arch4Renderer.rendererNormalize",
+      "name": "Renderer Normalize",
+      "type": "component",
+      "description": "Transforms Structurizr workspace JSON into DiagramSpec.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/renderer-structurizr/src/normalize.ts"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4RendererComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Renderer.rendererNormalize.md"
+    },
+    {
+      "entityId": "arch4.arch4Renderer.rendererOutput",
+      "name": "Renderer Output",
+      "type": "component",
+      "description": "Atomically writes rendered view JSON to build output.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "packages/renderer-structurizr/src/output.ts"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4RendererComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Renderer.rendererOutput.md"
+    },
+    {
+      "entityId": "arch4.arch4Viewer",
+      "name": "Arch4 Viewer",
+      "type": "container",
+      "description": "React diagram viewer for interactive architecture maps.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "packages/viewer/**"
+      ],
+      "owners": [
+        "Maintainer"
+      ],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers",
+        "Arch4ExtensionComponents"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/arch4.arch4Viewer.md"
+    },
+    {
+      "entityId": "cursor",
+      "name": "Cursor",
+      "type": "softwareSystem",
+      "description": "Editor platform that hosts the Arch4 extension, commands, tree view, and architecture map webview.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [
+        "packages/cursor-extension/**",
+        "scripts/dev-cursor.mjs"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers",
+        "Arch4ExtensionComponents",
+        "Arch4SystemContext"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/cursor.md"
+    },
+    {
+      "entityId": "developer",
+      "name": "Developer",
+      "type": "person",
+      "description": "Develops and maintains repository code in Cursor.",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "paths": [],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers",
+        "Arch4SystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/developer.md"
+    },
+    {
+      "entityId": "git",
+      "name": "Git",
+      "type": "softwareSystem",
+      "description": "Source-control history used for architecture indexing and contributor evidence.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [
+        "packages/cli/src/indexer.ts"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4CliComponents",
+        "Arch4Containers",
+        "Arch4SystemContext"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/git.md"
+    },
+    {
+      "entityId": "javaRuntime",
+      "name": "Java Runtime",
+      "type": "softwareSystem",
+      "description": "Embedded JVM used to run the bundled Structurizr CLI.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [
+        "runtime/**",
+        "docs/runtime-packaging.md"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers",
+        "Arch4RendererComponents",
+        "Arch4SystemContext"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/javaRuntime.md"
+    },
+    {
+      "entityId": "maintainer",
+      "name": "Maintainer",
+      "type": "person",
+      "description": "Builds, packages, and publishes Arch4 releases.",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "paths": [],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers",
+        "Arch4SystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/maintainer.md"
+    },
+    {
+      "entityId": "openVsx",
+      "name": "OpenVSX",
+      "type": "softwareSystem",
+      "description": "Extension marketplace used to publish and distribute Arch4 VSIX packages.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [
+        "docs/openvsx-release.md",
+        ".github/workflows/**"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4SystemContext"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/openVsx.md"
+    },
+    {
+      "entityId": "structurizrCli",
+      "name": "Structurizr CLI",
+      "type": "softwareSystem",
+      "description": "Validates Structurizr DSL workspaces and exports workspace JSON.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [
+        "runtime/**",
+        "docs/runtime-packaging.md"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "Arch4Containers",
+        "Arch4RendererComponents",
+        "Arch4SystemContext"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/structurizrCli.md"
+    },
+    {
+      "entityId": "targetWorkspace",
+      "name": "Target Workspace",
+      "type": "softwareSystem",
+      "description": "Repository where Arch4 is installed and whose architecture DSL, entities, and source files are modeled.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [
+        "examples/minimal-repo/**"
+      ],
+      "owners": [],
+      "confidence": "medium",
+      "openQuestions": [
+        "Should target workspaces always be modeled as external systems, or only when Arch4 is installed outside this repository?"
+      ],
+      "notes": {
+        "devExample": "examples/minimal-repo is the evidenced target workspace used by pnpm dev:cursor."
+      },
+      "views": [
+        "Arch4CliComponents",
+        "Arch4Containers",
+        "Arch4ExtensionComponents",
+        "Arch4RendererComponents",
+        "Arch4SystemContext"
+      ],
+      "contributors": [
+        {
+          "name": "Paul Stoeckle",
+          "email": "mailo@paulstoeckle.com",
+          "commits": 1
+        }
+      ],
+      "recentCommits": [
+        {
+          "hash": "55b9cc93cd1faa9a783861b9709a8dc9108a1563",
+          "author": "Paul Stoeckle",
+          "date": "2026-06-14",
+          "subject": "First release commit"
+        }
+      ],
+      "contextPath": ".arch4/architecture/build/context/targetWorkspace.md"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "28",
+      "sourceEntityId": "developer",
+      "targetEntityId": "cursor",
+      "label": "Develops repositories in",
+      "views": [
+        "Arch4Containers",
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "29",
+      "sourceEntityId": "developer",
+      "targetEntityId": "arch4",
+      "label": "Maintains architecture maps for",
+      "views": [
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "30",
+      "sourceEntityId": "developer",
+      "targetEntityId": "targetWorkspace",
+      "label": "Develops and maintains code in",
+      "views": [
+        "Arch4Containers",
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "31",
+      "sourceEntityId": "maintainer",
+      "targetEntityId": "arch4",
+      "label": "Maintains and publishes releases of",
+      "views": [
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "32",
+      "sourceEntityId": "aiAgent",
+      "targetEntityId": "cursor",
+      "label": "Runs agent workflows in",
+      "views": [
+        "Arch4Containers",
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "33",
+      "sourceEntityId": "aiAgent",
+      "targetEntityId": "arch4",
+      "label": "Updates architecture model for",
+      "views": [
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "34",
+      "sourceEntityId": "arch4",
+      "targetEntityId": "cursor",
+      "label": "Runs as extension in",
+      "views": [
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "35",
+      "sourceEntityId": "arch4",
+      "targetEntityId": "openVsx",
+      "label": "Publishes extension packages to",
+      "views": [
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "36",
+      "sourceEntityId": "arch4",
+      "targetEntityId": "structurizrCli",
+      "label": "Validates and exports DSL through",
+      "views": [
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "37",
+      "sourceEntityId": "arch4",
+      "targetEntityId": "javaRuntime",
+      "label": "Runs Structurizr CLI with",
+      "views": [
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "38",
+      "sourceEntityId": "arch4",
+      "targetEntityId": "git",
+      "label": "Indexes contributor and commit evidence from",
+      "views": [
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "39",
+      "sourceEntityId": "arch4",
+      "targetEntityId": "targetWorkspace",
+      "label": "Reads architecture source and repository files from",
+      "views": [
+        "Arch4SystemContext"
+      ]
+    },
+    {
+      "id": "40",
+      "sourceEntityId": "developer",
+      "targetEntityId": "arch4.arch4Extension",
+      "label": "Runs Arch4 commands and views maps in",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "41",
+      "sourceEntityId": "maintainer",
+      "targetEntityId": "arch4.arch4Extension",
+      "label": "Packages and tests extension through",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "42",
+      "sourceEntityId": "aiAgent",
+      "targetEntityId": "arch4.arch4Extension",
+      "label": "Triggers architecture update workflows through",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "43",
+      "sourceEntityId": "arch4.arch4Extension",
+      "targetEntityId": "arch4.arch4Cli",
+      "label": "Invokes bundled CLI through",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "44",
+      "sourceEntityId": "arch4.arch4Extension",
+      "targetEntityId": "arch4.arch4Viewer",
+      "label": "Renders maps with",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "45",
+      "sourceEntityId": "arch4.arch4Extension",
+      "targetEntityId": "arch4.arch4Core",
+      "label": "Reads architecture paths and contracts from",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "46",
+      "sourceEntityId": "arch4.arch4Extension",
+      "targetEntityId": "cursor",
+      "label": "Registers commands and webview in",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "47",
+      "sourceEntityId": "arch4.arch4Cli",
+      "targetEntityId": "arch4.arch4Renderer",
+      "label": "Renders workspace DSL through",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "48",
+      "sourceEntityId": "arch4.arch4Cli",
+      "targetEntityId": "arch4.arch4Core",
+      "label": "Uses shared contracts and layout helpers from",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "49",
+      "sourceEntityId": "arch4.arch4Cli",
+      "targetEntityId": "targetWorkspace",
+      "label": "Reads DSL, entities, and repository files from",
+      "views": [
+        "Arch4Containers",
+        "Arch4ExtensionComponents"
+      ]
+    },
+    {
+      "id": "50",
+      "sourceEntityId": "arch4.arch4Cli",
+      "targetEntityId": "git",
+      "label": "Collects git history from",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "51",
+      "sourceEntityId": "arch4.arch4Renderer",
+      "targetEntityId": "arch4.arch4Layout",
+      "label": "Applies diagram layout through",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "52",
+      "sourceEntityId": "arch4.arch4Renderer",
+      "targetEntityId": "arch4.arch4Core",
+      "label": "Uses shared diagram types from",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "53",
+      "sourceEntityId": "arch4.arch4Renderer",
+      "targetEntityId": "structurizrCli",
+      "label": "Validates and exports workspace DSL with",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "54",
+      "sourceEntityId": "arch4.arch4Renderer",
+      "targetEntityId": "javaRuntime",
+      "label": "Runs Structurizr through",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "55",
+      "sourceEntityId": "arch4.arch4Renderer",
+      "targetEntityId": "targetWorkspace",
+      "label": "Reads workspace.dsl from",
+      "views": [
+        "Arch4CliComponents",
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "56",
+      "sourceEntityId": "arch4.arch4Viewer",
+      "targetEntityId": "arch4.arch4Layout",
+      "label": "Uses layout helpers from",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "57",
+      "sourceEntityId": "arch4.arch4Viewer",
+      "targetEntityId": "arch4.arch4Core",
+      "label": "Uses diagram types from",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "58",
+      "sourceEntityId": "arch4.arch4Layout",
+      "targetEntityId": "arch4.arch4Core",
+      "label": "Uses diagram layout types from",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "59",
+      "sourceEntityId": "arch4.arch4Cli.cliCommands",
+      "targetEntityId": "arch4.arch4Cli.cliRuntime",
+      "label": "Resolves bundled runtime through",
+      "views": [
+        "Arch4CliComponents"
+      ]
+    },
+    {
+      "id": "60",
+      "sourceEntityId": "arch4.arch4Cli.cliCommands",
+      "targetEntityId": "arch4.arch4Renderer",
+      "label": "Calls render pipeline in",
+      "views": [
+        "Arch4CliComponents"
+      ]
+    },
+    {
+      "id": "61",
+      "sourceEntityId": "arch4.arch4Cli.cliCommands",
+      "targetEntityId": "arch4.arch4Cli.cliIndexer",
+      "label": "Builds architecture index through",
+      "views": [
+        "Arch4CliComponents"
+      ]
+    },
+    {
+      "id": "62",
+      "sourceEntityId": "arch4.arch4Cli.cliCommands",
+      "targetEntityId": "arch4.arch4Cli.cliContext",
+      "label": "Renders context markdown through",
+      "views": [
+        "Arch4CliComponents"
+      ]
+    },
+    {
+      "id": "63",
+      "sourceEntityId": "arch4.arch4Cli.cliIndexer",
+      "targetEntityId": "git",
+      "label": "Reads commit history from",
+      "views": [
+        "Arch4CliComponents"
+      ]
+    },
+    {
+      "id": "64",
+      "sourceEntityId": "arch4.arch4Cli.cliIndexer",
+      "targetEntityId": "targetWorkspace",
+      "label": "Scans repository files in",
+      "views": [
+        "Arch4CliComponents"
+      ]
+    },
+    {
+      "id": "65",
+      "sourceEntityId": "arch4.arch4Cli.cliContext",
+      "targetEntityId": "targetWorkspace",
+      "label": "Matches changed files against path globs in",
+      "views": [
+        "Arch4CliComponents"
+      ]
+    },
+    {
+      "id": "66",
+      "sourceEntityId": "arch4.arch4Renderer.rendererExport",
+      "targetEntityId": "structurizrCli",
+      "label": "Validates and exports DSL with",
+      "views": [
+        "Arch4RendererComponents"
+      ]
+    },
+    {
+      "id": "67",
+      "sourceEntityId": "arch4.arch4Renderer.rendererExport",
+      "targetEntityId": "javaRuntime",
+      "label": "Runs Structurizr with",
+      "views": [
+        "Arch4RendererComponents"
+      ]
+    },
+    {
+      "id": "68",
+      "sourceEntityId": "arch4.arch4Renderer.rendererExport",
+      "targetEntityId": "arch4.arch4Renderer.rendererNormalize",
+      "label": "Passes workspace JSON to",
+      "views": [
+        "Arch4RendererComponents"
+      ]
+    },
+    {
+      "id": "69",
+      "sourceEntityId": "arch4.arch4Renderer.rendererNormalize",
+      "targetEntityId": "arch4.arch4Renderer.rendererLayout",
+      "label": "Produces diagram specs for",
+      "views": [
+        "Arch4RendererComponents"
+      ]
+    },
+    {
+      "id": "70",
+      "sourceEntityId": "arch4.arch4Renderer.rendererLayout",
+      "targetEntityId": "arch4.arch4Layout",
+      "label": "Applies dagre layout through",
+      "views": [
+        "Arch4RendererComponents"
+      ]
+    },
+    {
+      "id": "71",
+      "sourceEntityId": "arch4.arch4Renderer.rendererLayout",
+      "targetEntityId": "arch4.arch4Renderer.rendererOutput",
+      "label": "Hands laid-out specs to",
+      "views": [
+        "Arch4RendererComponents"
+      ]
+    },
+    {
+      "id": "72",
+      "sourceEntityId": "arch4.arch4Renderer.rendererOutput",
+      "targetEntityId": "targetWorkspace",
+      "label": "Writes rendered views to",
+      "views": [
+        "Arch4RendererComponents"
+      ]
+    },
+    {
+      "id": "73",
+      "sourceEntityId": "arch4.arch4Extension.extensionHost",
+      "targetEntityId": "arch4.arch4Cli",
+      "label": "Executes CLI commands through",
+      "views": [
+        "Arch4ExtensionComponents"
+      ]
+    },
+    {
+      "id": "74",
+      "sourceEntityId": "arch4.arch4Extension.extensionHost",
+      "targetEntityId": "arch4.arch4Extension.extensionWebview",
+      "label": "Loads architecture maps in",
+      "views": [
+        "Arch4ExtensionComponents"
+      ]
+    },
+    {
+      "id": "75",
+      "sourceEntityId": "arch4.arch4Extension.extensionHost",
+      "targetEntityId": "arch4.arch4Extension.extensionArtifacts",
+      "label": "Installs and removes Cursor workflow files through",
+      "views": [
+        "Arch4ExtensionComponents"
+      ]
+    },
+    {
+      "id": "76",
+      "sourceEntityId": "arch4.arch4Extension.extensionHost",
+      "targetEntityId": "targetWorkspace",
+      "label": "Watches architecture source files in",
+      "views": [
+        "Arch4ExtensionComponents"
+      ]
+    },
+    {
+      "id": "77",
+      "sourceEntityId": "arch4.arch4Extension",
+      "targetEntityId": "targetWorkspace",
+      "label": "Watches architecture source files in",
+      "views": [
+        "Arch4Containers"
+      ]
+    },
+    {
+      "id": "78",
+      "sourceEntityId": "arch4.arch4Extension.extensionHost",
+      "targetEntityId": "cursor",
+      "label": "Registers tree provider and commands in",
+      "views": [
+        "Arch4ExtensionComponents"
+      ]
+    },
+    {
+      "id": "79",
+      "sourceEntityId": "arch4.arch4Extension.extensionWebview",
+      "targetEntityId": "arch4.arch4Viewer",
+      "label": "Embeds diagram viewer from",
+      "views": [
+        "Arch4ExtensionComponents"
+      ]
+    }
+  ],
+  "views": [
+    {
+      "id": "Arch4CliComponents",
+      "name": "Arch4CliComponents",
+      "type": "component",
+      "subjectEntityId": "arch4.arch4Cli",
+      "dataPath": ".arch4/architecture/build/views/Arch4CliComponents.json"
+    },
+    {
+      "id": "Arch4Containers",
+      "name": "Arch4Containers",
+      "type": "container",
+      "subjectEntityId": "arch4",
+      "dataPath": ".arch4/architecture/build/views/Arch4Containers.json"
+    },
+    {
+      "id": "Arch4ExtensionComponents",
+      "name": "Arch4ExtensionComponents",
+      "type": "component",
+      "subjectEntityId": "arch4.arch4Extension",
+      "dataPath": ".arch4/architecture/build/views/Arch4ExtensionComponents.json"
+    },
+    {
+      "id": "Arch4RendererComponents",
+      "name": "Arch4RendererComponents",
+      "type": "component",
+      "subjectEntityId": "arch4.arch4Renderer",
+      "dataPath": ".arch4/architecture/build/views/Arch4RendererComponents.json"
+    },
+    {
+      "id": "Arch4SystemContext",
+      "name": "Arch4SystemContext",
+      "type": "system_context",
+      "subjectEntityId": "arch4",
+      "dataPath": ".arch4/architecture/build/views/Arch4SystemContext.json"
+    }
+  ],
+  "diagnostics": [
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity developer has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity maintainer has no path mapping."
+    }
+  ]
+}

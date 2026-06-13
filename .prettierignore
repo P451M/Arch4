@@ -1,0 +1,10 @@
+artifacts/
+coverage/
+dist/
+node_modules/
+runtime/bundles/
+**/dist/
+**/.arch4/architecture/build/
+packages/cursor-extension/cli/
+packages/cursor-extension/media/
+pnpm-lock.yaml

@@ -1,0 +1,299 @@
+{
+  "id": "BookingApiComponents",
+  "name": "BookingApiComponents",
+  "type": "component",
+  "subjectId": "13",
+  "subjectEntityId": "bookingApi",
+  "direction": "RIGHT",
+  "nodes": [
+    {
+      "id": "14",
+      "entityId": "quoteValidator",
+      "type": "component",
+      "name": "Quote Validator",
+      "description": "Checks selected offer, price, availability window, and traveler constraints.",
+      "technology": "Kotlin",
+      "parentId": "13",
+      "parentEntityId": "bookingApi",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "layout": {
+        "x": 728,
+        "y": 1370,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "15",
+      "entityId": "bookingOrchestrator",
+      "type": "component",
+      "name": "Booking Orchestrator",
+      "description": "Creates booking records, coordinates partner confirmation, and emits booking lifecycle events.",
+      "technology": "Kotlin",
+      "parentId": "13",
+      "parentEntityId": "bookingApi",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "layout": {
+        "x": 168,
+        "y": 1720,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "16",
+      "entityId": "cancellationHandler",
+      "type": "component",
+      "name": "Cancellation Handler",
+      "description": "Applies cancellation policy, starts refund workflow, and records customer-visible cancellation state.",
+      "technology": "Kotlin",
+      "parentId": "13",
+      "parentEntityId": "bookingApi",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "layout": {
+        "x": 168,
+        "y": 1330,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "17",
+      "entityId": "partnerConfirmationAdapter",
+      "type": "component",
+      "name": "Partner Confirmation Adapter",
+      "description": "Normalizes airline and hotel confirmation outcomes into booking decisions.",
+      "technology": "Kotlin",
+      "parentId": "13",
+      "parentEntityId": "bookingApi",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "layout": {
+        "x": 728,
+        "y": 1760,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "19",
+      "entityId": "inventoryAdapter",
+      "type": "container",
+      "name": "Inventory Adapter",
+      "description": "Connects search and booking flows to airline and hotel partner APIs.",
+      "technology": "Node.js",
+      "parentId": "10",
+      "parentEntityId": "travel",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "layout": {
+        "x": 1438,
+        "y": 1760,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "20",
+      "entityId": "paymentService",
+      "type": "container",
+      "name": "Payment Service",
+      "description": "Owns authorization, capture, refund initiation, and payment status projection.",
+      "technology": "Java",
+      "parentId": "10",
+      "parentEntityId": "travel",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "layout": {
+        "x": 728,
+        "y": 80,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "21",
+      "entityId": "notificationWorker",
+      "type": "container",
+      "name": "Notification Worker",
+      "description": "Sends booking confirmations, cancellation receipts, and support escalation updates.",
+      "technology": "Python",
+      "parentId": "10",
+      "parentEntityId": "travel",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "layout": {
+        "x": 728,
+        "y": 470,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "24",
+      "entityId": "bookingDb",
+      "type": "database",
+      "name": "Booking DB",
+      "description": "Stores bookings, travelers, partner confirmations, itinerary state, and cancellation state.",
+      "technology": "PostgreSQL",
+      "parentId": "10",
+      "parentEntityId": "travel",
+      "tags": [
+        "Element",
+        "Container",
+        "Database"
+      ],
+      "layout": {
+        "x": 728,
+        "y": 860,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "25",
+      "entityId": "searchCache",
+      "type": "database",
+      "name": "Search Cache",
+      "description": "Stores short-lived search offers and partner availability snapshots.",
+      "technology": "Redis",
+      "parentId": "10",
+      "parentEntityId": "travel",
+      "tags": [
+        "Element",
+        "Container",
+        "Database"
+      ],
+      "layout": {
+        "x": 1438,
+        "y": 1370,
+        "width": 260,
+        "height": 140
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "78",
+      "source": "14",
+      "target": "25",
+      "label": "Verifies selected offer freshness",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "80",
+      "source": "15",
+      "target": "24",
+      "label": "Creates and updates booking state",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "81",
+      "source": "15",
+      "target": "17",
+      "label": "Requests partner confirmation",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "83",
+      "source": "16",
+      "target": "24",
+      "label": "Records cancellation state",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "84",
+      "source": "16",
+      "target": "20",
+      "label": "Starts refund workflow",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "85",
+      "source": "16",
+      "target": "21",
+      "label": "Requests cancellation notification",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "82",
+      "source": "17",
+      "target": "19",
+      "label": "Normalizes partner outcomes",
+      "tags": [
+        "Relationship"
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "container-boundary-13",
+      "type": "container",
+      "label": "Booking API",
+      "elementId": "13",
+      "entityId": "bookingApi",
+      "children": [
+        "14",
+        "15",
+        "16",
+        "17"
+      ],
+      "layout": {
+        "x": 80,
+        "y": 1248,
+        "width": 996,
+        "height": 728
+      }
+    }
+  ],
+  "legend": [
+    {
+      "id": "component",
+      "kind": "element",
+      "label": "Component"
+    },
+    {
+      "id": "container",
+      "kind": "element",
+      "label": "Container"
+    },
+    {
+      "id": "database",
+      "kind": "element",
+      "label": "Database"
+    }
+  ],
+  "bounds": {
+    "width": 1778,
+    "height": 2056
+  }
+}

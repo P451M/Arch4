@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "searchCache",
+  "paths": ["infra/search-cache.md"],
+  "owners": [],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

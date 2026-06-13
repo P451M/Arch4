@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "bookingApi",
+  "paths": ["src/booking-api/**/*"],
+  "owners": [],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

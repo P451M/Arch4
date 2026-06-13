@@ -1,0 +1,1391 @@
+/* Theme tokens and viewer shell */
+.arch4-viewer {
+  --arch4-background: #f5f7fb;
+  --arch4-surface: #ffffff;
+  --arch4-surface-raised: #ffffff;
+  --arch4-surface-muted: #f9fafc;
+  --arch4-surface-selected: #eef2ff;
+  --arch4-surface-control: #ffffff;
+  --arch4-surface-control-hover: #f3f5f9;
+  --arch4-icon-button-hover: rgba(104, 115, 134, 0.12);
+  --arch4-list-hover-background: #f3f5f9;
+  --arch4-list-hover-foreground: #172033;
+  --arch4-list-active-foreground: #172033;
+  --arch4-text: #172033;
+  --arch4-text-muted: #687386;
+  --arch4-heading-muted: #4b5b73;
+  --arch4-border: #d9dee8;
+  --arch4-node-border: #b9c3d5;
+  --arch4-accent: #4f6df5;
+  --arch4-accent-strong: #3652d9;
+  --arch4-accent-soft: #eef2ff;
+  --arch4-selection-ring: rgba(79, 109, 245, 0.18);
+  --arch4-shadow: rgba(22, 32, 51, 0.08);
+  --arch4-overlay-shadow: rgba(22, 32, 51, 0.12);
+  --arch4-edge-label-background: color-mix(
+    in srgb,
+    var(--arch4-surface-raised) 96%,
+    var(--arch4-background)
+  );
+  --arch4-edge-label-border: color-mix(
+    in srgb,
+    var(--arch4-text-muted) 28%,
+    var(--arch4-border)
+  );
+  --arch4-edge-label-shadow: 0 4px 14px var(--arch4-shadow);
+  --arch4-edge-active-stroke: var(--arch4-accent);
+  --arch4-edge-order-background: color-mix(
+    in srgb,
+    var(--arch4-text) 88%,
+    var(--arch4-accent)
+  );
+  --arch4-edge-order-foreground: var(--arch4-background);
+  --arch4-focus-ring: color-mix(in srgb, var(--arch4-accent) 45%, transparent);
+  --arch4-error-border: #ef8f8f;
+  --arch4-error-background: #fff2f2;
+  --arch4-grid-color: color-mix(in srgb, #aeb8c8 62%, transparent);
+  --arch4-grid-major-color: color-mix(in srgb, #8493aa 70%, transparent);
+  --arch4-person-accent: #7c3aed;
+  --arch4-software-system-accent: #2563eb;
+  --arch4-container-accent: #0891b2;
+  --arch4-database-accent: #16a34a;
+  --arch4-component-accent: #d97706;
+  --arch4-component-icon-accent: #f59e0b;
+  --arch4-infrastructure-accent: #64748b;
+  --arch4-deployment-view-accent: #7c8da1;
+  --arch4-dynamic-view-accent: #2f9f8f;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--arch4-text);
+  background: var(--arch4-background);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.arch4-viewer.sidebar-collapsed {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.arch4-canvas {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  background:
+    radial-gradient(
+      circle at 20% 12%,
+      color-mix(in srgb, var(--arch4-accent) 6%, transparent),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--arch4-surface) 30%, transparent),
+      transparent 36%
+    ),
+    var(--arch4-background);
+}
+
+/* React Flow integration */
+.arch4-viewer .react-flow {
+  --xy-edge-stroke-default: var(--arch4-text-muted);
+  --xy-edge-stroke-selected-default: var(--arch4-accent);
+  --xy-background-color-default: var(--arch4-background);
+  --xy-background-pattern-dots-color-default: var(--arch4-grid-color);
+  --xy-controls-button-background-color-default: var(--arch4-surface-control);
+  --xy-controls-button-background-color-hover-default: var(
+    --arch4-surface-control-hover
+  );
+  --xy-controls-button-color-default: var(--arch4-text);
+  --xy-controls-button-color-hover-default: var(--arch4-text);
+  --xy-controls-button-border-color-default: var(--arch4-border);
+  --xy-controls-box-shadow-default: 0 0 0 1px var(--arch4-border);
+  --xy-edge-label-background-color-default: var(--arch4-surface-raised);
+  --xy-edge-label-color-default: var(--arch4-text);
+  color: var(--arch4-text);
+  background: transparent;
+}
+
+.arch4-viewer .react-flow__node-arch4Boundary {
+  z-index: 0 !important;
+  pointer-events: none;
+}
+
+.arch4-viewer .react-flow__node:has(.arch4-node-action-menu) {
+  z-index: 90 !important;
+}
+
+.arch4-viewer .react-flow__controls {
+  overflow: hidden;
+  border: 1px solid var(--arch4-border);
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px var(--arch4-shadow);
+}
+
+.arch4-viewer .react-flow__controls-button {
+  border-bottom-color: var(--arch4-border);
+  background: var(--arch4-surface-control);
+  color: var(--arch4-text);
+}
+
+.arch4-viewer .react-flow__controls-button:hover {
+  background: var(--arch4-surface-control-hover);
+  color: var(--arch4-text);
+}
+
+.arch4-viewer .react-flow__controls-button svg {
+  fill: currentColor;
+}
+
+/* Shared controls */
+.arch4-icon-button {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  appearance: none;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--arch4-text-muted);
+  cursor: pointer;
+  line-height: 0;
+  padding: 0;
+}
+
+.arch4-icon-button > svg {
+  display: block;
+  flex: 0 0 auto;
+  pointer-events: none;
+}
+
+.arch4-icon-button:hover,
+.arch4-icon-button:focus-visible {
+  background: var(--arch4-icon-button-hover);
+  color: var(--arch4-text);
+}
+
+.arch4-sidebar-toggle {
+  box-sizing: border-box;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+}
+
+.arch4-sidebar-reopen {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 20;
+  box-shadow: 0 4px 12px var(--arch4-shadow);
+}
+
+.arch4-layout-panel {
+  margin: 12px;
+}
+
+.arch4-layout-settings {
+  position: relative;
+}
+
+.arch4-layout-settings-trigger {
+  width: 38px;
+  height: 38px;
+  border-color: var(--arch4-border);
+  background: var(--arch4-surface-control);
+  box-shadow: 0 4px 12px var(--arch4-shadow);
+}
+
+.arch4-layout-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 48px);
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--arch4-border);
+  border-radius: 8px;
+  background: var(--arch4-surface-raised);
+  box-shadow: 0 12px 32px var(--arch4-overlay-shadow);
+}
+
+.arch4-layout-menu button {
+  display: inline-flex;
+  height: 34px;
+  appearance: none;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid var(--arch4-border);
+  border-radius: 7px;
+  background: var(--arch4-surface-control);
+  color: var(--arch4-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  line-height: 1;
+  padding: 0 7px;
+}
+
+.arch4-layout-menu button:hover,
+.arch4-layout-menu button:focus-visible {
+  background: var(--arch4-surface-control-hover);
+  color: var(--arch4-text);
+}
+
+.arch4-layout-menu button.active {
+  border-color: color-mix(
+    in srgb,
+    var(--arch4-accent) 52%,
+    var(--arch4-border)
+  );
+  background: var(--arch4-accent-soft);
+  color: var(--arch4-accent-strong);
+}
+
+.arch4-layout-menu .arch4-layout-reset {
+  grid-column: 1 / -1;
+  justify-content: flex-start;
+  padding: 0 10px;
+}
+
+.arch4-layout-menu svg {
+  flex: 0 0 auto;
+}
+
+.arch4-close {
+  float: right;
+  border: 1px solid var(--arch4-border);
+  border-radius: 6px;
+  background: var(--arch4-surface-control);
+  color: inherit;
+  cursor: pointer;
+  padding: 6px;
+}
+
+/* Sidebar and navigation */
+.arch4-sidebar {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  min-height: 0;
+  overflow: auto;
+  border-right: 1px solid var(--arch4-border);
+  background: var(--arch4-surface);
+  padding: 16px;
+}
+
+.arch4-brand {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.arch4-brand > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.arch4-brand strong {
+  font-size: 20px;
+}
+
+.arch4-brand span,
+.arch4-list span,
+.arch4-diagnostic span {
+  color: var(--arch4-text-muted);
+  font-size: 12px;
+}
+
+.arch4-section-trigger,
+.arch4-subsection-trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--arch4-heading-muted);
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.arch4-section-trigger {
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 0;
+  color: var(--arch4-heading-muted);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.arch4-subsection-trigger {
+  gap: 7px;
+  min-height: 24px;
+  border-radius: 6px;
+  padding: 2px 6px;
+  color: var(--arch4-text-muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.arch4-subsection-trigger:hover,
+.arch4-subsection-trigger:focus-visible {
+  background: var(--arch4-list-hover-background);
+  color: var(--arch4-list-hover-foreground);
+}
+
+.arch4-section-trigger svg,
+.arch4-subsection-trigger svg {
+  flex: 0 0 auto;
+  transition: transform 140ms ease;
+}
+
+.arch4-section-trigger svg.open,
+.arch4-subsection-trigger svg.open {
+  transform: rotate(90deg);
+}
+
+.arch4-section-content,
+.arch4-subsection-content {
+  display: grid;
+  gap: 3px;
+}
+
+.arch4-tree {
+  display: grid;
+  gap: 2px;
+}
+
+.arch4-sidebar-subsection {
+  display: grid;
+  gap: 1px;
+}
+
+.arch4-list {
+  display: grid;
+  gap: 1px;
+  padding-left: 18px;
+}
+
+.arch4-list button {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 27px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--arch4-text-muted);
+  cursor: pointer;
+  padding: 3px 6px;
+  text-align: left;
+}
+
+.arch4-list button:hover {
+  background: var(--arch4-list-hover-background);
+  color: var(--arch4-list-hover-foreground);
+}
+
+.arch4-list button.active {
+  border-color: color-mix(in srgb, var(--arch4-accent) 56%, transparent);
+  background: var(--arch4-surface-selected);
+  color: var(--arch4-list-active-foreground);
+}
+
+.arch4-list button strong {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12.5px;
+  font-weight: 680;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arch4-tree-item-icon {
+  display: inline-grid;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+  color: var(--arch4-accent);
+}
+
+.arch4-tree-item-icon.software-system {
+  color: var(--arch4-software-system-accent);
+}
+
+.arch4-tree-item-icon.container {
+  color: var(--arch4-container-accent);
+}
+
+.arch4-tree-item-icon.component {
+  color: var(--arch4-component-icon-accent);
+}
+
+.arch4-tree-item-icon.deployment-view {
+  color: var(--arch4-deployment-view-accent);
+}
+
+.arch4-tree-item-icon.dynamic-view {
+  color: var(--arch4-dynamic-view-accent);
+}
+
+/* Diagram nodes */
+.arch4-node {
+  --arch4-node-accent: var(--arch4-accent);
+  --arch4-node-background: color-mix(
+    in srgb,
+    var(--arch4-node-accent) 6%,
+    var(--arch4-surface-raised)
+  );
+  --arch4-node-rail-background: color-mix(
+    in srgb,
+    var(--arch4-node-accent) 18%,
+    var(--arch4-surface-raised)
+  );
+  display: grid;
+  position: relative;
+  grid-template-columns: 96px minmax(0, 1fr);
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  min-width: 292px;
+  min-height: 148px;
+  overflow: hidden;
+  border: 1px solid
+    color-mix(in srgb, var(--arch4-node-accent) 42%, var(--arch4-node-border));
+  border-radius: 8px;
+  background: var(--arch4-node-background);
+  color: var(--arch4-text);
+  box-shadow: 0 10px 24px var(--arch4-shadow);
+}
+
+.arch4-node.menu-open {
+  overflow: visible;
+}
+
+.arch4-node.menu-open .arch4-node-body {
+  overflow: visible;
+}
+
+.arch4-node.selected {
+  border-color: var(--arch4-accent);
+  box-shadow:
+    0 0 0 4px var(--arch4-selection-ring),
+    0 10px 28px var(--arch4-shadow);
+}
+
+.arch4-node.person {
+  --arch4-node-accent: var(--arch4-person-accent);
+}
+
+.arch4-node.software-system,
+.arch4-node.software-system-instance {
+  --arch4-node-accent: var(--arch4-software-system-accent);
+}
+
+.arch4-node.container,
+.arch4-node.container-instance {
+  --arch4-node-accent: var(--arch4-container-accent);
+}
+
+.arch4-node.database {
+  --arch4-node-accent: var(--arch4-database-accent);
+}
+
+.arch4-node.component {
+  --arch4-node-accent: var(--arch4-component-accent);
+}
+
+.arch4-node.infrastructure-node,
+.arch4-node.deployment-node {
+  --arch4-node-accent: var(--arch4-infrastructure-accent);
+}
+
+.arch4-node-rail {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+  overflow: hidden;
+  border-right: 1px solid
+    color-mix(in srgb, var(--arch4-node-accent) 34%, transparent);
+  background: var(--arch4-node-rail-background);
+  color: color-mix(in srgb, var(--arch4-node-accent) 88%, var(--arch4-text));
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0;
+  line-height: 1.15;
+  padding: 16px 12px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.arch4-node-rail > span:last-child {
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: normal;
+  text-wrap: balance;
+  word-break: normal;
+}
+
+.arch4-node.container-instance .arch4-node-rail,
+.arch4-node.software-system-instance .arch4-node-rail,
+.arch4-node.deployment-node .arch4-node-rail {
+  font-size: 10px;
+}
+
+.arch4-node.infrastructure-node .arch4-node-rail {
+  font-size: 9px;
+}
+
+.arch4-node-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  color: color-mix(in srgb, var(--arch4-node-accent) 92%, var(--arch4-text));
+}
+
+.arch4-node.component .arch4-node-icon {
+  color: var(--arch4-component-icon-accent);
+}
+
+.arch4-node-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  gap: 8px;
+  overflow: hidden;
+  padding: 15px 14px 12px 18px;
+}
+
+.arch4-node-text {
+  display: grid;
+  grid-template-rows: minmax(0, auto) minmax(0, auto);
+  align-content: start;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  gap: 7px;
+  overflow: hidden;
+}
+
+.arch4-node h3 {
+  display: -webkit-box;
+  margin: 0;
+  max-height: calc(1.14em * 3);
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  font-size: 17px;
+  font-weight: 850;
+  letter-spacing: 0;
+  line-height: 1.14;
+  overflow-wrap: anywhere;
+}
+
+.arch4-node:has(p) h3 {
+  max-height: calc(1.14em * 2);
+  -webkit-line-clamp: 2;
+}
+
+.arch4-node p {
+  display: -webkit-box;
+  min-height: 0;
+  margin: 0;
+  max-height: calc(1.34em * 3);
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  color: var(--arch4-text-muted);
+  font-size: 12.25px;
+  font-weight: 580;
+  line-height: 1.34;
+  overflow-wrap: anywhere;
+}
+
+.arch4-node-footer {
+  display: flex;
+  flex: 0 0 22px;
+  min-width: 0;
+  min-height: 22px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.arch4-node-footer:has(.arch4-node-actions):not(:has(.arch4-node-technology)) {
+  justify-content: flex-end;
+}
+
+.arch4-node-technology {
+  flex: 0 1 auto;
+  min-width: 0;
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid
+    color-mix(in srgb, var(--arch4-node-accent) 26%, transparent);
+  border-radius: 999px;
+  background: color-mix(
+    in srgb,
+    var(--arch4-node-accent) 14%,
+    var(--arch4-node-background)
+  );
+  color: var(--arch4-text-muted);
+  font-size: 10.5px;
+  font-weight: 760;
+  line-height: 1.1;
+  padding: 4px 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arch4-node-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 3px;
+}
+
+.arch4-node-action {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: color-mix(
+    in srgb,
+    var(--arch4-node-accent) 78%,
+    var(--arch4-text-muted)
+  );
+  cursor: pointer;
+  opacity: 0.82;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease,
+    opacity 140ms ease;
+}
+
+.arch4-node-action:hover,
+.arch4-node-action:focus-visible {
+  background: color-mix(in srgb, var(--arch4-node-accent) 10%, transparent);
+  color: var(--arch4-node-accent);
+  opacity: 1;
+}
+
+.arch4-node-action:focus-visible {
+  outline: 2px solid var(--arch4-focus-ring);
+  outline-offset: 2px;
+}
+
+.arch4-node-action-menu-root {
+  position: relative;
+}
+
+.arch4-node-action-menu {
+  position: absolute;
+  bottom: 0;
+  left: calc(100% + 8px);
+  z-index: 80;
+  display: grid;
+  width: 278px;
+  overflow: hidden;
+  border: 1px solid var(--arch4-border);
+  border-radius: 8px;
+  background: var(--arch4-surface-raised);
+  box-shadow: 0 14px 34px var(--arch4-overlay-shadow);
+  color: var(--arch4-text);
+}
+
+.arch4-node-action-menu-item {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--arch4-border) 70%, transparent);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 9px 10px;
+  text-align: left;
+}
+
+.arch4-node-action-menu-item:last-child {
+  border-bottom: 0;
+}
+
+.arch4-node-action-menu-item:hover,
+.arch4-node-action-menu-item:focus-visible {
+  background: var(--arch4-surface-control-hover);
+}
+
+.arch4-node-action-menu-item strong,
+.arch4-node-action-menu-item small {
+  display: block;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.arch4-node-action-menu-item strong {
+  color: var(--arch4-text);
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.arch4-node-action-menu-item small {
+  margin-top: 2px;
+  border: 0;
+  background: transparent;
+  color: var(--arch4-text-muted);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.2;
+  padding: 0;
+}
+
+.arch4-flow-overview .arch4-node {
+  grid-template-columns: 58px minmax(0, 1fr);
+}
+
+.arch4-flow-overview .arch4-node-rail {
+  gap: 0;
+  padding: 12px 8px;
+}
+
+.arch4-flow-overview .arch4-node-rail > span:last-child,
+.arch4-flow-overview .arch4-node p,
+.arch4-flow-overview .arch4-node-footer,
+.arch4-flow-overview .arch4-node-actions {
+  display: none;
+}
+
+.arch4-flow-overview .arch4-node-icon {
+  width: 42px;
+  height: 42px;
+}
+
+.arch4-flow-overview .arch4-node-body {
+  display: grid;
+  align-items: center;
+  padding: 14px 16px;
+}
+
+.arch4-flow-overview .arch4-node-text {
+  display: grid;
+  align-content: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+.arch4-flow-overview .arch4-node h3 {
+  max-height: calc(1.06em * 2);
+  -webkit-line-clamp: 2;
+  font-size: 25px;
+  font-weight: 900;
+  line-height: 1.06;
+}
+
+/* Boundaries and edges */
+.arch4-boundary {
+  --arch4-boundary-accent: var(--arch4-software-system-accent);
+  --arch4-boundary-border: color-mix(
+    in srgb,
+    var(--arch4-boundary-accent) 88%,
+    var(--arch4-border)
+  );
+  --arch4-boundary-fill: color-mix(
+    in srgb,
+    var(--arch4-boundary-accent) 8%,
+    transparent
+  );
+  --arch4-boundary-label: color-mix(
+    in srgb,
+    var(--arch4-boundary-accent) 72%,
+    var(--arch4-text-muted)
+  );
+  --arch4-boundary-width: 4px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: var(--arch4-boundary-width) dashed var(--arch4-boundary-border);
+  border-radius: 32px;
+  background: var(--arch4-boundary-fill);
+  color: var(--arch4-boundary-label);
+  pointer-events: none;
+}
+
+.arch4-boundary.software-system {
+  --arch4-boundary-accent: var(--arch4-software-system-accent);
+}
+
+.arch4-boundary.container {
+  --arch4-boundary-accent: var(--arch4-container-accent);
+}
+
+.arch4-boundary.deployment-node {
+  --arch4-boundary-accent: var(--arch4-infrastructure-accent);
+  --arch4-boundary-fill: color-mix(
+    in srgb,
+    var(--arch4-boundary-accent) 6%,
+    transparent
+  );
+  --arch4-boundary-width: 3px;
+  border-style: solid;
+  border-radius: 36px;
+}
+
+.arch4-boundary span {
+  position: absolute;
+  top: 18px;
+  left: 22px;
+  max-width: calc(100% - 44px);
+  overflow: hidden;
+  color: inherit;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.arch4-handle {
+  width: 1px;
+  height: 1px;
+  min-width: 1px;
+  min-height: 1px;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.arch4-edge-hitbox {
+  cursor: pointer;
+  stroke-linecap: round;
+  stroke-opacity: 0;
+  stroke-width: 22;
+}
+
+.arch4-edge-path {
+  stroke: var(--arch4-edge-stroke, var(--arch4-text-muted));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-opacity: 0.68;
+  stroke-width: var(--arch4-edge-width, 2.05);
+  transition:
+    stroke 140ms ease,
+    stroke-opacity 140ms ease,
+    stroke-width 140ms ease;
+}
+
+.arch4-edge-arrow {
+  fill: var(--arch4-edge-stroke, var(--arch4-text-muted));
+  opacity: 0.68;
+  pointer-events: none;
+  transition:
+    fill 140ms ease,
+    opacity 140ms ease;
+}
+
+.arch4-edge-hitbox:hover + .arch4-edge-path,
+.arch4-edge-path:hover,
+.arch4-edge-path.active {
+  stroke: var(--arch4-edge-active-stroke);
+  stroke-opacity: 0.95;
+  stroke-width: 2.65;
+}
+
+.arch4-edge-arrow.active {
+  fill: var(--arch4-edge-active-stroke);
+  opacity: 0.95;
+}
+
+.arch4-edge-label {
+  position: absolute;
+  z-index: 30;
+  display: inline-flex;
+  max-width: 240px;
+  min-height: 26px;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--arch4-edge-label-border);
+  border-radius: 6px;
+  background: var(--arch4-edge-label-background);
+  box-shadow: var(--arch4-edge-label-shadow);
+  color: var(--arch4-text);
+  font-size: 12px;
+  font-weight: 780;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  padding: 5px 9px;
+  pointer-events: all;
+  text-align: center;
+  white-space: normal;
+  user-select: none;
+}
+
+.arch4-edge-label.active,
+.arch4-edge-label.dynamic {
+  border-color: color-mix(
+    in srgb,
+    var(--arch4-accent) 35%,
+    var(--arch4-border)
+  );
+}
+
+.arch4-edge-label.dynamic {
+  --arch4-edge-order-background: color-mix(
+    in srgb,
+    var(--arch4-text) 88%,
+    var(--arch4-dynamic-view-accent)
+  );
+}
+
+.arch4-edge-order {
+  display: inline-grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--arch4-edge-order-background);
+  color: var(--arch4-edge-order-foreground);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+/* Legend */
+.arch4-legend {
+  display: flex;
+  width: max-content;
+  max-width: calc(100vw - 96px);
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid var(--arch4-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--arch4-surface-raised) 92%, transparent);
+  box-shadow: 0 2px 8px var(--arch4-shadow);
+  color: var(--arch4-text-muted);
+  padding: 8px 10px;
+  scrollbar-width: none;
+}
+
+.arch4-legend::-webkit-scrollbar {
+  display: none;
+}
+
+.arch4-legend-item {
+  display: inline-flex;
+  min-height: 22px;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.arch4-legend-icon {
+  display: inline-grid;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+  color: var(--arch4-accent);
+}
+
+.arch4-legend-icon.person {
+  color: var(--arch4-person-accent);
+}
+
+.arch4-legend-icon.software-system {
+  color: var(--arch4-software-system-accent);
+}
+
+.arch4-legend-icon.container {
+  color: var(--arch4-container-accent);
+}
+
+.arch4-legend-icon.database {
+  color: var(--arch4-database-accent);
+}
+
+.arch4-legend-icon.component {
+  color: var(--arch4-component-icon-accent);
+}
+
+.arch4-legend-swatch {
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--arch4-border);
+  border-radius: 999px;
+  background: var(--arch4-text-muted);
+}
+
+.arch4-legend-swatch.relationship {
+  width: 20px;
+  height: 0;
+  border-width: 0;
+  border-top: 2px solid var(--arch4-text-muted);
+  border-radius: 999px;
+  background: transparent;
+}
+
+.arch4-legend-swatch.boundary {
+  width: 22px;
+  height: 0;
+  border-width: 0;
+  border-top: 3px dotted var(--arch4-text-muted);
+  border-radius: 0;
+  background: transparent;
+}
+
+/* Details drawer */
+.arch4-details {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  width: 340px;
+  overflow: auto;
+  border-left: 1px solid var(--arch4-border);
+  background: var(--arch4-surface);
+  box-shadow: -16px 0 40px var(--arch4-overlay-shadow);
+  padding: 18px 18px 18px;
+}
+
+.arch4-details-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  padding-right: 54px;
+}
+
+.arch4-details-header .arch4-eyebrow {
+  grid-column: 1;
+  margin: 0;
+}
+
+.arch4-details-header h2 {
+  grid-column: 1;
+  margin: 0;
+}
+
+.arch4-details-header .arch4-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+
+.arch4-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--arch4-accent-strong);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.arch4-details h2 {
+  margin: 0;
+}
+
+.arch4-details p {
+  margin: 0;
+  color: var(--arch4-heading-muted);
+  line-height: 1.5;
+}
+
+.arch4-details dl {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 8px 10px;
+  font-size: 13px;
+}
+
+.arch4-details dt {
+  color: var(--arch4-text-muted);
+  font-weight: 700;
+}
+
+.arch4-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.arch4-details h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 8px;
+  color: var(--arch4-heading-muted);
+  font-size: 13px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.arch4-details ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.arch4-details li {
+  display: grid;
+  gap: 2px;
+  border: 1px solid var(--arch4-border);
+  border-radius: 6px;
+  background: var(--arch4-surface-muted);
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.arch4-details li strong {
+  overflow-wrap: anywhere;
+}
+
+.arch4-details li span {
+  color: var(--arch4-text-muted);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.arch4-relationships {
+  display: grid;
+  gap: 10px;
+}
+
+.arch4-relationship-group {
+  display: grid;
+  gap: 6px;
+}
+
+.arch4-relationship-group h4 {
+  margin: 0;
+  color: var(--arch4-text-muted);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.arch4-relationship-list {
+  gap: 8px;
+}
+
+.arch4-details .arch4-relationship-item {
+  gap: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.arch4-details .arch4-relationship-item.horizontal {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+}
+
+.arch4-relationship-item > span {
+  display: grid;
+  min-width: 0;
+  padding: 8px 10px;
+}
+
+.arch4-relationship-item > span + span {
+  border-top: 1px solid color-mix(in srgb, var(--arch4-border) 72%, transparent);
+}
+
+.arch4-relationship-item.horizontal > span + span {
+  border-top: 0;
+  border-left: 1px solid
+    color-mix(in srgb, var(--arch4-border) 72%, transparent);
+}
+
+.arch4-details .arch4-relationship-entity {
+  color: var(--arch4-text);
+  font-size: 13px;
+  font-weight: 760;
+  overflow-wrap: anywhere;
+}
+
+.arch4-relationship-description {
+  gap: 2px;
+}
+
+.arch4-relationship-description strong {
+  color: var(--arch4-text);
+  overflow-wrap: anywhere;
+}
+
+.arch4-relationship-empty {
+  font-size: 12px;
+}
+
+.arch4-related-view-item:hover,
+.arch4-related-view-item:has(.arch4-related-view-button:focus-visible) {
+  background: var(--arch4-list-hover-background);
+  color: var(--arch4-list-hover-foreground);
+}
+
+.arch4-related-view-item:hover span,
+.arch4-related-view-item:has(.arch4-related-view-button:focus-visible) span {
+  color: var(--arch4-list-hover-foreground);
+}
+
+.arch4-related-view-item:has(.arch4-related-view-button:focus-visible) {
+  outline: 2px solid var(--arch4-focus-ring);
+  outline-offset: 2px;
+}
+
+.arch4-related-view-button {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-align: left;
+}
+
+.arch4-related-view-button:focus-visible {
+  outline: 0;
+}
+
+.arch4-details pre {
+  max-height: 220px;
+  overflow: auto;
+  border: 1px solid var(--arch4-border);
+  border-radius: 6px;
+  background: var(--arch4-surface-muted);
+  color: var(--arch4-text);
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 0;
+  padding: 10px;
+  white-space: pre-wrap;
+}
+
+/* Empty, diagnostic, and muted states */
+.arch4-muted {
+  margin: 0;
+  color: var(--arch4-heading-muted);
+  line-height: 1.5;
+}
+
+.arch4-diagnostics {
+  display: grid;
+  gap: 6px;
+}
+
+.arch4-diagnostic {
+  display: grid;
+  gap: 2px;
+  border: 1px solid var(--arch4-border);
+  border-radius: 6px;
+  background: var(--arch4-surface-muted);
+  padding: 8px;
+}
+
+.arch4-diagnostic.error {
+  border-color: var(--arch4-error-border);
+  background: var(--arch4-error-background);
+}
+
+.arch4-empty {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  color: var(--arch4-text-muted);
+}
+
+.arch4-empty-message {
+  display: grid;
+  max-width: 520px;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  line-height: 1;
+}
+
+.arch4-empty-message strong {
+  color: var(--arch4-text);
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.arch4-empty-message > span {
+  display: block;
+  line-height: 2.2;
+}
+
+.arch4-keyboard-shortcut {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-inline: 3px;
+  white-space: nowrap;
+}
+
+.arch4-keyboard-shortcut-part {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.arch4-keyboard-separator {
+  color: var(--arch4-text-muted);
+}
+
+.arch4-empty-message kbd {
+  display: inline-block;
+  min-width: 20px;
+  border: 1px solid var(--arch4-border);
+  border-radius: 4px;
+  background: var(--arch4-surface-control);
+  color: var(--arch4-text);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-inline: 2px;
+  padding: 1px 5px;
+  vertical-align: 1px;
+}

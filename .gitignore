@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+
+# Build and package output
+dist/
+out/
+artifacts/
+coverage/
+runtime/bundles/
+runtime/tmp/
+packages/cursor-extension/cli/
+packages/cursor-extension/*.vsix
+packages/cursor-extension/**/*.vsix
+*.vsix
+*.tsbuildinfo
+*.map
+
+# Tool caches
+.turbo/
+.vite/
+.vitest/
+.eslintcache
+.cache/
+.pnpm-store/
+
+# Local environment and OS/editor state
+.DS_Store
+.env
+.env.*
+!.env.example
+.vscode-test/
+
+# Generated architecture artifacts
+**/.arch4/architecture/generated/
+
+# Intentional example fixtures
+!examples/minimal-repo/.arch4/
+!examples/minimal-repo/.arch4/architecture/
+!examples/minimal-repo/.arch4/architecture/arch4.json
+!examples/minimal-repo/.arch4/architecture/workspace.dsl
+!examples/minimal-repo/.arch4/architecture/layout.json
+!examples/minimal-repo/.arch4/architecture/entities/
+!examples/minimal-repo/.arch4/architecture/entities/**/*.json
+!examples/minimal-repo/.cursor/
+!examples/minimal-repo/.cursor/commands/
+!examples/minimal-repo/.cursor/commands/*.md
+!examples/minimal-repo/.cursor/rules/
+!examples/minimal-repo/.cursor/rules/*.mdc
+!examples/minimal-repo/.cursor/skills/
+!examples/minimal-repo/.cursor/skills/**/
+!examples/minimal-repo/.cursor/skills/**/*.md

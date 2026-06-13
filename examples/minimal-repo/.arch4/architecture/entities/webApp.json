@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "webApp",
+  "paths": ["src/web/**/*"],
+  "owners": [],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

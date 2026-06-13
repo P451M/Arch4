@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "bookingOrchestrator",
+  "paths": ["src/booking-api/orchestrator.ts"],
+  "owners": [],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

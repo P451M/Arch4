@@ -1,0 +1,198 @@
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  color: var(--vscode-foreground, #cccccc);
+  background: var(--vscode-editor-background, #1e1e1e);
+  font-family: var(--vscode-font-family, system-ui, sans-serif);
+  font-size: var(--vscode-font-size, 13px);
+}
+
+body.vscode-dark,
+body.vscode-high-contrast {
+  color-scheme: dark;
+}
+
+body.vscode-light,
+body.vscode-high-contrast-light {
+  color-scheme: light;
+}
+
+#root {
+  display: block;
+}
+
+.arch4-viewer {
+  width: 100%;
+  height: 100%;
+  font-family: var(--vscode-font-family, system-ui, sans-serif);
+  --arch4-background: var(--vscode-editor-background, #1e1e1e);
+  --arch4-surface: var(
+    --vscode-sideBar-background,
+    var(--vscode-editorWidget-background, #252526)
+  );
+  --arch4-surface-raised: var(
+    --vscode-editorWidget-background,
+    var(--vscode-sideBar-background, #252526)
+  );
+  --arch4-surface-muted: var(
+    --vscode-list-hoverBackground,
+    var(--vscode-input-background, #2a2d2e)
+  );
+  --arch4-surface-selected: var(
+    --vscode-list-activeSelectionBackground,
+    var(--vscode-list-focusBackground, #04395e)
+  );
+  --arch4-surface-control: var(
+    --vscode-editorWidget-background,
+    var(--vscode-sideBar-background, var(--vscode-editor-background, #252526))
+  );
+  --arch4-surface-control-hover: var(
+    --vscode-toolbar-hoverBackground,
+    var(
+      --vscode-list-hoverBackground,
+      color-mix(in srgb, var(--arch4-text) 10%, var(--arch4-surface-control))
+    )
+  );
+  --arch4-icon-button-hover: var(
+    --vscode-toolbar-hoverBackground,
+    rgba(90, 93, 94, 0.31)
+  );
+  --arch4-list-hover-background: var(
+    --vscode-list-hoverBackground,
+    rgba(90, 93, 94, 0.31)
+  );
+  --arch4-list-hover-foreground: var(
+    --vscode-list-hoverForeground,
+    var(--vscode-foreground, #cccccc)
+  );
+  --arch4-list-active-foreground: var(
+    --vscode-list-activeSelectionForeground,
+    var(--vscode-foreground, #ffffff)
+  );
+  --arch4-text: var(--vscode-foreground, #cccccc);
+  --arch4-text-muted: var(--vscode-descriptionForeground, #9d9d9d);
+  --arch4-heading-muted: var(--vscode-descriptionForeground, #9d9d9d);
+  --arch4-border: var(
+    --vscode-panel-border,
+    var(--vscode-sideBar-border, #3c3c3c)
+  );
+  --arch4-node-border: var(
+    --vscode-editorWidget-border,
+    var(--vscode-panel-border, #3c3c3c)
+  );
+  --arch4-accent: var(--vscode-focusBorder, #007fd4);
+  --arch4-accent-strong: var(
+    --vscode-textLink-foreground,
+    var(--vscode-focusBorder, #3794ff)
+  );
+  --arch4-accent-soft: var(
+    --vscode-inputOption-activeBackground,
+    var(--vscode-list-hoverBackground, #04395e)
+  );
+  --arch4-selection-ring: var(--vscode-focusBorder, #007fd4);
+  --arch4-shadow: rgba(0, 0, 0, 0.16);
+  --arch4-overlay-shadow: rgba(0, 0, 0, 0.24);
+  --arch4-edge-label-background: var(--vscode-editorWidget-background, #252526);
+  --arch4-edge-label-border: color-mix(
+    in srgb,
+    var(--vscode-focusBorder, #007fd4) 30%,
+    var(--arch4-border)
+  );
+  --arch4-edge-label-shadow: 0 5px 18px rgba(0, 0, 0, 0.32);
+  --arch4-edge-active-stroke: var(
+    --vscode-textLink-foreground,
+    var(--vscode-charts-blue, #3794ff)
+  );
+  --arch4-edge-order-background: var(--vscode-foreground, #cccccc);
+  --arch4-edge-order-foreground: var(--vscode-editor-background, #1e1e1e);
+  --arch4-focus-ring: var(--vscode-focusBorder, #007fd4);
+  --arch4-error-border: var(
+    --vscode-inputValidation-errorBorder,
+    var(--vscode-errorForeground, #f14c4c)
+  );
+  --arch4-error-background: var(
+    --vscode-inputValidation-errorBackground,
+    var(--vscode-editorWidget-background, #5a1d1d)
+  );
+  --arch4-grid-color: color-mix(
+    in srgb,
+    var(
+        --vscode-editorIndentGuide-background1,
+        var(--vscode-charts-blue, var(--vscode-foreground, #cccccc))
+      )
+      86%,
+    transparent
+  );
+  --arch4-grid-major-color: color-mix(
+    in srgb,
+    var(
+        --vscode-editorIndentGuide-activeBackground1,
+        var(
+          --vscode-charts-blue,
+          var(
+            --vscode-editorIndentGuide-background1,
+            var(--vscode-foreground, #cccccc)
+          )
+        )
+      )
+      92%,
+    transparent
+  );
+  --arch4-person-accent: var(--vscode-charts-purple, #b180d7);
+  --arch4-software-system-accent: var(--vscode-charts-blue, #3794ff);
+  --arch4-container-accent: var(--vscode-charts-cyan, #4dd0e1);
+  --arch4-database-accent: var(--vscode-charts-green, #89d185);
+  --arch4-component-accent: var(--vscode-charts-orange, #d7ba7d);
+  --arch4-component-icon-accent: color-mix(
+    in srgb,
+    var(--vscode-charts-orange, #d7ba7d) 72%,
+    #ffffff
+  );
+  --arch4-infrastructure-accent: var(
+    --vscode-charts-foreground,
+    var(--vscode-descriptionForeground, #9d9d9d)
+  );
+}
+
+body.vscode-high-contrast .arch4-viewer,
+body.vscode-high-contrast-light .arch4-viewer {
+  --arch4-grid-color: color-mix(
+    in srgb,
+    var(--vscode-contrastBorder, var(--vscode-foreground, #cccccc)) 55%,
+    transparent
+  );
+  --arch4-grid-major-color: color-mix(
+    in srgb,
+    var(--vscode-contrastActiveBorder, var(--vscode-foreground, #cccccc)) 70%,
+    transparent
+  );
+}
+
+.arch4-viewer .react-flow {
+  --xy-controls-button-background-color-default: var(--arch4-surface-control);
+  --xy-controls-button-background-color-hover-default: var(
+    --arch4-surface-control-hover
+  );
+  --xy-controls-button-color-default: var(--arch4-text);
+  --xy-controls-button-color-hover-default: var(--arch4-text);
+  --xy-controls-button-border-color-default: var(--arch4-border);
+  --xy-controls-box-shadow-default: 0 0 0 1px var(--arch4-border);
+}
+
+.arch4-list button {
+  cursor: pointer;
+}
+
+.arch4-close {
+  cursor: pointer;
+}

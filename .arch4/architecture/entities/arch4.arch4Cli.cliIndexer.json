@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Cli.cliIndexer",
+  "owners": ["Maintainer"],
+  "paths": ["packages/cli/src/indexer.ts"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

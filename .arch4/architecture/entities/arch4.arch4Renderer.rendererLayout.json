@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Renderer.rendererLayout",
+  "owners": ["Maintainer"],
+  "paths": ["packages/renderer-structurizr/src/layout.ts"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

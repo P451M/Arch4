@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "eventBus",
+  "paths": ["infra/event-bus.md"],
+  "owners": [],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

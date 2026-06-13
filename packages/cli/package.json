@@ -1,0 +1,30 @@
+{
+  "name": "@arch4/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "bin": {
+    "arch4": "./dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests --exclude '**/dist/**'"
+  },
+  "dependencies": {
+    "@arch4/core": "workspace:*",
+    "@arch4/renderer-structurizr": "workspace:*",
+    "minimatch": "^10.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.7"
+  }
+}

@@ -1,0 +1,400 @@
+{
+  "id": "Arch4SystemContext",
+  "name": "Arch4SystemContext",
+  "type": "system_context",
+  "subjectId": "10",
+  "subjectEntityId": "arch4",
+  "direction": "RIGHT",
+  "nodes": [
+    {
+      "id": "1",
+      "entityId": "developer",
+      "type": "person",
+      "name": "Developer",
+      "description": "Develops and maintains repository code in Cursor.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "Arch4 Users and Maintainers",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "layout": {
+        "x": 162,
+        "y": 1846,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "2",
+      "entityId": "maintainer",
+      "type": "person",
+      "name": "Maintainer",
+      "description": "Builds, packages, and publishes Arch4 releases.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "Arch4 Users and Maintainers",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "layout": {
+        "x": 162,
+        "y": 1256,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "3",
+      "entityId": "aiAgent",
+      "type": "person",
+      "name": "AI Agent",
+      "description": "Updates architecture models and retrieves architecture context during agent workflows.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "Arch4 Users and Maintainers",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "layout": {
+        "x": 162,
+        "y": 156,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "4",
+      "entityId": "cursor",
+      "type": "softwareSystem",
+      "name": "Cursor",
+      "description": "Editor platform that hosts the Arch4 extension, commands, tree view, and architecture map webview.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "External Editor, Marketplace, and Tooling",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1882,
+        "y": 198,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "5",
+      "entityId": "openVsx",
+      "type": "softwareSystem",
+      "name": "OpenVSX",
+      "description": "Extension marketplace used to publish and distribute Arch4 VSIX packages.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "External Editor, Marketplace, and Tooling",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1882,
+        "y": 633,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "6",
+      "entityId": "structurizrCli",
+      "type": "softwareSystem",
+      "name": "Structurizr CLI",
+      "description": "Validates Structurizr DSL workspaces and exports workspace JSON.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "External Editor, Marketplace, and Tooling",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1882,
+        "y": 1023,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "7",
+      "entityId": "javaRuntime",
+      "type": "softwareSystem",
+      "name": "Java Runtime",
+      "description": "Embedded JVM used to run the bundled Structurizr CLI.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "External Editor, Marketplace, and Tooling",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1882,
+        "y": 1413,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "8",
+      "entityId": "git",
+      "type": "softwareSystem",
+      "name": "Git",
+      "description": "Source-control history used for architecture indexing and contributor evidence.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "External Editor, Marketplace, and Tooling",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1882,
+        "y": 1803,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "9",
+      "entityId": "targetWorkspace",
+      "type": "softwareSystem",
+      "name": "Target Workspace",
+      "description": "Repository where Arch4 is installed and whose architecture DSL, entities, and source files are modeled.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "Modeled Repository",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 2378,
+        "y": 1001,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "10",
+      "entityId": "arch4",
+      "type": "softwareSystem",
+      "name": "Arch4",
+      "description": "Enriched C4 architecture maps for Cursor repositories.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "Arch4 Platform",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1022,
+        "y": 1001,
+        "width": 260,
+        "height": 140
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "28",
+      "source": "1",
+      "target": "4",
+      "label": "Develops repositories in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "29",
+      "source": "1",
+      "target": "10",
+      "label": "Maintains architecture maps for",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "30",
+      "source": "1",
+      "target": "9",
+      "label": "Develops and maintains code in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "31",
+      "source": "2",
+      "target": "10",
+      "label": "Maintains and publishes releases of",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "32",
+      "source": "3",
+      "target": "4",
+      "label": "Runs agent workflows in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "33",
+      "source": "3",
+      "target": "10",
+      "label": "Updates architecture model for",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "34",
+      "source": "10",
+      "target": "4",
+      "label": "Runs as extension in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "35",
+      "source": "10",
+      "target": "5",
+      "label": "Publishes extension packages to",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "36",
+      "source": "10",
+      "target": "6",
+      "label": "Validates and exports DSL through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "37",
+      "source": "10",
+      "target": "7",
+      "label": "Runs Structurizr CLI with",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "38",
+      "source": "10",
+      "target": "8",
+      "label": "Indexes contributor and commit evidence from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "39",
+      "source": "10",
+      "target": "9",
+      "label": "Reads architecture source and repository files from",
+      "tags": [
+        "Relationship"
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "group-boundary-root-Arch4-Users-and-Maintainers",
+      "type": "group",
+      "label": "Arch4 Users and Maintainers",
+      "children": [
+        "1",
+        "2",
+        "3"
+      ],
+      "layout": {
+        "x": 80,
+        "y": 80,
+        "width": 424,
+        "height": 1976
+      }
+    },
+    {
+      "id": "group-boundary-root-External-Editor-Marketplace-and-Tooling",
+      "type": "group",
+      "label": "External Editor, Marketplace, and Tooling",
+      "children": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "layout": {
+        "x": 1800,
+        "y": 122,
+        "width": 424,
+        "height": 1891
+      }
+    },
+    {
+      "id": "group-boundary-root-Modeled-Repository",
+      "type": "group",
+      "label": "Modeled Repository",
+      "children": [
+        "9"
+      ],
+      "layout": {
+        "x": 2296,
+        "y": 925,
+        "width": 424,
+        "height": 286
+      }
+    },
+    {
+      "id": "group-boundary-root-Arch4-Platform",
+      "type": "group",
+      "label": "Arch4 Platform",
+      "children": [
+        "10"
+      ],
+      "layout": {
+        "x": 940,
+        "y": 925,
+        "width": 424,
+        "height": 286
+      }
+    }
+  ],
+  "legend": [
+    {
+      "id": "person",
+      "kind": "element",
+      "label": "Person"
+    },
+    {
+      "id": "softwareSystem",
+      "kind": "element",
+      "label": "SoftwareSystem"
+    }
+  ],
+  "bounds": {
+    "width": 2800,
+    "height": 2136
+  }
+}

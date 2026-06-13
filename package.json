@@ -1,0 +1,36 @@
+{
+  "name": "arch4-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.2.2",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "check": "pnpm -r run check",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "test": "pnpm -r run test",
+    "arch4": "node packages/cli/dist/index.js",
+    "smoke": "node scripts/smoke-dev.mjs",
+    "setup:runtime": "node scripts/setup-runtime.mjs",
+    "dev:cursor": "node scripts/dev-cursor.mjs",
+    "package:cli": "node scripts/package-cli.mjs",
+    "package:extension": "node scripts/package-extension.mjs",
+    "package:extension:all": "node scripts/package-extension.mjs --platform darwin-arm64 && node scripts/package-extension.mjs --platform darwin-x64 && node scripts/package-extension.mjs --platform linux-x64 && node scripts/package-extension.mjs --platform win32-x64",
+    "reinstall:cursor": "pnpm build && pnpm package:extension && node scripts/reinstall-cursor-extension.mjs",
+    "release:dry-run": "pnpm build && pnpm package:extension:all",
+    "verify:runtime": "node scripts/verify-runtime-manifests.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.10.0",
+    "esbuild": "^0.28.1",
+    "eslint": "^10.4.1",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.4",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.61.0",
+    "vitest": "^4.1.7",
+    "yazl": "3.3.1"
+  }
+}

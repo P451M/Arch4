@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "analyticsExportWorker",
+  "paths": ["src/workers/analytics-export-worker.ts"],
+  "owners": [],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

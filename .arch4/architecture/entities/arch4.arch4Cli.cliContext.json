@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Cli.cliContext",
+  "owners": ["Maintainer"],
+  "paths": ["packages/cli/src/context.ts"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

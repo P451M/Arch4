@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "paymentService",
+  "paths": ["src/payment-service/**/*"],
+  "owners": [],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

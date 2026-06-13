@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "quoteValidator",
+  "paths": ["src/booking-api/quote-validator.ts"],
+  "owners": [],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

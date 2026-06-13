@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Viewer",
+  "owners": ["Maintainer"],
+  "paths": ["packages/viewer/**"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

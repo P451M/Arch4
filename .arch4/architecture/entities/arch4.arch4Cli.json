@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Cli",
+  "owners": ["Maintainer"],
+  "paths": ["packages/cli/**"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Arch4 extension icon</title>
+  <desc id="desc">A white A4 mark on a black background.</desc>
+
+  <rect width="512" height="512" rx="112" fill="#000"/>
+  <path
+    d="M88 374 174 138h68l86 236h-58l-17-52h-92l-17 52H88Zm87-96h64l-32-98-32 98Zm170 96V267h-36v-44l42-85h49l-40 83h34v-55h51v55h31v46h-31v107h-100Z"
+    fill="#fff"
+  />
+</svg>

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Extension.extensionWebview",
+  "owners": ["Maintainer"],
+  "paths": [
+    "packages/cursor-extension/src/webview/**",
+    "packages/cursor-extension/src/webview.css"
+  ],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

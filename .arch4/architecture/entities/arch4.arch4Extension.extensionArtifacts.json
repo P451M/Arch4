@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Extension.extensionArtifacts",
+  "owners": ["Maintainer"],
+  "paths": ["packages/cursor-extension/src/workspace-artifacts.ts"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

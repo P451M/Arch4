@@ -1,0 +1,41 @@
+---
+arch4-owned: true
+description: Keep Arch4 architecture maps current
+alwaysApply: true
+---
+
+Arch4 source of truth lives in .arch4/architecture/.
+
+After architectural changes, redesigns, dependency changes, runtime topology
+changes, deployment changes, ownership changes, or source path moves, update
+Arch4 before considering the work complete.
+
+Architecture source:
+
+- `.arch4/architecture/workspace.dsl` contains the architecture model.
+- `.arch4/architecture/entities/*.json` contains entity metadata: owners,
+  paths, confidence, open questions, and notes.
+- `.arch4/architecture/build/**` is derived output. Never edit it as source.
+
+Use the C4 and Arch4 skills for detailed workflow:
+
+- Use `/seed-arch4` for first-time model creation when
+  `.arch4/architecture/workspace.dsl` is empty or still minimal.
+- Use `/update-arch4` for ongoing model maintenance when an architecture
+  model already exists.
+- Use `/review-arch4` before committing architecture-impacting changes.
+
+Evidence boundaries:
+
+- The first architecture model is AI-generated from repository inspection, not
+  from scaffold assumptions.
+- Do not invent architecture facts without source evidence from code, manifests,
+  deployment/config files, tests, git history, existing model files, or explicit
+  user input.
+- Prefer adding diagnostics/open questions over silently encoding uncertain
+  facts.
+- Edit only `.arch4/architecture/workspace.dsl` and
+  `.arch4/architecture/entities/*.json` as architecture source.
+- Never edit `.arch4/architecture/build/**` as source.
+- Keep architecture facts scoped to systems, dependencies, ownership, runtime,
+  deployment, and paths that are evidenced in this repository.

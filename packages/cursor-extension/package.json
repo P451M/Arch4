@@ -1,0 +1,103 @@
+{
+  "name": "arch4-cursor-extension",
+  "displayName": "Arch4",
+  "description": "Enriched C4 architecture maps for your repo.",
+  "version": "0.1.0",
+  "publisher": "arch4",
+  "author": {
+    "name": "Paul Stöckle"
+  },
+  "private": true,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/P451M/Arch4.git"
+  },
+  "homepage": "https://github.com/P451M/Arch4#readme",
+  "bugs": {
+    "url": "https://github.com/P451M/Arch4/issues"
+  },
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#111827",
+    "theme": "dark"
+  },
+  "keywords": [
+    "architecture",
+    "architecture-map",
+    "c4",
+    "structurizr",
+    "diagrams",
+    "cursor"
+  ],
+  "type": "module",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:arch4.init",
+    "onCommand:arch4.openMap",
+    "onCommand:arch4.buildArtifacts",
+    "onCommand:arch4.updateModel",
+    "onCommand:arch4.removeArtifacts",
+    "onView:arch4.explorer"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "arch4.init",
+        "title": "Arch4: Initialize Workspace"
+      },
+      {
+        "command": "arch4.openMap",
+        "title": "Arch4: Open Architecture Map"
+      },
+      {
+        "command": "arch4.buildArtifacts",
+        "title": "Arch4: Build Architecture Artifacts"
+      },
+      {
+        "command": "arch4.updateModel",
+        "title": "Arch4: Update Architecture Model"
+      },
+      {
+        "command": "arch4.removeArtifacts",
+        "title": "Arch4: Remove Workspace Artifacts"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "arch4.explorer",
+          "name": "Arch4"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node ../../scripts/bundle-extension-host.mjs && vite build && node ../../scripts/bundle-extension-cli.mjs",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests --exclude '**/dist/**'"
+  },
+  "dependencies": {
+    "@arch4/core": "workspace:*",
+    "@arch4/viewer": "workspace:*",
+    "@vitejs/plugin-react": "^5.1.1",
+    "vite": "^7.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/vscode": "^1.95.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.7"
+  }
+}

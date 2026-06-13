@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "entityId": "openVsx",
+  "owners": [],
+  "paths": [
+    "docs/openvsx-release.md",
+    ".github/workflows/**"
+  ],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

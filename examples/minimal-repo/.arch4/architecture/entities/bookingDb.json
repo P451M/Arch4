@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "bookingDb",
+  "paths": ["infra/booking-db.md"],
+  "owners": [],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

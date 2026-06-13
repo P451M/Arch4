@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Layout",
+  "owners": ["Maintainer"],
+  "paths": ["packages/layout/**"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

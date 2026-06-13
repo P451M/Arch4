@@ -1,0 +1,266 @@
+{
+  "id": "Arch4CliComponents",
+  "name": "Arch4CliComponents",
+  "type": "component",
+  "subjectId": "19",
+  "subjectEntityId": "arch4.arch4Cli",
+  "direction": "RIGHT",
+  "nodes": [
+    {
+      "id": "8",
+      "entityId": "git",
+      "type": "softwareSystem",
+      "name": "Git",
+      "description": "Source-control history used for architecture indexing and contributor evidence.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "External Editor, Marketplace, and Tooling",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1438,
+        "y": 1295,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "9",
+      "entityId": "targetWorkspace",
+      "type": "softwareSystem",
+      "name": "Target Workspace",
+      "description": "Repository where Arch4 is installed and whose architecture DSL, entities, and source files are modeled.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "Modeled Repository",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1438,
+        "y": 827,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "14",
+      "entityId": "arch4.arch4Renderer",
+      "type": "container",
+      "name": "Arch4 Renderer",
+      "description": "Structurizr export normalization, layout application, and rendered view output.",
+      "technology": "TypeScript",
+      "parentId": "10",
+      "parentEntityId": "arch4",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "layout": {
+        "x": 334,
+        "y": 1474,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "20",
+      "entityId": "arch4.arch4Cli.cliCommands",
+      "type": "component",
+      "name": "CLI Commands",
+      "description": "Command routing and workspace artifact orchestration.",
+      "technology": "TypeScript",
+      "parentId": "19",
+      "parentEntityId": "arch4.arch4Cli",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "layout": {
+        "x": 168,
+        "y": 632,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "21",
+      "entityId": "arch4.arch4Cli.cliIndexer",
+      "type": "component",
+      "name": "CLI Indexer",
+      "description": "Builds architecture index and context markdown from rendered views and entity metadata.",
+      "technology": "TypeScript",
+      "parentId": "19",
+      "parentEntityId": "arch4.arch4Cli",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "layout": {
+        "x": 757,
+        "y": 893,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "22",
+      "entityId": "arch4.arch4Cli.cliContext",
+      "type": "component",
+      "name": "CLI Context",
+      "description": "Maps changed files to architecture elements and renders compact context.",
+      "technology": "TypeScript",
+      "parentId": "19",
+      "parentEntityId": "arch4.arch4Cli",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "layout": {
+        "x": 728,
+        "y": 552,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "23",
+      "entityId": "arch4.arch4Cli.cliRuntime",
+      "type": "component",
+      "name": "CLI Runtime",
+      "description": "Resolves bundled Java, Structurizr CLI, and platform runtime manifests.",
+      "technology": "TypeScript",
+      "parentId": "19",
+      "parentEntityId": "arch4.arch4Cli",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "layout": {
+        "x": 744,
+        "y": 226,
+        "width": 260,
+        "height": 140
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "55",
+      "source": "14",
+      "target": "9",
+      "label": "Reads workspace.dsl from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "59",
+      "source": "20",
+      "target": "23",
+      "label": "Resolves bundled runtime through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "60",
+      "source": "20",
+      "target": "14",
+      "label": "Calls render pipeline in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "61",
+      "source": "20",
+      "target": "21",
+      "label": "Builds architecture index through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "62",
+      "source": "20",
+      "target": "22",
+      "label": "Renders context markdown through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "63",
+      "source": "21",
+      "target": "8",
+      "label": "Reads commit history from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "64",
+      "source": "21",
+      "target": "9",
+      "label": "Scans repository files in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "65",
+      "source": "22",
+      "target": "9",
+      "label": "Matches changed files against path globs in",
+      "tags": [
+        "Relationship"
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "container-boundary-19",
+      "type": "container",
+      "label": "Arch4 CLI",
+      "elementId": "19",
+      "entityId": "arch4.arch4Cli",
+      "children": [
+        "20",
+        "21",
+        "22",
+        "23"
+      ],
+      "layout": {
+        "x": 80,
+        "y": 144,
+        "width": 1025,
+        "height": 965
+      }
+    }
+  ],
+  "legend": [
+    {
+      "id": "component",
+      "kind": "element",
+      "label": "Component"
+    },
+    {
+      "id": "container",
+      "kind": "element",
+      "label": "Container"
+    },
+    {
+      "id": "softwareSystem",
+      "kind": "element",
+      "label": "SoftwareSystem"
+    }
+  ],
+  "bounds": {
+    "width": 1778,
+    "height": 1694
+  }
+}

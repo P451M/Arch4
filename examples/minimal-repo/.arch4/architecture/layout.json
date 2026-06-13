@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "views": {
+    "BookTripFlow": {
+      "direction": "DOWN"
+    },
+    "TravelBookingSystemContext": {
+      "direction": "DOWN"
+    },
+    "TravelBookingContainers": {
+      "direction": "DOWN"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "name": "travel-booking-recovery-example",
+  "description": "Richer travel booking recovery fixture for Arch4 Cursor rendering validation.",
+  "createdAt": "1970-01-01T00:00:00.000Z",
+  "source": {
+    "dsl": "workspace.dsl",
+    "entitiesDir": "entities",
+    "buildDir": "build"
+  },
+  "tools": {
+    "arch4": "0.1.0"
+  }
+}

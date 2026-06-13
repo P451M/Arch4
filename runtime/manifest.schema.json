@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arch4.dev/schemas/runtime-manifest.schema.json",
+  "title": "Arch4 Runtime Manifest",
+  "type": "object",
+  "required": ["schemaVersion", "platform", "tools"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "platform": {
+      "type": "object",
+      "required": ["os", "arch"],
+      "properties": {
+        "os": { "enum": ["darwin", "linux", "win32"] },
+        "arch": { "enum": ["arm64", "x64"] }
+      },
+      "additionalProperties": false
+    },
+    "tools": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "version",
+          "license",
+          "url",
+          "sha256",
+          "relativeExecutable"
+        ],
+        "properties": {
+          "name": { "enum": ["java", "structurizr"] },
+          "version": { "type": "string", "minLength": 1 },
+          "license": { "type": "string", "minLength": 1 },
+          "notice": { "type": "string" },
+          "url": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "archivePath": { "type": "string" },
+          "kind": { "type": "string" },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "url", "sha256", "archivePath"],
+              "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "url": { "type": "string", "minLength": 1 },
+                "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+                "archivePath": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "relativeExecutable": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

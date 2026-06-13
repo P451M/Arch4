@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "entityId": "supportConsole",
+  "paths": ["src/support-console/**/*"],
+  "owners": [],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

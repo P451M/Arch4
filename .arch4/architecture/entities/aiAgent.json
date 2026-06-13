@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "entityId": "aiAgent",
+  "owners": [],
+  "paths": [
+    ".cursor/commands/**",
+    ".cursor/skills/**"
+  ],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

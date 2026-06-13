@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.2.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm setup:runtime
+      - run: pnpm build
+      - run: pnpm check
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm test
+      - run: pnpm smoke
+      - run: pnpm verify:runtime
+      - run: pnpm audit --prod
+      - run: pnpm package:extension -- --platform linux-x64
+      - name: Ensure generated artifacts stay out of git
+        run: |
+          git status --short
+          test -z "$(git status --short)"

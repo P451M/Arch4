@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Extension.extensionHost",
+  "owners": ["Maintainer"],
+  "paths": [
+    "packages/cursor-extension/src/extension.ts",
+    "packages/cursor-extension/src/workspace-json.ts"
+  ],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {}
+}

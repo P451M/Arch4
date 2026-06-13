@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4",
+  "owners": ["Maintainer"],
+  "paths": [
+    "packages/**",
+    "docs/**",
+    "scripts/**",
+    ".arch4/**"
+  ],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {
+    "modelingConvention": "Internal npm packages are modeled as containers because no stronger runtime deployment boundary is evidenced in this monorepo."
+  }
+}

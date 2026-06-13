@@ -1,0 +1,1347 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "1970-01-01T00:00:00.000Z",
+  "projectRoot": "/Users/paul/Repos/Arch4/arch4/examples/minimal-repo",
+  "elements": [
+    {
+      "entityId": "airlinePartner",
+      "name": "Airline Partner APIs",
+      "type": "softwareSystem",
+      "description": "Flight search, seat hold, ticket confirmation, and cancellation contracts.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [],
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers",
+        "TravelBookingSystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/airlinePartner.md"
+    },
+    {
+      "entityId": "analyticsExportWorker",
+      "name": "Analytics Export Worker",
+      "type": "container",
+      "description": "Publishes curated booking and partner reliability events to analytics.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "src/workers/analytics-export-worker.ts"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/analyticsExportWorker.md"
+    },
+    {
+      "entityId": "analyticsExportWorkerInstance",
+      "name": "Analytics Export Worker",
+      "type": "containerInstance",
+      "description": "Publishes curated booking and partner reliability events to analytics.",
+      "tags": [
+        "Container Instance"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/analyticsExportWorkerInstance.md"
+    },
+    {
+      "entityId": "analyticsWarehouse",
+      "name": "Analytics Warehouse",
+      "type": "softwareSystem",
+      "description": "Downstream reporting for booking funnel, partner reliability, and support metrics.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingContainers",
+        "TravelBookingSystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/analyticsWarehouse.md"
+    },
+    {
+      "entityId": "bookingApi",
+      "name": "Booking API",
+      "type": "container",
+      "description": "Coordinates booking lifecycle workflows and exposes customer and support APIs.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "src/booking-api/**/*"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/bookingApi.md"
+    },
+    {
+      "entityId": "bookingApiInstance",
+      "name": "Booking API",
+      "type": "containerInstance",
+      "description": "Coordinates booking lifecycle workflows and exposes customer and support APIs.",
+      "tags": [
+        "Container Instance"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/bookingApiInstance.md"
+    },
+    {
+      "entityId": "bookingDb",
+      "name": "Booking DB",
+      "type": "database",
+      "description": "Stores bookings, travelers, partner confirmations, itinerary state, and cancellation state.",
+      "tags": [
+        "Element",
+        "Container",
+        "Database"
+      ],
+      "paths": [
+        "infra/booking-db.md"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookTripFlow",
+        "BookingApiComponents",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/bookingDb.md"
+    },
+    {
+      "entityId": "bookingDbRuntime",
+      "name": "Booking DB",
+      "type": "infrastructureNode",
+      "description": "Managed production booking database.",
+      "tags": [
+        "Element",
+        "Infrastructure Node"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/bookingDbRuntime.md"
+    },
+    {
+      "entityId": "bookingOrchestrator",
+      "name": "Booking Orchestrator",
+      "type": "component",
+      "description": "Creates booking records, coordinates partner confirmation, and emits booking lifecycle events.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "src/booking-api/orchestrator.ts"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookingApiComponents"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/bookingOrchestrator.md"
+    },
+    {
+      "entityId": "cancellationHandler",
+      "name": "Cancellation Handler",
+      "type": "component",
+      "description": "Applies cancellation policy, starts refund workflow, and records customer-visible cancellation state.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "src/booking-api/cancellation.ts"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookingApiComponents"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/cancellationHandler.md"
+    },
+    {
+      "entityId": "edgeGateway",
+      "name": "Edge Gateway",
+      "type": "infrastructureNode",
+      "description": "Terminates TLS and routes public traffic to the platform.",
+      "tags": [
+        "Element",
+        "Infrastructure Node"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/edgeGateway.md"
+    },
+    {
+      "entityId": "eventBus",
+      "name": "Event Bus",
+      "type": "container",
+      "description": "Carries booking lifecycle, payment, notification, and analytics events.",
+      "tags": [
+        "Element",
+        "Container",
+        "Queue"
+      ],
+      "paths": [
+        "infra/event-bus.md"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/eventBus.md"
+    },
+    {
+      "entityId": "eventBusRuntime",
+      "name": "Event Bus",
+      "type": "infrastructureNode",
+      "description": "Managed event streaming infrastructure.",
+      "tags": [
+        "Element",
+        "Infrastructure Node"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/eventBusRuntime.md"
+    },
+    {
+      "entityId": "hotelPartner",
+      "name": "Hotel Partner APIs",
+      "type": "softwareSystem",
+      "description": "Hotel availability, room reservation, confirmation, and cancellation contracts.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [],
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers",
+        "TravelBookingSystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/hotelPartner.md"
+    },
+    {
+      "entityId": "identity",
+      "name": "Identity Provider",
+      "type": "softwareSystem",
+      "description": "Customer and employee sign-in, session policy, and support-agent authorization.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingContainers",
+        "TravelBookingSystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/identity.md"
+    },
+    {
+      "entityId": "inventoryAdapter",
+      "name": "Inventory Adapter",
+      "type": "container",
+      "description": "Connects search and booking flows to airline and hotel partner APIs.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "src/inventory-adapter/**/*"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookTripFlow",
+        "BookingApiComponents",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/inventoryAdapter.md"
+    },
+    {
+      "entityId": "inventoryAdapterInstance",
+      "name": "Inventory Adapter",
+      "type": "containerInstance",
+      "description": "Connects search and booking flows to airline and hotel partner APIs.",
+      "tags": [
+        "Container Instance"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/inventoryAdapterInstance.md"
+    },
+    {
+      "entityId": "notificationProvider",
+      "name": "Notification Provider",
+      "type": "softwareSystem",
+      "description": "Email, SMS, and push delivery for booking lifecycle updates.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [],
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers",
+        "TravelBookingSystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/notificationProvider.md"
+    },
+    {
+      "entityId": "notificationWorker",
+      "name": "Notification Worker",
+      "type": "container",
+      "description": "Sends booking confirmations, cancellation receipts, and support escalation updates.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "src/workers/notification-worker.ts"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookTripFlow",
+        "BookingApiComponents",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/notificationWorker.md"
+    },
+    {
+      "entityId": "notificationWorkerInstance",
+      "name": "Notification Worker",
+      "type": "containerInstance",
+      "description": "Sends booking confirmations, cancellation receipts, and support escalation updates.",
+      "tags": [
+        "Container Instance"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/notificationWorkerInstance.md"
+    },
+    {
+      "entityId": "partnerConfirmationAdapter",
+      "name": "Partner Confirmation Adapter",
+      "type": "component",
+      "description": "Normalizes airline and hotel confirmation outcomes into booking decisions.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "src/booking-api/partner-confirmation.ts"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookingApiComponents"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/partnerConfirmationAdapter.md"
+    },
+    {
+      "entityId": "paymentProvider",
+      "name": "Payment Provider",
+      "type": "softwareSystem",
+      "description": "External card authorization, capture, refunds, and payment dispute signals.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [],
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers",
+        "TravelBookingSystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/paymentProvider.md"
+    },
+    {
+      "entityId": "paymentService",
+      "name": "Payment Service",
+      "type": "container",
+      "description": "Owns authorization, capture, refund initiation, and payment status projection.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "src/payment-service/**/*"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookTripFlow",
+        "BookingApiComponents",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/paymentService.md"
+    },
+    {
+      "entityId": "paymentServiceInstance",
+      "name": "Payment Service",
+      "type": "containerInstance",
+      "description": "Owns authorization, capture, refund initiation, and payment status projection.",
+      "tags": [
+        "Container Instance"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/paymentServiceInstance.md"
+    },
+    {
+      "entityId": "productOwner",
+      "name": "Booking Product Owner",
+      "type": "person",
+      "description": "Owns booking journey priorities, customer outcomes, and roadmap tradeoffs.",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingSystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/productOwner.md"
+    },
+    {
+      "entityId": "quoteValidator",
+      "name": "Quote Validator",
+      "type": "component",
+      "description": "Checks selected offer, price, availability window, and traveler constraints.",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "paths": [
+        "src/booking-api/quote-validator.ts"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookingApiComponents"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/quoteValidator.md"
+    },
+    {
+      "entityId": "searchCache",
+      "name": "Search Cache",
+      "type": "database",
+      "description": "Stores short-lived search offers and partner availability snapshots.",
+      "tags": [
+        "Element",
+        "Container",
+        "Database"
+      ],
+      "paths": [
+        "infra/search-cache.md"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookTripFlow",
+        "BookingApiComponents",
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/searchCache.md"
+    },
+    {
+      "entityId": "searchCacheRuntime",
+      "name": "Search Cache",
+      "type": "infrastructureNode",
+      "description": "Managed cache for search offer snapshots.",
+      "tags": [
+        "Element",
+        "Infrastructure Node"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/searchCacheRuntime.md"
+    },
+    {
+      "entityId": "searchService",
+      "name": "Search Service",
+      "type": "container",
+      "description": "Runs trip search, caches offer summaries, and shields users from partner latency.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "src/search-service/**/*"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookTripFlow",
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/searchService.md"
+    },
+    {
+      "entityId": "searchServiceInstance",
+      "name": "Search Service",
+      "type": "containerInstance",
+      "description": "Runs trip search, caches offer summaries, and shields users from partner latency.",
+      "tags": [
+        "Container Instance"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/searchServiceInstance.md"
+    },
+    {
+      "entityId": "supportAgent",
+      "name": "Support Agent",
+      "type": "person",
+      "description": "Customer support specialist resolving booking, payment, and partner confirmation issues.",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingContainers",
+        "TravelBookingSystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/supportAgent.md"
+    },
+    {
+      "entityId": "supportConsole",
+      "name": "Support Console",
+      "type": "container",
+      "description": "Internal agent UI for booking lookup, manual support actions, and customer communication.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "src/support-console/**/*"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/supportConsole.md"
+    },
+    {
+      "entityId": "supportConsoleInstance",
+      "name": "Support Console",
+      "type": "containerInstance",
+      "description": "Internal agent UI for booking lookup, manual support actions, and customer communication.",
+      "tags": [
+        "Container Instance"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/supportConsoleInstance.md"
+    },
+    {
+      "entityId": "travel",
+      "name": "Travel Booking Platform",
+      "type": "softwareSystem",
+      "description": "Lets travelers search, book, pay for, change, cancel, and get support for trips.",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingSystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/travel.md"
+    },
+    {
+      "entityId": "traveler",
+      "name": "Traveler",
+      "type": "person",
+      "description": "Customer searching, booking, changing, or cancelling trips.",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "paths": [],
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers",
+        "TravelBookingSystemContext"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/traveler.md"
+    },
+    {
+      "entityId": "webApp",
+      "name": "Web App",
+      "type": "container",
+      "description": "Customer-facing travel search, checkout, itinerary, and cancellation experience.",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "paths": [
+        "src/web/**/*"
+      ],
+      "owners": [],
+      "confidence": "high",
+      "openQuestions": [],
+      "notes": {},
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/webApp.md"
+    },
+    {
+      "entityId": "webAppInstance",
+      "name": "Web App",
+      "type": "containerInstance",
+      "description": "Customer-facing travel search, checkout, itinerary, and cancellation experience.",
+      "tags": [
+        "Container Instance"
+      ],
+      "paths": [],
+      "views": [
+        "TravelBookingProductionDeployment"
+      ],
+      "contributors": [],
+      "recentCommits": [],
+      "contextPath": ".arch4/architecture/build/context/webAppInstance.md"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "42",
+      "sourceEntityId": "edgeGateway",
+      "targetEntityId": "webAppInstance",
+      "label": "Routes customer traffic",
+      "views": [
+        "TravelBookingProductionDeployment"
+      ]
+    },
+    {
+      "id": "43",
+      "sourceEntityId": "edgeGateway",
+      "targetEntityId": "supportConsoleInstance",
+      "label": "Routes support traffic",
+      "views": [
+        "TravelBookingProductionDeployment"
+      ]
+    },
+    {
+      "id": "44",
+      "sourceEntityId": "searchServiceInstance",
+      "targetEntityId": "searchCacheRuntime",
+      "label": "Reads and writes offers",
+      "views": [
+        "TravelBookingProductionDeployment"
+      ]
+    },
+    {
+      "id": "45",
+      "sourceEntityId": "bookingApiInstance",
+      "targetEntityId": "bookingDbRuntime",
+      "label": "Reads and writes booking state",
+      "views": [
+        "TravelBookingProductionDeployment"
+      ]
+    },
+    {
+      "id": "46",
+      "sourceEntityId": "bookingApiInstance",
+      "targetEntityId": "eventBusRuntime",
+      "label": "Publishes lifecycle events",
+      "views": [
+        "TravelBookingProductionDeployment"
+      ]
+    },
+    {
+      "id": "47",
+      "sourceEntityId": "notificationWorkerInstance",
+      "targetEntityId": "eventBusRuntime",
+      "label": "Consumes lifecycle events",
+      "views": [
+        "TravelBookingProductionDeployment"
+      ]
+    },
+    {
+      "id": "48",
+      "sourceEntityId": "analyticsExportWorkerInstance",
+      "targetEntityId": "eventBusRuntime",
+      "label": "Consumes analytics events",
+      "views": [
+        "TravelBookingProductionDeployment"
+      ]
+    },
+    {
+      "id": "49",
+      "sourceEntityId": "traveler",
+      "targetEntityId": "webApp",
+      "label": "Searches, books, changes, and cancels trips",
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "50",
+      "sourceEntityId": "traveler",
+      "targetEntityId": "travel",
+      "label": "Searches, books, changes, and cancels trips",
+      "views": [
+        "TravelBookingSystemContext"
+      ]
+    },
+    {
+      "id": "51",
+      "sourceEntityId": "supportAgent",
+      "targetEntityId": "supportConsole",
+      "label": "Reviews bookings and handles support cases",
+      "views": [
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "52",
+      "sourceEntityId": "supportAgent",
+      "targetEntityId": "travel",
+      "label": "Reviews bookings and handles support cases",
+      "views": [
+        "TravelBookingSystemContext"
+      ]
+    },
+    {
+      "id": "53",
+      "sourceEntityId": "productOwner",
+      "targetEntityId": "travel",
+      "label": "Reviews recovered booking journey and product risks",
+      "views": [
+        "TravelBookingSystemContext"
+      ]
+    },
+    {
+      "id": "54",
+      "sourceEntityId": "webApp",
+      "targetEntityId": "identity",
+      "label": "Authenticates traveler",
+      "views": [
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "55",
+      "sourceEntityId": "travel",
+      "targetEntityId": "identity",
+      "label": "Authenticates traveler",
+      "views": [
+        "TravelBookingSystemContext"
+      ]
+    },
+    {
+      "id": "56",
+      "sourceEntityId": "supportConsole",
+      "targetEntityId": "identity",
+      "label": "Authorizes support access",
+      "views": [
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "57",
+      "sourceEntityId": "webApp",
+      "targetEntityId": "bookingApi",
+      "label": "Creates, reads, changes, and cancels bookings",
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "58",
+      "sourceEntityId": "webApp",
+      "targetEntityId": "searchService",
+      "label": "Searches flights and hotels",
+      "views": [
+        "BookTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "59",
+      "sourceEntityId": "supportConsole",
+      "targetEntityId": "bookingApi",
+      "label": "Looks up bookings and requests support actions",
+      "views": [
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "60",
+      "sourceEntityId": "searchService",
+      "targetEntityId": "searchCache",
+      "label": "Reads and writes short-lived offers",
+      "views": [
+        "BookTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "61",
+      "sourceEntityId": "searchService",
+      "targetEntityId": "inventoryAdapter",
+      "label": "Requests live partner availability",
+      "views": [
+        "BookTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "62",
+      "sourceEntityId": "bookingApi",
+      "targetEntityId": "bookingDb",
+      "label": "Reads and writes booking lifecycle state",
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "63",
+      "sourceEntityId": "bookingApi",
+      "targetEntityId": "eventBus",
+      "label": "Publishes booking lifecycle events",
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "64",
+      "sourceEntityId": "bookingApi",
+      "targetEntityId": "paymentService",
+      "label": "Requests authorization, capture, and refunds",
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "65",
+      "sourceEntityId": "bookingApi",
+      "targetEntityId": "inventoryAdapter",
+      "label": "Confirms or cancels partner reservations",
+      "views": [
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "66",
+      "sourceEntityId": "paymentService",
+      "targetEntityId": "paymentProvider",
+      "label": "Authorizes, captures, and refunds payments",
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "67",
+      "sourceEntityId": "travel",
+      "targetEntityId": "paymentProvider",
+      "label": "Authorizes, captures, and refunds payments",
+      "views": [
+        "TravelBookingSystemContext"
+      ]
+    },
+    {
+      "id": "68",
+      "sourceEntityId": "inventoryAdapter",
+      "targetEntityId": "airlinePartner",
+      "label": "Searches, holds, confirms, and cancels flights",
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "69",
+      "sourceEntityId": "travel",
+      "targetEntityId": "airlinePartner",
+      "label": "Searches, holds, confirms, and cancels flights",
+      "views": [
+        "TravelBookingSystemContext"
+      ]
+    },
+    {
+      "id": "70",
+      "sourceEntityId": "inventoryAdapter",
+      "targetEntityId": "hotelPartner",
+      "label": "Searches, reserves, confirms, and cancels rooms",
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "71",
+      "sourceEntityId": "travel",
+      "targetEntityId": "hotelPartner",
+      "label": "Searches, reserves, confirms, and cancels rooms",
+      "views": [
+        "TravelBookingSystemContext"
+      ]
+    },
+    {
+      "id": "72",
+      "sourceEntityId": "notificationWorker",
+      "targetEntityId": "eventBus",
+      "label": "Consumes booking and payment events",
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "73",
+      "sourceEntityId": "notificationWorker",
+      "targetEntityId": "notificationProvider",
+      "label": "Sends customer notifications",
+      "views": [
+        "BookTripFlow",
+        "CancelTripFlow",
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "74",
+      "sourceEntityId": "travel",
+      "targetEntityId": "notificationProvider",
+      "label": "Sends customer notifications",
+      "views": [
+        "TravelBookingSystemContext"
+      ]
+    },
+    {
+      "id": "75",
+      "sourceEntityId": "analyticsExportWorker",
+      "targetEntityId": "eventBus",
+      "label": "Consumes lifecycle events",
+      "views": [
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "76",
+      "sourceEntityId": "analyticsExportWorker",
+      "targetEntityId": "analyticsWarehouse",
+      "label": "Publishes curated booking facts",
+      "views": [
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "77",
+      "sourceEntityId": "travel",
+      "targetEntityId": "analyticsWarehouse",
+      "label": "Publishes curated booking facts",
+      "views": [
+        "TravelBookingSystemContext"
+      ]
+    },
+    {
+      "id": "78",
+      "sourceEntityId": "quoteValidator",
+      "targetEntityId": "searchCache",
+      "label": "Verifies selected offer freshness",
+      "views": [
+        "BookingApiComponents"
+      ]
+    },
+    {
+      "id": "79",
+      "sourceEntityId": "bookingApi",
+      "targetEntityId": "searchCache",
+      "label": "Verifies selected offer freshness",
+      "views": [
+        "TravelBookingContainers"
+      ]
+    },
+    {
+      "id": "80",
+      "sourceEntityId": "bookingOrchestrator",
+      "targetEntityId": "bookingDb",
+      "label": "Creates and updates booking state",
+      "views": [
+        "BookingApiComponents"
+      ]
+    },
+    {
+      "id": "81",
+      "sourceEntityId": "bookingOrchestrator",
+      "targetEntityId": "partnerConfirmationAdapter",
+      "label": "Requests partner confirmation",
+      "views": [
+        "BookingApiComponents"
+      ]
+    },
+    {
+      "id": "82",
+      "sourceEntityId": "partnerConfirmationAdapter",
+      "targetEntityId": "inventoryAdapter",
+      "label": "Normalizes partner outcomes",
+      "views": [
+        "BookingApiComponents"
+      ]
+    },
+    {
+      "id": "83",
+      "sourceEntityId": "cancellationHandler",
+      "targetEntityId": "bookingDb",
+      "label": "Records cancellation state",
+      "views": [
+        "BookingApiComponents"
+      ]
+    },
+    {
+      "id": "84",
+      "sourceEntityId": "cancellationHandler",
+      "targetEntityId": "paymentService",
+      "label": "Starts refund workflow",
+      "views": [
+        "BookingApiComponents"
+      ]
+    },
+    {
+      "id": "85",
+      "sourceEntityId": "cancellationHandler",
+      "targetEntityId": "notificationWorker",
+      "label": "Requests cancellation notification",
+      "views": [
+        "BookingApiComponents"
+      ]
+    },
+    {
+      "id": "86",
+      "sourceEntityId": "bookingApi",
+      "targetEntityId": "notificationWorker",
+      "label": "Requests cancellation notification",
+      "views": [
+        "TravelBookingContainers"
+      ]
+    }
+  ],
+  "views": [
+    {
+      "id": "BookingApiComponents",
+      "name": "BookingApiComponents",
+      "type": "component",
+      "subjectEntityId": "bookingApi",
+      "dataPath": ".arch4/architecture/build/views/BookingApiComponents.json"
+    },
+    {
+      "id": "BookTripFlow",
+      "name": "BookTripFlow",
+      "type": "dynamic",
+      "subjectEntityId": "travel",
+      "dataPath": ".arch4/architecture/build/views/BookTripFlow.json"
+    },
+    {
+      "id": "CancelTripFlow",
+      "name": "CancelTripFlow",
+      "type": "dynamic",
+      "subjectEntityId": "travel",
+      "dataPath": ".arch4/architecture/build/views/CancelTripFlow.json"
+    },
+    {
+      "id": "TravelBookingContainers",
+      "name": "TravelBookingContainers",
+      "type": "container",
+      "subjectEntityId": "travel",
+      "dataPath": ".arch4/architecture/build/views/TravelBookingContainers.json"
+    },
+    {
+      "id": "TravelBookingProductionDeployment",
+      "name": "TravelBookingProductionDeployment",
+      "type": "deployment",
+      "subjectEntityId": "travel",
+      "dataPath": ".arch4/architecture/build/views/TravelBookingProductionDeployment.json"
+    },
+    {
+      "id": "TravelBookingSystemContext",
+      "name": "TravelBookingSystemContext",
+      "type": "system_context",
+      "subjectEntityId": "travel",
+      "dataPath": ".arch4/architecture/build/views/TravelBookingSystemContext.json"
+    }
+  ],
+  "diagnostics": [
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity traveler has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity airlinePartner has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity hotelPartner has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity paymentProvider has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity notificationProvider has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity supportAgent has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity identity has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity analyticsWarehouse has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity edgeGateway has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity webAppInstance has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity supportConsoleInstance has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity bookingApiInstance has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity searchServiceInstance has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity inventoryAdapterInstance has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity paymentServiceInstance has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity notificationWorkerInstance has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity analyticsExportWorkerInstance has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity bookingDbRuntime has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity searchCacheRuntime has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity eventBusRuntime has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity productOwner has no path mapping."
+    },
+    {
+      "level": "warning",
+      "code": "arch4.index.element.unmapped",
+      "message": "Architecture entity travel has no path mapping."
+    }
+  ]
+}

@@ -1,0 +1,588 @@
+{
+  "id": "Arch4Containers",
+  "name": "Arch4Containers",
+  "type": "container",
+  "subjectId": "10",
+  "subjectEntityId": "arch4",
+  "direction": "DOWN",
+  "nodes": [
+    {
+      "id": "1",
+      "entityId": "developer",
+      "type": "person",
+      "name": "Developer",
+      "description": "Develops and maintains repository code in Cursor.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "Arch4 Users and Maintainers",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "layout": {
+        "x": 162,
+        "y": 156,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "2",
+      "entityId": "maintainer",
+      "type": "person",
+      "name": "Maintainer",
+      "description": "Builds, packages, and publishes Arch4 releases.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "Arch4 Users and Maintainers",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "layout": {
+        "x": 3072,
+        "y": 156,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "3",
+      "entityId": "aiAgent",
+      "type": "person",
+      "name": "AI Agent",
+      "description": "Updates architecture models and retrieves architecture context during agent workflows.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "Arch4 Users and Maintainers",
+      "tags": [
+        "Element",
+        "Person"
+      ],
+      "layout": {
+        "x": 1382,
+        "y": 156,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "4",
+      "entityId": "cursor",
+      "type": "softwareSystem",
+      "name": "Cursor",
+      "description": "Editor platform that hosts the Arch4 extension, commands, tree view, and architecture map webview.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "External Editor, Marketplace, and Tooling",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 852,
+        "y": 3326,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "6",
+      "entityId": "structurizrCli",
+      "type": "softwareSystem",
+      "name": "Structurizr CLI",
+      "description": "Validates Structurizr DSL workspaces and exports workspace JSON.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "External Editor, Marketplace, and Tooling",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1362,
+        "y": 3326,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "7",
+      "entityId": "javaRuntime",
+      "type": "softwareSystem",
+      "name": "Java Runtime",
+      "description": "Embedded JVM used to run the bundled Structurizr CLI.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "External Editor, Marketplace, and Tooling",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1872,
+        "y": 3326,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "8",
+      "entityId": "git",
+      "type": "softwareSystem",
+      "name": "Git",
+      "description": "Source-control history used for architecture indexing and contributor evidence.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "External Editor, Marketplace, and Tooling",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 2382,
+        "y": 3326,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "9",
+      "entityId": "targetWorkspace",
+      "type": "softwareSystem",
+      "name": "Target Workspace",
+      "description": "Repository where Arch4 is installed and whose architecture DSL, entities, and source files are modeled.",
+      "parentId": null,
+      "parentEntityId": null,
+      "group": "Modeled Repository",
+      "tags": [
+        "Element",
+        "Software System"
+      ],
+      "layout": {
+        "x": 1617,
+        "y": 3684,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "11",
+      "entityId": "arch4.arch4Core",
+      "type": "container",
+      "name": "Arch4 Core",
+      "description": "Shared contracts, workspace layout, JSON helpers, and validation.",
+      "technology": "TypeScript",
+      "parentId": "10",
+      "parentEntityId": "arch4",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "layout": {
+        "x": 2139,
+        "y": 2956,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "12",
+      "entityId": "arch4.arch4Layout",
+      "type": "container",
+      "name": "Arch4 Layout",
+      "description": "Diagram layout engine using dagre graph layout.",
+      "technology": "TypeScript",
+      "parentId": "10",
+      "parentEntityId": "arch4",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "layout": {
+        "x": 1804,
+        "y": 2366,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "13",
+      "entityId": "arch4.arch4Viewer",
+      "type": "container",
+      "name": "Arch4 Viewer",
+      "description": "React diagram viewer for interactive architecture maps.",
+      "technology": "TypeScript / React",
+      "parentId": "10",
+      "parentEntityId": "arch4",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "layout": {
+        "x": 1951,
+        "y": 1776,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "14",
+      "entityId": "arch4.arch4Renderer",
+      "type": "container",
+      "name": "Arch4 Renderer",
+      "description": "Structurizr export normalization, layout application, and rendered view output.",
+      "technology": "TypeScript",
+      "parentId": "10",
+      "parentEntityId": "arch4",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "layout": {
+        "x": 1094,
+        "y": 1776,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "19",
+      "entityId": "arch4.arch4Cli",
+      "type": "container",
+      "name": "Arch4 CLI",
+      "description": "Terminal CLI for init, validate, render, index, context, and doctor commands.",
+      "technology": "TypeScript / Node.js",
+      "parentId": "10",
+      "parentEntityId": "arch4",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "layout": {
+        "x": 1241,
+        "y": 1336,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "24",
+      "entityId": "arch4.arch4Extension",
+      "type": "container",
+      "name": "Arch4 Cursor Extension",
+      "description": "Cursor extension host, explorer tree, commands, and architecture map webview.",
+      "technology": "TypeScript / VS Code Extension API",
+      "parentId": "10",
+      "parentEntityId": "arch4",
+      "tags": [
+        "Element",
+        "Container"
+      ],
+      "layout": {
+        "x": 1591,
+        "y": 896,
+        "width": 260,
+        "height": 140
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "28",
+      "source": "1",
+      "target": "4",
+      "label": "Develops repositories in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "30",
+      "source": "1",
+      "target": "9",
+      "label": "Develops and maintains code in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "40",
+      "source": "1",
+      "target": "24",
+      "label": "Runs Arch4 commands and views maps in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "41",
+      "source": "2",
+      "target": "24",
+      "label": "Packages and tests extension through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "32",
+      "source": "3",
+      "target": "4",
+      "label": "Runs agent workflows in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "42",
+      "source": "3",
+      "target": "24",
+      "label": "Triggers architecture update workflows through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "58",
+      "source": "12",
+      "target": "11",
+      "label": "Uses diagram layout types from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "56",
+      "source": "13",
+      "target": "12",
+      "label": "Uses layout helpers from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "57",
+      "source": "13",
+      "target": "11",
+      "label": "Uses diagram types from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "51",
+      "source": "14",
+      "target": "12",
+      "label": "Applies diagram layout through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "52",
+      "source": "14",
+      "target": "11",
+      "label": "Uses shared diagram types from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "53",
+      "source": "14",
+      "target": "6",
+      "label": "Validates and exports workspace DSL with",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "54",
+      "source": "14",
+      "target": "7",
+      "label": "Runs Structurizr through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "55",
+      "source": "14",
+      "target": "9",
+      "label": "Reads workspace.dsl from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "47",
+      "source": "19",
+      "target": "14",
+      "label": "Renders workspace DSL through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "48",
+      "source": "19",
+      "target": "11",
+      "label": "Uses shared contracts and layout helpers from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "49",
+      "source": "19",
+      "target": "9",
+      "label": "Reads DSL, entities, and repository files from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "50",
+      "source": "19",
+      "target": "8",
+      "label": "Collects git history from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "43",
+      "source": "24",
+      "target": "19",
+      "label": "Invokes bundled CLI through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "44",
+      "source": "24",
+      "target": "13",
+      "label": "Renders maps with",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "45",
+      "source": "24",
+      "target": "11",
+      "label": "Reads architecture paths and contracts from",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "46",
+      "source": "24",
+      "target": "4",
+      "label": "Registers commands and webview in",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "77",
+      "source": "24",
+      "target": "9",
+      "label": "Watches architecture source files in",
+      "tags": []
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "system-boundary-10",
+      "type": "softwareSystem",
+      "label": "Arch4",
+      "elementId": "10",
+      "entityId": "arch4",
+      "children": [
+        "11",
+        "12",
+        "13",
+        "14",
+        "19",
+        "24"
+      ],
+      "layout": {
+        "x": 998,
+        "y": 804,
+        "width": 1497,
+        "height": 2374
+      }
+    },
+    {
+      "id": "group-boundary-root-Arch4-Users-and-Maintainers",
+      "type": "group",
+      "label": "Arch4 Users and Maintainers",
+      "children": [
+        "1",
+        "2",
+        "3"
+      ],
+      "layout": {
+        "x": 80,
+        "y": 80,
+        "width": 3334,
+        "height": 286
+      }
+    },
+    {
+      "id": "group-boundary-root-External-Editor-Marketplace-and-Tooling",
+      "type": "group",
+      "label": "External Editor, Marketplace, and Tooling",
+      "children": [
+        "4",
+        "6",
+        "7",
+        "8"
+      ],
+      "layout": {
+        "x": 770,
+        "y": 3250,
+        "width": 1954,
+        "height": 286
+      }
+    },
+    {
+      "id": "group-boundary-root-Modeled-Repository",
+      "type": "group",
+      "label": "Modeled Repository",
+      "children": [
+        "9"
+      ],
+      "layout": {
+        "x": 1535,
+        "y": 3608,
+        "width": 424,
+        "height": 286
+      }
+    }
+  ],
+  "legend": [
+    {
+      "id": "container",
+      "kind": "element",
+      "label": "Container"
+    },
+    {
+      "id": "person",
+      "kind": "element",
+      "label": "Person"
+    },
+    {
+      "id": "softwareSystem",
+      "kind": "element",
+      "label": "SoftwareSystem"
+    }
+  ],
+  "bounds": {
+    "width": 3494,
+    "height": 3974
+  }
+}
