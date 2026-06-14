@@ -54,7 +54,7 @@ function validateRuntime(manifest) {
     const executable = path.join(bundleDir, tool.relativeExecutable);
     try {
       const args = tool.name === "java" ? ["-version"] : ["version"];
-      execFileSync(executable, args, { env, stdio: "pipe" });
+      execRuntimeTool(executable, args, env);
     } catch (error) {
       const stderr =
         error && typeof error === "object" && "stderr" in error
@@ -72,6 +72,14 @@ function validateRuntime(manifest) {
       );
     }
   }
+}
+
+function execRuntimeTool(executable, args, env) {
+  const options = { env, stdio: "pipe" };
+  if (process.platform === "win32" && /\.(bat|cmd)$/i.test(executable)) {
+    options.shell = true;
+  }
+  return execFileSync(executable, args, options);
 }
 
 function runtimeEnv(manifest) {
