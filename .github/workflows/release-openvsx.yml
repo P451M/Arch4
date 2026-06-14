@@ -71,7 +71,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - id: extension
-        run: echo "version=$(node -p \"require('./packages/cursor-extension/package.json').version\")" >> "$GITHUB_OUTPUT"
+        run: node scripts/write-extension-version-output.mjs
       - run: pnpm setup:runtime -- --platform ${{ matrix.platform }}
       - run: pnpm build
       - run: pnpm package:extension -- --platform ${{ matrix.platform }}
