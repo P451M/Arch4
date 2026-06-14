@@ -2,10 +2,7 @@
   "schemaVersion": 1,
   "entityId": "cursor",
   "owners": [],
-  "paths": [
-    "packages/cursor-extension/**",
-    "scripts/dev-cursor.mjs"
-  ],
+  "paths": ["packages/cursor-extension/**", "scripts/dev-cursor.mjs"],
   "confidence": "high",
   "openQuestions": [],
   "notes": {}

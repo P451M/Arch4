@@ -2,9 +2,7 @@
   "schemaVersion": 1,
   "entityId": "targetWorkspace",
   "owners": [],
-  "paths": [
-    "examples/minimal-repo/**"
-  ],
+  "paths": ["examples/minimal-repo/**"],
   "confidence": "medium",
   "openQuestions": [
     "Should target workspaces always be modeled as external systems, or only when Arch4 is installed outside this repository?"

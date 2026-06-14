@@ -2,10 +2,7 @@
   "schemaVersion": 1,
   "entityId": "structurizrCli",
   "owners": [],
-  "paths": [
-    "runtime/**",
-    "docs/runtime-packaging.md"
-  ],
+  "paths": ["runtime/**", "docs/runtime-packaging.md"],
   "confidence": "high",
   "openQuestions": [],
   "notes": {}

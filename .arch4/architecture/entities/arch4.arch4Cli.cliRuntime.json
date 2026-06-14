@@ -2,10 +2,7 @@
   "schemaVersion": 1,
   "entityId": "arch4.arch4Cli.cliRuntime",
   "owners": ["Maintainer"],
-  "paths": [
-    "packages/cli/src/runtime.ts",
-    "packages/cli/src/repo-files.ts"
-  ],
+  "paths": ["packages/cli/src/runtime.ts", "packages/cli/src/repo-files.ts"],
   "confidence": "high",
   "openQuestions": [],
   "notes": {}

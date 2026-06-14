@@ -2,12 +2,7 @@
   "schemaVersion": 1,
   "entityId": "arch4",
   "owners": ["Maintainer"],
-  "paths": [
-    "packages/**",
-    "docs/**",
-    "scripts/**",
-    ".arch4/**"
-  ],
+  "paths": ["packages/**", "docs/**", "scripts/**", ".arch4/**"],
   "confidence": "high",
   "openQuestions": [],
   "notes": {
