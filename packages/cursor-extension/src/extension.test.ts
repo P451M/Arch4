@@ -139,6 +139,7 @@ describe("release packaging", () => {
     expect(packageScript).toContain('from "yazl"');
     expect(packageScript).toContain("zipStagedExtension");
     expect(packageScript).toContain('"media/icon.png"');
+    expect(packageScript).toContain('"media/marketplace/arch4-demo.gif"');
     expect(packageScript).toContain("runtimeManifestErrors");
     expect(packageScript).toContain("verifyCopiedRuntime");
     expect(packageScript).not.toContain('execFileSync(\n  "zip"');

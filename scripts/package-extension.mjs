@@ -187,6 +187,7 @@ function verifyStagedExtension(targetExtensionDir, targetPlatform) {
     "THIRD_PARTY_NOTICES.md",
     "dist/extension.js",
     "media/icon.png",
+    "media/marketplace/arch4-demo.gif",
     "media/marketplace/arch4-overview.png",
     "media/webview.js",
     "media/webview.css",
