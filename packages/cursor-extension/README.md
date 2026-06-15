@@ -8,6 +8,16 @@ codebase before changing it.
 
 ![Looping Arch4 demo in Cursor showing workspace initialization, architecture model update, and interactive C4 map exploration](media/marketplace/arch4-demo-cropped.gif)
 
+## Getting Started
+
+1. Install Arch4 from Cursor's Extensions pane.
+2. Run `Arch4: Initialize Workspace` from the Command Palette.
+3. Run `Arch4: Update Architecture Model`.
+4. Run `Arch4: Open Architecture Map`.
+
+Arch4 creates repository-local architecture files and Cursor workflow helpers.
+Review generated model changes before committing them.
+
 ## Features
 
 - Initialize `.arch4/architecture/` with a Structurizr DSL workspace.
@@ -19,17 +29,9 @@ codebase before changing it.
 - Use embedded platform runtimes with no system Java, Structurizr, or Graphviz
   setup for published packages.
 
-## Getting Started
-
-1. Install Arch4 from Cursor's Extensions pane.
-2. Run `Arch4: Initialize Workspace` from the Command Palette.
-3. Run `Arch4: Update Architecture Model`.
-4. Run `Arch4: Open Architecture Map`.
-
-Arch4 creates repository-local architecture files and Cursor workflow helpers.
-Review generated model changes before committing them.
-
 ## Commands
+
+![Cursor Command Palette showing Arch4 commands](media/marketplace/arch4-command-palette.png)
 
 - `Arch4: Initialize Workspace`
 - `Arch4: Update Architecture Model`

@@ -21,13 +21,24 @@
 </p>
 
 Arch4 is a Cursor plugin that keeps C4 architecture documentation next to the
-code, generates repository-aware architecture artifacts, and opens enriched
-interactive C4/Structurizr maps directly inside Cursor.
+code, generates repository-aware Structurizr DSL artifacts, and opens enriched
+interactive C4 maps directly inside Cursor.
 
 It is designed for teams and AI-assisted development workflows that need an
 accurate architectural view before changing a system: ownership, source paths,
 relationships, confidence, notes, open questions, and generated context stay
 connected to the repository.
+
+## Why Arch4?
+
+- Keep architecture documentation close to the code it describes, with
+  repository-local C4 and Structurizr DSL artifacts.
+- Use Cursor-native commands, views, rules, and skills instead of switching to a
+  separate architecture tool.
+- Carry implementation context into the map: ownership, source paths,
+  confidence, notes, open questions, and generated development context.
+- Run packaged builds without installing system Java, Structurizr, Graphviz, or
+  `dot`; the extension uses its bundled runtime for the target platform.
 
 ## What Arch4 Does
 
@@ -55,15 +66,22 @@ Manual VSIX install for local builds:
 cursor --install-extension artifacts/arch4-0.1.0-<platform>.vsix
 ```
 
-Supported packaged platforms are `darwin-arm64`, `darwin-x64`, `linux-x64`,
-and `win32-x64`.
-
 ## Example Workspace
 
 The [minimal repository example](examples/minimal-repo/README.md) contains a
 reviewed mock travel-booking architecture with context, container, component,
 deployment, and dynamic views. It is the quickest way to inspect the rendered
 map and validate extension behavior during development.
+
+## Screenshots
+
+Command Palette access to the Arch4 workflow:
+
+![Cursor Command Palette showing Arch4 commands](packages/cursor-extension/media/marketplace/arch4-command-palette.png)
+
+Interactive architecture map with repository context and element details:
+
+![Arch4 interactive architecture map in Cursor with an element details drawer](packages/cursor-extension/media/marketplace/arch4-full-screenshot.png)
 
 ## Commands
 
@@ -115,6 +133,12 @@ an actionable diagnostic instead of falling back to tools on the user's machine.
 
 Development builds can use `pnpm setup:runtime` to download the pinned runtime
 into `runtime/bundles/<platform>/`.
+
+## Status
+
+Arch4 is early and pre-1.0. Packaged extension targets are `darwin-arm64`,
+`darwin-x64`, `linux-x64`, and `win32-x64`. OpenVSX installation and GitHub
+issue intake depend on the current publication and repository visibility state.
 
 ## Documentation
 
@@ -224,6 +248,16 @@ version, platform, and Cursor version.
 
 Security reporting and the local inspection model are documented in
 [SECURITY.md](SECURITY.md).
+
+## Acknowledgements
+
+Arch4 builds on ideas from the software architecture tooling ecosystem. Thanks
+to [Simon Brown](https://simonbrown.je/) for the
+[C4 model](https://c4model.com/), [Structurizr](https://structurizr.com/), and
+[Structurizr DSL](https://docs.structurizr.com/dsl). Arch4 was also influenced
+by Kevin Nord's [c4hero](https://github.com/c4hero/c4hero), especially the idea
+that C4 and Structurizr DSL workflows can support visual editing, persisted
+manual layout adjustments, and Dagre-assisted layout.
 
 ## License
 
