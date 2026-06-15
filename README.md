@@ -29,28 +29,6 @@ accurate architectural view before changing a system: ownership, source paths,
 relationships, confidence, notes, open questions, and generated context stay
 connected to the repository.
 
-## Why Arch4?
-
-- Keep architecture documentation close to the code it describes, with
-  repository-local C4 and Structurizr DSL artifacts.
-- Use Cursor-native commands, views, rules, and skills instead of switching to a
-  separate architecture tool.
-- Carry implementation context into the map: ownership, source paths,
-  confidence, notes, open questions, and generated development context.
-- Run packaged builds without installing system Java, Structurizr, Graphviz, or
-  `dot`; the extension uses its bundled runtime for the target platform.
-
-## What Arch4 Does
-
-- Installs as a Cursor plugin and adds Arch4 commands, views, rules, and skills.
-- Initializes a repository-local C4 documentation workspace under
-  `.arch4/architecture/`.
-- Generates and validates Structurizr DSL models from repository context.
-- Renders enriched C4 architecture views in an interactive Cursor webview.
-- Indexes architecture entities with ownership, repository paths, confidence,
-  notes, and open questions.
-- Builds contextual markdown for architecture-aware development workflows.
-
 ## Quick Start
 
 Install Arch4 from Cursor's Extensions pane after the plugin is published to
@@ -65,6 +43,28 @@ Manual VSIX install for local builds:
 ```sh
 cursor --install-extension artifacts/arch4-0.1.0-<platform>.vsix
 ```
+
+## What Arch4 Does
+
+- Installs as a Cursor plugin and adds Arch4 commands, views, rules, and skills.
+- Initializes a repository-local C4 documentation workspace under
+  `.arch4/architecture/`.
+- Generates and validates Structurizr DSL models from repository context.
+- Renders enriched C4 architecture views in an interactive Cursor webview.
+- Indexes architecture entities with ownership, repository paths, confidence,
+  notes, and open questions.
+- Builds contextual markdown for architecture-aware development workflows.
+
+## Why Arch4?
+
+- Keep architecture documentation close to the code it describes, with
+  repository-local C4 and Structurizr DSL artifacts.
+- Use Cursor-native commands, views, rules, and skills instead of switching to a
+  separate architecture tool.
+- Carry implementation context into the map: ownership, source paths,
+  confidence, notes, open questions, and generated development context.
+- Run packaged builds without installing system Java, Structurizr, Graphviz, or
+  `dot`; the extension uses its bundled runtime for the target platform.
 
 ## Example Workspace
 
