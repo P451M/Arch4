@@ -8,6 +8,10 @@ codebase before changing it.
 
 ![Looping Arch4 demo in Cursor showing workspace initialization, architecture model update, and interactive C4 map exploration](../../assets/media/arch4-demo-cropped.gif)
 
+## Architecture Map
+
+![Arch4 architecture map showing generated C4 containers, relationships, and element details inside Cursor](../../assets/media/arch4-full-screenshot.png)
+
 ## Getting Started
 
 1. Install Arch4 from Cursor's Extensions pane.

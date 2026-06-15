@@ -163,6 +163,14 @@ describe("release packaging", () => {
     expect(packageScript).not.toContain('execFileSync(\n  "zip"');
   });
 
+  it("keeps marketplace overview media visible in packaged README output", () => {
+    const readme = readFileSync(path.resolve("README.md"), "utf8");
+
+    expect(readme).toContain("arch4-demo-cropped.gif");
+    expect(readme).toContain("arch4-full-screenshot.png");
+    expect(readme).toContain("Arch4 architecture map showing generated C4");
+  });
+
   it("retries transient runtime downloads for release packaging", () => {
     const setupRuntimeScript = readFileSync(
       path.resolve("../../scripts/setup-runtime.mjs"),
