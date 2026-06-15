@@ -134,7 +134,8 @@ describe("release packaging", () => {
 
     expect(publishScript).toContain("ovsx@1.0.1");
     expect(publishScript).toContain("OVSX_PAT");
-    expect(publishScript).toContain('"pnpm.cmd"');
+    expect(publishScript).toContain('execFileSync("pnpm"');
+    expect(publishScript).toContain('shell: process.platform === "win32"');
     expect(publishScript).not.toContain('"-p"');
     expect(publishScript).not.toContain('"npx"');
     expect(packageScript).toContain('from "yazl"');
