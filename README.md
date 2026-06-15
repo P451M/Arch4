@@ -31,8 +31,8 @@ connected to the repository.
 
 ## Quick Start
 
-Install Arch4 from Cursor's Extensions pane after the plugin is published to
-OpenVSX. Search for `Arch4`, install the extension for your platform, then run:
+Install Arch4 from Cursor's Extensions pane. Search for `Arch4`, install the
+extension for your platform, then run:
 
 1. `Arch4: Initialize Workspace`
 2. `Arch4: Update Architecture Model`
