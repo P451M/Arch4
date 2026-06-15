@@ -16,9 +16,8 @@ if (!existsSync(artifactPath)) {
   throw new Error(`VSIX artifact does not exist: ${artifactPath}`);
 }
 
-const pnpmCommand = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
-
-execFileSync(pnpmCommand, ["dlx", "ovsx@1.0.1", "publish", artifactPath], {
+execFileSync("pnpm", ["dlx", "ovsx@1.0.1", "publish", artifactPath], {
   env: { ...process.env, OVSX_PAT: process.env.OVSX_PAT },
+  shell: process.platform === "win32",
   stdio: "inherit",
 });
