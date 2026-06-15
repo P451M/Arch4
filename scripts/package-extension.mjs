@@ -145,9 +145,31 @@ function copySharedMediaAssets(targetExtensionDir) {
 }
 
 function stagedExtensionReadme() {
-  return readFileSync(path.join(sourceDir, "README.md"), "utf8").replaceAll(
+  const readme = readFileSync(path.join(sourceDir, "README.md"), "utf8");
+  return readme.replaceAll(
     "../../assets/media/",
-    "media/",
+    releaseMediaBaseUrl(packageJson),
+  );
+}
+
+function releaseMediaBaseUrl(manifest) {
+  if (!manifest.version) {
+    throw new Error("Extension package version is required for README media.");
+  }
+  const repository = githubRepositoryPath(manifest.repository?.url);
+  return `https://raw.githubusercontent.com/${repository}/v${manifest.version}/assets/media/`;
+}
+
+function githubRepositoryPath(repositoryUrl) {
+  const normalized = String(repositoryUrl ?? "")
+    .replace(/^git\+/, "")
+    .replace(/\.git$/, "");
+  const httpsMatch = /^https:\/\/github\.com\/([^/]+\/[^/]+)$/.exec(normalized);
+  if (httpsMatch) return httpsMatch[1];
+  const sshMatch = /^git@github\.com:([^/]+\/[^/]+)$/.exec(normalized);
+  if (sshMatch) return sshMatch[1];
+  throw new Error(
+    `Extension package repository must be a GitHub URL for README media: ${repositoryUrl}`,
   );
 }
 
@@ -248,6 +270,15 @@ function verifyStagedExtension(targetExtensionDir, targetPlatform) {
   );
   const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
   assertRuntimeManifest(manifest, targetPlatform, manifestPath);
+  const readme = readFileSync(
+    path.join(targetExtensionDir, "README.md"),
+    "utf8",
+  );
+  if (readme.includes("../../assets/media/") || readme.includes("](media/")) {
+    throw new Error(
+      "Packaged README must use absolute release media URLs for marketplace rendering.",
+    );
+  }
   for (const tool of manifest.tools) {
     const executable = path.join(
       targetExtensionDir,

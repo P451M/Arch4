@@ -145,6 +145,13 @@ describe("release packaging", () => {
     expect(packageScript).toContain('path.join(root, "assets", "media")');
     expect(packageScript).toContain("copySharedMediaAssets");
     expect(packageScript).toContain("stagedExtensionReadme");
+    expect(packageScript).toContain("releaseMediaBaseUrl");
+    expect(packageScript).toContain(
+      "https://raw.githubusercontent.com/${repository}/v${manifest.version}/assets/media/",
+    );
+    expect(packageScript).toContain(
+      "Packaged README must use absolute release media URLs",
+    );
     expect(packageScript).toContain('"arch4-icon-512.png", "icon.png"');
     expect(packageScript).toContain('"media/icon.png"');
     expect(packageScript).toContain('"media/arch4-demo-cropped.gif"');
