@@ -1,13 +1,13 @@
 name: Lightweight issue
-description: Report a bug, request, docs gap, or confusing behavior.
+description: For kind souls too busy for a full report but too nice to leave us guessing.
 title: "[Issue]: "
 body:
   - type: textarea
     id: summary
     attributes:
       label: What should we know?
-      description: A short description is enough. Include what happened, what you expected, or what you would like changed.
-      placeholder: Arch4 did something unexpected when...
+      description: One sentence is allowed. Half a clue is better than silence.
+      placeholder: Arch4 did something weird when...
     validations:
       required: true
 

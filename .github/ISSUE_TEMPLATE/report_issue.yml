@@ -1,0 +1,96 @@
+name: Report issue
+description: Use this when you can share the details needed to reproduce and fix the problem.
+title: "[Issue]: "
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type
+      description: What kind of issue is this?
+      options:
+        - Bug
+        - Installation problem
+        - Feature request
+        - Documentation
+        - Question
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe the problem or request.
+      placeholder: Arch4 fails to... / I expected Arch4 to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest sequence that shows the issue. For feature requests, describe the workflow instead.
+      placeholder: |
+        1. Run `...`
+        2. Open `...`
+        3. See `...`
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead? Include errors, logs, or screenshots if available.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Please fill in all lines that apply.
+      placeholder: |
+        Arch4 version:
+        Operating system:
+        Cursor version:
+        Node version:
+        pnpm version:
+    validations:
+      required: true
+
+  - type: textarea
+    id: doctor
+    attributes:
+      label: arch4 doctor output
+      description: Run `arch4 doctor` and paste the output here if this is a bug or installation issue.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: If available, paste relevant entries from `.arch4/architecture/build/diagnostics.json`.
+      render: json
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: security
+    attributes:
+      label: Security check
+      description: Public issues should not include vulnerability details.
+      options:
+        - label: This does not contain a private security vulnerability report.
+          required: true
