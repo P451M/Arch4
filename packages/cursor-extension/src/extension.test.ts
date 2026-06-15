@@ -134,10 +134,13 @@ describe("release packaging", () => {
 
     expect(publishScript).toContain("ovsx@1.0.1");
     expect(publishScript).toContain("OVSX_PAT");
+    expect(publishScript).toContain('"pnpm.cmd"');
     expect(publishScript).not.toContain('"-p"');
     expect(publishScript).not.toContain('"npx"');
     expect(packageScript).toContain('from "yazl"');
     expect(packageScript).toContain("zipStagedExtension");
+    expect(packageScript).toContain("forceDosTimestamp: true");
+    expect(packageScript).toContain("assertNoZipExtraFields");
     expect(packageScript).toContain('"media/icon.png"');
     expect(packageScript).toContain(
       '"media/marketplace/arch4-demo-cropped.gif"',

@@ -324,10 +324,65 @@ async function zipStagedExtension(sourceDir, outputPath) {
     ),
   ]) {
     const absolutePath = path.join(sourceDir, file);
-    zipFile.addFile(absolutePath, file, { mode: statSync(absolutePath).mode });
+    zipFile.addFile(absolutePath, file, {
+      forceDosTimestamp: true,
+      mode: statSync(absolutePath).mode,
+    });
   }
   zipFile.end();
   await finished(output);
+  assertNoZipExtraFields(outputPath);
+}
+
+function assertNoZipExtraFields(zipPath) {
+  const zip = readFileSync(zipPath);
+  const eocdOffset = findEndOfCentralDirectory(zip);
+  const entries = zip.readUInt16LE(eocdOffset + 10);
+  let centralDirectoryOffset = zip.readUInt32LE(eocdOffset + 16);
+  const entriesWithExtraFields = [];
+
+  for (let index = 0; index < entries; index += 1) {
+    if (zip.readUInt32LE(centralDirectoryOffset) !== 0x02014b50) {
+      throw new Error(`Invalid ZIP central directory in ${zipPath}.`);
+    }
+
+    const fileNameLength = zip.readUInt16LE(centralDirectoryOffset + 28);
+    const centralExtraFieldLength = zip.readUInt16LE(
+      centralDirectoryOffset + 30,
+    );
+    const fileCommentLength = zip.readUInt16LE(centralDirectoryOffset + 32);
+    const localHeaderOffset = zip.readUInt32LE(centralDirectoryOffset + 42);
+    const fileName = zip
+      .subarray(
+        centralDirectoryOffset + 46,
+        centralDirectoryOffset + 46 + fileNameLength,
+      )
+      .toString("utf8");
+
+    if (zip.readUInt32LE(localHeaderOffset) !== 0x04034b50) {
+      throw new Error(`Invalid ZIP local header for ${fileName}.`);
+    }
+    const localExtraFieldLength = zip.readUInt16LE(localHeaderOffset + 28);
+    if (centralExtraFieldLength || localExtraFieldLength) {
+      entriesWithExtraFields.push(fileName);
+    }
+
+    centralDirectoryOffset +=
+      46 + fileNameLength + centralExtraFieldLength + fileCommentLength;
+  }
+
+  if (entriesWithExtraFields.length) {
+    throw new Error(
+      `OpenVSX rejects VSIX ZIP extra fields; found extra fields in:\n${entriesWithExtraFields.map((file) => `- ${file}`).join("\n")}`,
+    );
+  }
+}
+
+function findEndOfCentralDirectory(zip) {
+  for (let offset = zip.length - 22; offset >= 0; offset -= 1) {
+    if (zip.readUInt32LE(offset) === 0x06054b50) return offset;
+  }
+  throw new Error("Invalid ZIP file: end of central directory not found.");
 }
 
 function contentTypes() {
