@@ -1,5 +1,4 @@
 <!-- arch4-owned: true -->
-
 # Seed Arch4 Architecture Model
 
 Create this repository's initial Arch4 architecture model.
@@ -17,7 +16,7 @@ Use both the C4 skill and the Arch4 skill. Follow this workflow:
    - use relationship labels that read as `<source> <label> <target>`, including needed prepositions
    - treat package-as-container modeling as an explicit convention when runtime boundaries are not evidenced
 5. Use staged validation before metadata generation for large DSL edits.
-6. Create or update `.arch4/architecture/entities/*.json` metadata from validated identifiers for modeled entities, including paths, owners when known, confidence, open questions, and notes.
+6. Create or update `.arch4/architecture/entities/*.json` metadata from validated identifiers for modeled entities, including paths, owners when known, confidence, open questions, and notes that follow the Arch4 skill's entity notes guidance.
 7. Do not create dynamic views during initial seeding. Instead, identify suitable dynamic view candidates.
 8. Do not edit files under `.arch4/architecture/build/**`; they are derived output.
 9. If an Arch4 CLI is available, run `arch4 validate`, `arch4 render`, and `arch4 index` after source edits and report the result.

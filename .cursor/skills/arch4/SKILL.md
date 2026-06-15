@@ -34,6 +34,35 @@ Each entity metadata file is stored at
 
 Use `paths` for repository file globs. Do not use `pathGlobs`.
 
+## Entity Notes
+
+Use `notes` for durable, evidence-backed architecture context that is not
+already obvious from the DSL, paths, owners, or relationships.
+
+- Prefer `notes.summary` as the first field when notes are present. Keep it to
+  1-3 concise sentences about the entity's durable architecture role, not an
+  implementation walkthrough.
+- Use structured keys when evidenced and useful: `summary`,
+  `responsibilities`, `boundaries`, `dataOwnership`, `contracts`,
+  `technologyNotes`, `dependencyNotes`, `operationalConcerns`,
+  `decisions`, `risks`, and `evidence`.
+- Use `technologyNotes` and `dependencyNotes` for explanatory context, not as
+  duplicates of DSL technology labels or modeled relationships. Good notes
+  explain rationale, runtime constraints, dependency criticality, sync/async
+  behavior, failure behavior, ownership boundaries, or coupling that affects
+  future changes.
+- Do not invent notes from guesses or names alone. Keep notes backed by code,
+  manifests, deploy files, tests, docs, git history, existing Arch4 files, or
+  explicit user input.
+- Put uncertain facts in `openQuestions`, not `notes`.
+- Avoid duplicating the DSL description or restating first-class Arch4 facts
+  unless the note adds important context.
+- Omit empty note fields and keep `notes: {}` when there is nothing durable to
+  add.
+- Update relevant entity notes when responsibilities, boundaries,
+  dependencies, data ownership, runtime technology, runtime behavior,
+  ownership, or paths change.
+
 ## Structurizr Identifier Discipline
 
 - Check whether `.arch4/architecture/workspace.dsl` contains
@@ -67,7 +96,10 @@ Use `paths` for repository file globs. Do not use `pathGlobs`.
 6. After rendering, inspect generated view JSON and report node, edge, and
    boundary counts for each view. Treat zero-edge component views as a quality
    problem unless intentionally justified.
-7. Run `git status --short` after architecture workflows and call out any
+7. Before committing or completing architecture-impacting work, review changed
+   files against mapped entities and confirm relevant
+   `.arch4/architecture/entities/*.json` notes are still accurate.
+8. Run `git status --short` after architecture workflows and call out any
    unexpected changes outside allowed Arch4 source files.
 
 ## Large Architecture Edit Workflow

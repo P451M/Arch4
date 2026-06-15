@@ -39,3 +39,5 @@ Evidence boundaries:
 - Never edit `.arch4/architecture/build/**` as source.
 - Keep architecture facts scoped to systems, dependencies, ownership, runtime,
   deployment, and paths that are evidenced in this repository.
+- Before completing architecture-impacting work, review changed files against
+  mapped entities and confirm relevant entity notes are still accurate.
