@@ -38,10 +38,10 @@ extension for your platform, then run:
 2. `Arch4: Update Architecture Model`
 3. `Arch4: Open Architecture Map`
 
-Manual VSIX install for local builds:
+Local source checkout reinstall:
 
 ```sh
-cursor --install-extension artifacts/arch4-0.1.0-<platform>.vsix
+pnpm reinstall:cursor
 ```
 
 ## What Arch4 Does
