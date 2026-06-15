@@ -163,6 +163,19 @@ describe("release packaging", () => {
     expect(packageScript).not.toContain('execFileSync(\n  "zip"');
   });
 
+  it("retries transient runtime downloads for release packaging", () => {
+    const setupRuntimeScript = readFileSync(
+      path.resolve("../../scripts/setup-runtime.mjs"),
+      "utf8",
+    );
+
+    expect(setupRuntimeScript).toContain("ARCH4_RUNTIME_DOWNLOAD_ATTEMPTS");
+    expect(setupRuntimeScript).toContain("withDownloadRetries");
+    expect(setupRuntimeScript).toContain("retryableDownloadStatusCodes");
+    expect(setupRuntimeScript).toContain("isRetryableDownloadError");
+    expect(setupRuntimeScript).toContain("setTimeout as sleep");
+  });
+
   it("verifies required third-party notice coverage", () => {
     const utilityUrl = pathToFileURL(
       path.resolve("../../scripts/release-verification-utils.mjs"),

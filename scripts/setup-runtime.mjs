@@ -13,6 +13,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -20,6 +21,11 @@ const runtimeRoot = path.join(root, "runtime");
 const platformId =
   option("--platform") ?? `${process.platform}-${process.arch}`;
 const manifestPath = path.join(runtimeRoot, "manifests", `${platformId}.json`);
+const downloadAttempts = positiveIntegerEnv(
+  "ARCH4_RUNTIME_DOWNLOAD_ATTEMPTS",
+  4,
+);
+const retryableDownloadStatusCodes = new Set([408, 429, 500, 502, 503, 504]);
 
 if (!existsSync(manifestPath)) {
   throw new Error(`No runtime manifest found for ${platformId}.`);
@@ -142,16 +148,67 @@ async function installTool(tool) {
 }
 
 async function download(url) {
-  if (url.startsWith("https://ghcr.io/v2/")) {
-    return downloadGhcrBlob(url);
+  return withDownloadRetries(url, async () => {
+    if (url.startsWith("https://ghcr.io/v2/")) {
+      return downloadGhcrBlob(url);
+    }
+    return fetchBuffer(url);
+  });
+}
+
+async function withDownloadRetries(url, operation) {
+  let lastError;
+  for (let attempt = 1; attempt <= downloadAttempts; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (attempt === downloadAttempts || !isRetryableDownloadError(error)) {
+        throw error;
+      }
+      const delayMs = 1000 * 2 ** (attempt - 1);
+      console.warn(
+        `Download failed for ${url} on attempt ${attempt}/${downloadAttempts}; retrying in ${delayMs}ms. ${errorMessage(error)}`,
+      );
+      await sleep(delayMs);
+    }
   }
-  const response = await fetch(url, { redirect: "follow" });
+  throw lastError;
+}
+
+function isRetryableDownloadError(error) {
+  if (error && typeof error === "object" && "status" in error) {
+    return retryableDownloadStatusCodes.has(Number(error.status));
+  }
+  return true;
+}
+
+async function fetchBuffer(url, options = {}) {
+  const response = await fetch(url, { redirect: "follow", ...options });
   if (!response.ok) {
-    throw new Error(
-      `Download failed for ${url}: ${response.status} ${response.statusText}`,
-    );
+    throw downloadResponseError(url, response);
   }
   return Buffer.from(await response.arrayBuffer());
+}
+
+function downloadResponseError(url, response) {
+  const error = new Error(
+    `Download failed for ${url}: ${response.status} ${response.statusText}`,
+  );
+  error.status = response.status;
+  return error;
+}
+
+function errorMessage(error) {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function positiveIntegerEnv(name, fallback) {
+  const value = process.env[name];
+  if (value === undefined) return fallback;
+  const parsed = Number.parseInt(value, 10);
+  if (Number.isInteger(parsed) && parsed > 0) return parsed;
+  throw new Error(`${name} must be a positive integer.`);
 }
 
 async function downloadGhcrBlob(url) {
@@ -163,24 +220,18 @@ async function downloadGhcrBlob(url) {
     `https://ghcr.io/token?scope=repository:${repo}:pull`,
   );
   if (!tokenResponse.ok) {
-    throw new Error(
-      `Could not get GHCR token for ${repo}: ${tokenResponse.status} ${tokenResponse.statusText}`,
+    throw downloadResponseError(
+      `https://ghcr.io/token?scope=repository:${repo}:pull`,
+      tokenResponse,
     );
   }
   const tokenPayload = await tokenResponse.json();
-  const response = await fetch(url, {
+  return fetchBuffer(url, {
     headers: {
       Authorization: `Bearer ${tokenPayload.token}`,
       Accept: "application/vnd.oci.image.layer.v1.tar+gzip",
     },
-    redirect: "follow",
   });
-  if (!response.ok) {
-    throw new Error(
-      `Download failed for ${url}: ${response.status} ${response.statusText}`,
-    );
-  }
-  return Buffer.from(await response.arrayBuffer());
 }
 
 function verifySha256(filePath, expected, name) {
