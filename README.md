@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="packages/cursor-extension/media/icon.svg" width="96" height="96" alt="Arch4 C4 icon">
+  <img src="assets/media/arch4-icon.svg" width="96" height="96" alt="Arch4 C4 icon">
 </p>
 
 <h1 align="center">Arch4</h1>
@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <img src="packages/cursor-extension/media/marketplace/arch4-demo-cropped.gif" alt="Looping Arch4 demo in Cursor showing workspace initialization, architecture model update, and interactive C4 map exploration">
+  <img src="assets/media/arch4-demo-cropped.gif" alt="Looping Arch4 demo in Cursor showing workspace initialization, architecture model update, and interactive C4 map exploration">
 </p>
 
 Arch4 is a Cursor plugin that keeps C4 architecture documentation next to the
@@ -77,11 +77,11 @@ map and validate extension behavior during development.
 
 Command Palette access to the Arch4 workflow:
 
-![Cursor Command Palette showing Arch4 commands](packages/cursor-extension/media/marketplace/arch4-command-palette.png)
+![Cursor Command Palette showing Arch4 commands](assets/media/arch4-command-palette.png)
 
 Interactive architecture map with repository context and element details:
 
-![Arch4 interactive architecture map in Cursor with an element details drawer](packages/cursor-extension/media/marketplace/arch4-full-screenshot.png)
+![Arch4 interactive architecture map in Cursor with an element details drawer](assets/media/arch4-full-screenshot.png)
 
 ## Commands
 

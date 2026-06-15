@@ -26,6 +26,7 @@ import {
 import { runtimeManifestErrors } from "./release-verification-utils.mjs";
 
 const sourceDir = cursorExtensionDir;
+const mediaSourceDir = path.join(root, "assets", "media");
 const packageJson = readCursorExtensionPackageJson();
 const platformId = option("--platform") ?? currentPlatformId();
 const supportedPlatforms = new Set([
@@ -51,8 +52,13 @@ mkdirSync(extensionDir, { recursive: true });
 
 copyFiltered(path.join(sourceDir, "dist"), path.join(extensionDir, "dist"));
 copyFiltered(path.join(sourceDir, "media"), path.join(extensionDir, "media"));
+copySharedMediaAssets(extensionDir);
 copyFiltered(path.join(sourceDir, "cli"), path.join(extensionDir, "cli"));
-cpSync(path.join(sourceDir, "README.md"), path.join(extensionDir, "README.md"));
+writeFileSync(
+  path.join(extensionDir, "README.md"),
+  stagedExtensionReadme(),
+  "utf8",
+);
 copyPlatformRuntime(platformId, extensionDir);
 for (const item of [
   "CHANGELOG.md",
@@ -121,6 +127,30 @@ function copyFiltered(source, destination) {
   if (stat.isFile()) cpSync(source, destination);
 }
 
+function copySharedMediaAssets(targetExtensionDir) {
+  const mediaTargetDir = path.join(targetExtensionDir, "media");
+  mkdirSync(mediaTargetDir, { recursive: true });
+  for (const [source, destination] of [
+    ["arch4-icon-512.png", "icon.png"],
+    ["arch4-demo-cropped.gif", "arch4-demo-cropped.gif"],
+    ["arch4-command-palette.png", "arch4-command-palette.png"],
+    ["arch4-full-screenshot.png", "arch4-full-screenshot.png"],
+    ["arch4-overview.png", "arch4-overview.png"],
+  ]) {
+    cpSync(
+      path.join(mediaSourceDir, source),
+      path.join(mediaTargetDir, destination),
+    );
+  }
+}
+
+function stagedExtensionReadme() {
+  return readFileSync(path.join(sourceDir, "README.md"), "utf8").replaceAll(
+    "../../assets/media/",
+    "media/",
+  );
+}
+
 function excludedPackageEntry(entry, absolutePath) {
   if (entry.endsWith(".d.ts")) return true;
   if (entry.endsWith(".map")) return true;
@@ -187,8 +217,10 @@ function verifyStagedExtension(targetExtensionDir, targetPlatform) {
     "THIRD_PARTY_NOTICES.md",
     "dist/extension.js",
     "media/icon.png",
-    "media/marketplace/arch4-demo-cropped.gif",
-    "media/marketplace/arch4-overview.png",
+    "media/arch4-demo-cropped.gif",
+    "media/arch4-command-palette.png",
+    "media/arch4-full-screenshot.png",
+    "media/arch4-overview.png",
     "media/webview.js",
     "media/webview.css",
     "cli/index.js",
@@ -391,6 +423,7 @@ function contentTypes() {
   <Default Extension="json" ContentType="application/json"/>
   <Default Extension="js" ContentType="application/javascript"/>
   <Default Extension="css" ContentType="text/css"/>
+  <Default Extension="gif" ContentType="image/gif"/>
   <Default Extension="md" ContentType="text/markdown"/>
   <Default Extension="png" ContentType="image/png"/>
   <Default Extension="svg" ContentType="image/svg+xml"/>

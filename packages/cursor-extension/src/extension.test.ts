@@ -142,10 +142,15 @@ describe("release packaging", () => {
     expect(packageScript).toContain("zipStagedExtension");
     expect(packageScript).toContain("forceDosTimestamp: true");
     expect(packageScript).toContain("assertNoZipExtraFields");
+    expect(packageScript).toContain('path.join(root, "assets", "media")');
+    expect(packageScript).toContain("copySharedMediaAssets");
+    expect(packageScript).toContain("stagedExtensionReadme");
+    expect(packageScript).toContain('"arch4-icon-512.png", "icon.png"');
     expect(packageScript).toContain('"media/icon.png"');
-    expect(packageScript).toContain(
-      '"media/marketplace/arch4-demo-cropped.gif"',
-    );
+    expect(packageScript).toContain('"media/arch4-demo-cropped.gif"');
+    expect(packageScript).toContain('"media/arch4-command-palette.png"');
+    expect(packageScript).toContain('"media/arch4-full-screenshot.png"');
+    expect(packageScript).toContain('"media/arch4-overview.png"');
     expect(packageScript).toContain("runtimeManifestErrors");
     expect(packageScript).toContain("verifyCopiedRuntime");
     expect(packageScript).not.toContain('execFileSync(\n  "zip"');
