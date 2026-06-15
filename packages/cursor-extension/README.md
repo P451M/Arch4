@@ -1,6 +1,6 @@
 # Arch4
 
-Enriched C4 architecture maps for Cursor repositories.
+Generated, enriched C4 architecture maps for Cursor repositories.
 
 Arch4 adds a repository-local architecture workspace, interactive C4 maps, and
 architecture-aware Cursor workflows so teams and AI agents can understand a

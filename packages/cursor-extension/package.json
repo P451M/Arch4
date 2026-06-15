@@ -1,7 +1,7 @@
 {
   "name": "arch4-cursor-extension",
   "displayName": "Arch4",
-  "description": "Enriched C4 architecture maps for your repo.",
+  "description": "Generated, enriched C4 architecture maps for your repo.",
   "version": "0.1.1",
   "publisher": "arch4",
   "author": {
