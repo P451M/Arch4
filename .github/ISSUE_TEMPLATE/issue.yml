@@ -1,0 +1,59 @@
+name: Lightweight issue
+description: Report a bug, request, docs gap, or confusing behavior.
+title: "[Issue]: "
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: What should we know?
+      description: A short description is enough. Include what happened, what you expected, or what you would like changed.
+      placeholder: Arch4 did something unexpected when...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type
+      description: Optional, but it helps route the issue.
+      options:
+        - Bug
+        - Feature request
+        - Documentation
+        - Question
+        - Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Optional details
+      description: Add any extra context that might help reproduce, understand, or prioritize this.
+      placeholder: |
+        Steps, example repo shape, command output, screenshots, logs, or links.
+        If relevant, include output from `arch4 doctor`.
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Optional environment
+      description: Useful for bugs and installation issues.
+      placeholder: |
+        Arch4 version:
+        Operating system:
+        Cursor version:
+        Node/pnpm version:
+    validations:
+      required: false
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Optional diagnostics
+      description: If available, paste relevant diagnostics from `.arch4/architecture/build/diagnostics.json`.
+      render: json
+    validations:
+      required: false
