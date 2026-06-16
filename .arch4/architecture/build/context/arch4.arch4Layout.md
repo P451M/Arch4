@@ -1,17 +1,24 @@
 # Arch4 Context
 
-## Arch4 Layout
+## Diagram Layout Engine
 
 - Entity: arch4.arch4Layout
 - Type: container
-- Description: Diagram layout engine using dagre graph layout.
+- Description: Computes dagre-based node and boundary layout for diagram specs.
 - Tags: Element, Container
-- Paths: packages/layout/**
+- Paths: packages/layout/**/*
 - Views: Arch4Containers, Arch4RendererComponents
-- Owners: Maintainer
+- Owners: Arch4
 - Confidence: high
+
+Notes:
+```json
+{
+  "summary": "Dagre-based layout engine that positions diagram nodes and boundaries for rendered Arch4 views."
+}
+```
 - Contributors: Paul Stoeckle (1)
 
 Recent commits:
-- 2026-06-14 55b9cc93 First release commit
+- 2026-06-14 1d74a893 Initial Arch4 release
 

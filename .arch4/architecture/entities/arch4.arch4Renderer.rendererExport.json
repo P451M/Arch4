@@ -1,9 +1,14 @@
 {
   "schemaVersion": 1,
   "entityId": "arch4.arch4Renderer.rendererExport",
-  "owners": ["Maintainer"],
-  "paths": ["packages/renderer-structurizr/src/process.ts"],
+  "owners": ["Arch4"],
+  "paths": [
+    "packages/renderer-structurizr/src/process.ts",
+    "packages/renderer-structurizr/src/runtime.ts"
+  ],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Runs Structurizr validate and export subprocesses against workspace.dsl using the bundled Java and Structurizr CLI."
+  }
 }

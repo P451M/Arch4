@@ -1,9 +1,15 @@
 {
   "schemaVersion": 1,
   "entityId": "cursor",
-  "owners": [],
-  "paths": ["packages/cursor-extension/**", "scripts/dev-cursor.mjs"],
+  "owners": ["Cursor"],
+  "paths": [
+    "packages/cursor-extension/**/*",
+    "scripts/dev-cursor.mjs",
+    "scripts/reinstall-cursor-extension.mjs"
+  ],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Editor platform that hosts the Arch4 extension, command palette workflow, explorer tree, webview map, and AI prompt deeplinks."
+  }
 }

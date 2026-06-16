@@ -1,17 +1,24 @@
 # Arch4 Context
 
-## CLI Runtime
+## Runtime Resolver
 
 - Entity: arch4.arch4Cli.cliRuntime
 - Type: component
-- Description: Resolves bundled Java, Structurizr CLI, and platform runtime manifests.
+- Description: Locates bundled or configured Java and Structurizr CLI executables.
 - Tags: Element, Component
-- Paths: packages/cli/src/runtime.ts, packages/cli/src/repo-files.ts
+- Paths: packages/cli/src/runtime.ts
 - Views: Arch4CliComponents
-- Owners: Maintainer
+- Owners: Arch4
 - Confidence: high
+
+Notes:
+```json
+{
+  "summary": "Resolves bundled or configured Java and Structurizr CLI paths and reports runtime diagnostics for doctor and render commands."
+}
+```
 - Contributors: Paul Stoeckle (1)
 
 Recent commits:
-- 2026-06-14 55b9cc93 First release commit
+- 2026-06-14 1d74a893 Initial Arch4 release
 

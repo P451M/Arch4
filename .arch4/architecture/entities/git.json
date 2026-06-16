@@ -5,5 +5,7 @@
   "paths": ["packages/cli/src/indexer.ts"],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Source-control history consulted during indexing to attach contributors and recent commits to mapped architecture elements."
+  }
 }

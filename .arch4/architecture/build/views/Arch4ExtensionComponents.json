@@ -2,22 +2,41 @@
   "id": "Arch4ExtensionComponents",
   "name": "Arch4ExtensionComponents",
   "type": "component",
-  "subjectId": "24",
+  "subjectId": "17",
   "subjectEntityId": "arch4.arch4Extension",
   "direction": "RIGHT",
   "nodes": [
     {
-      "id": "4",
-      "entityId": "cursor",
+      "id": "9",
+      "entityId": "targetWorkspace",
       "type": "softwareSystem",
-      "name": "Cursor",
-      "description": "Editor platform that hosts the Arch4 extension, commands, tree view, and architecture map webview.",
+      "name": "Target Repository",
+      "description": "Repository workspace where Arch4 stores architecture source and derived artifacts under .arch4/.",
       "parentId": null,
       "parentEntityId": null,
-      "group": "External Editor, Marketplace, and Tooling",
       "tags": [
         "Element",
         "Software System"
+      ],
+      "layout": {
+        "x": 1438,
+        "y": 315,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "11",
+      "entityId": "arch4.arch4Cli",
+      "type": "container",
+      "name": "Arch4 CLI",
+      "description": "Initializes, validates, renders, indexes, and serves architecture context for a repository.",
+      "technology": "Node.js / TypeScript",
+      "parentId": "10",
+      "parentEntityId": "arch4",
+      "tags": [
+        "Element",
+        "Container"
       ],
       "layout": {
         "x": 728,
@@ -27,73 +46,13 @@
       }
     },
     {
-      "id": "9",
-      "entityId": "targetWorkspace",
-      "type": "softwareSystem",
-      "name": "Target Workspace",
-      "description": "Repository where Arch4 is installed and whose architecture DSL, entities, and source files are modeled.",
-      "parentId": null,
-      "parentEntityId": null,
-      "group": "Modeled Repository",
-      "tags": [
-        "Element",
-        "Software System"
-      ],
-      "layout": {
-        "x": 1438,
-        "y": 708,
-        "width": 260,
-        "height": 140
-      }
-    },
-    {
-      "id": "13",
-      "entityId": "arch4.arch4Viewer",
-      "type": "container",
-      "name": "Arch4 Viewer",
-      "description": "React diagram viewer for interactive architecture maps.",
-      "technology": "TypeScript / React",
-      "parentId": "10",
-      "parentEntityId": "arch4",
-      "tags": [
-        "Element",
-        "Container"
-      ],
-      "layout": {
-        "x": 1438,
-        "y": 1570,
-        "width": 260,
-        "height": 140
-      }
-    },
-    {
-      "id": "19",
-      "entityId": "arch4.arch4Cli",
-      "type": "container",
-      "name": "Arch4 CLI",
-      "description": "Terminal CLI for init, validate, render, index, context, and doctor commands.",
-      "technology": "TypeScript / Node.js",
-      "parentId": "10",
-      "parentEntityId": "arch4",
-      "tags": [
-        "Element",
-        "Container"
-      ],
-      "layout": {
-        "x": 728,
-        "y": 470,
-        "width": 260,
-        "height": 140
-      }
-    },
-    {
-      "id": "25",
+      "id": "18",
       "entityId": "arch4.arch4Extension.extensionHost",
       "type": "component",
       "name": "Extension Host",
-      "description": "Registers commands, tree provider, file watchers, and CLI orchestration.",
+      "description": "Registers commands, tree view, file watchers, and CLI orchestration.",
       "technology": "TypeScript",
-      "parentId": "24",
+      "parentId": "17",
       "parentEntityId": "arch4.arch4Extension",
       "tags": [
         "Element",
@@ -101,47 +60,67 @@
       ],
       "layout": {
         "x": 168,
-        "y": 945,
+        "y": 550,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "19",
+      "entityId": "arch4.arch4Extension.extensionWebview",
+      "type": "component",
+      "name": "Architecture Map Webview",
+      "description": "Embeds the interactive C4 map and layout controls in Cursor.",
+      "technology": "React / TypeScript",
+      "parentId": "17",
+      "parentEntityId": "arch4.arch4Extension",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "layout": {
+        "x": 728,
+        "y": 940,
+        "width": 260,
+        "height": 140
+      }
+    },
+    {
+      "id": "20",
+      "entityId": "arch4.arch4Extension.extensionArtifacts",
+      "type": "component",
+      "name": "Workspace Artifacts",
+      "description": "Installs Arch4-owned Cursor helpers and reads rendered build artifacts.",
+      "technology": "TypeScript",
+      "parentId": "17",
+      "parentEntityId": "arch4.arch4Extension",
+      "tags": [
+        "Element",
+        "Component"
+      ],
+      "layout": {
+        "x": 728,
+        "y": 550,
         "width": 260,
         "height": 140
       }
     },
     {
       "id": "26",
-      "entityId": "arch4.arch4Extension.extensionWebview",
-      "type": "component",
-      "name": "Extension Webview",
-      "description": "Hosts interactive architecture map UI in a Cursor webview panel.",
-      "technology": "TypeScript / React",
-      "parentId": "24",
-      "parentEntityId": "arch4.arch4Extension",
+      "entityId": "arch4.arch4Viewer",
+      "type": "container",
+      "name": "Architecture Viewer",
+      "description": "React map UI for exploring rendered diagrams with element details and navigation.",
+      "technology": "React / TypeScript",
+      "parentId": "10",
+      "parentEntityId": "arch4",
       "tags": [
         "Element",
-        "Component"
+        "Container"
       ],
       "layout": {
-        "x": 728,
-        "y": 1570,
-        "width": 260,
-        "height": 140
-      }
-    },
-    {
-      "id": "27",
-      "entityId": "arch4.arch4Extension.extensionArtifacts",
-      "type": "component",
-      "name": "Extension Artifacts",
-      "description": "Installs and removes Arch4-owned Cursor rules, skills, and commands.",
-      "technology": "TypeScript",
-      "parentId": "24",
-      "parentEntityId": "arch4.arch4Extension",
-      "tags": [
-        "Element",
-        "Component"
-      ],
-      "layout": {
-        "x": 728,
-        "y": 1180,
+        "x": 1438,
+        "y": 940,
         "width": 260,
         "height": 140
       }
@@ -149,64 +128,55 @@
   ],
   "edges": [
     {
-      "id": "49",
-      "source": "19",
+      "id": "46",
+      "source": "11",
       "target": "9",
-      "label": "Reads DSL, entities, and repository files from",
+      "label": "Initializes and writes architecture source in",
       "tags": [
         "Relationship"
       ]
     },
     {
-      "id": "73",
-      "source": "25",
+      "id": "62",
+      "source": "18",
+      "target": "11",
+      "label": "Executes CLI commands via",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "63",
+      "source": "18",
       "target": "19",
-      "label": "Executes CLI commands through",
+      "label": "Hosts interactive map in",
       "tags": [
         "Relationship"
       ]
     },
     {
-      "id": "74",
-      "source": "25",
+      "id": "64",
+      "source": "18",
+      "target": "20",
+      "label": "Manages workspace artifacts through",
+      "tags": [
+        "Relationship"
+      ]
+    },
+    {
+      "id": "66",
+      "source": "19",
       "target": "26",
-      "label": "Loads architecture maps in",
+      "label": "Renders diagram UI from",
       "tags": [
         "Relationship"
       ]
     },
     {
-      "id": "75",
-      "source": "25",
-      "target": "27",
-      "label": "Installs and removes Cursor workflow files through",
-      "tags": [
-        "Relationship"
-      ]
-    },
-    {
-      "id": "76",
-      "source": "25",
+      "id": "65",
+      "source": "20",
       "target": "9",
-      "label": "Watches architecture source files in",
-      "tags": [
-        "Relationship"
-      ]
-    },
-    {
-      "id": "78",
-      "source": "25",
-      "target": "4",
-      "label": "Registers tree provider and commands in",
-      "tags": [
-        "Relationship"
-      ]
-    },
-    {
-      "id": "79",
-      "source": "26",
-      "target": "13",
-      "label": "Embeds diagram viewer from",
+      "label": "Installs Arch4-owned helpers and reads build artifacts from",
       "tags": [
         "Relationship"
       ]
@@ -214,21 +184,21 @@
   ],
   "boundaries": [
     {
-      "id": "container-boundary-24",
+      "id": "container-boundary-17",
       "type": "container",
-      "label": "Arch4 Cursor Extension",
-      "elementId": "24",
+      "label": "Cursor Extension",
+      "elementId": "17",
       "entityId": "arch4.arch4Extension",
       "children": [
-        "25",
-        "26",
-        "27"
+        "18",
+        "19",
+        "20"
       ],
       "layout": {
         "x": 80,
-        "y": 863,
+        "y": 468,
         "width": 996,
-        "height": 923
+        "height": 688
       }
     }
   ],
@@ -251,6 +221,6 @@
   ],
   "bounds": {
     "width": 1778,
-    "height": 1866
+    "height": 1236
   }
 }

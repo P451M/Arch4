@@ -1,9 +1,11 @@
 {
   "schemaVersion": 1,
   "entityId": "developer",
-  "owners": [],
+  "owners": ["Arch4"],
   "paths": [],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Primary human actor who edits repository code and uses Arch4 inside Cursor to maintain and explore C4 documentation."
+  }
 }

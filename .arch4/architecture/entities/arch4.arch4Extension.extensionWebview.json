@@ -1,12 +1,14 @@
 {
   "schemaVersion": 1,
   "entityId": "arch4.arch4Extension.extensionWebview",
-  "owners": ["Maintainer"],
+  "owners": ["Arch4"],
   "paths": [
-    "packages/cursor-extension/src/webview/**",
-    "packages/cursor-extension/src/webview.css"
+    "packages/cursor-extension/media/**/*",
+    "packages/cursor-extension/vite.config.ts"
   ],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Bundled webview shell that embeds the Arch4 viewer bundle and exchanges layout and payload messages with the extension host."
+  }
 }

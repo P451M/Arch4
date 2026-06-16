@@ -1,17 +1,24 @@
 # Arch4 Context
 
-## Extension Artifacts
+## Workspace Artifacts
 
 - Entity: arch4.arch4Extension.extensionArtifacts
 - Type: component
-- Description: Installs and removes Arch4-owned Cursor rules, skills, and commands.
+- Description: Installs Arch4-owned Cursor helpers and reads rendered build artifacts.
 - Tags: Element, Component
-- Paths: packages/cursor-extension/src/workspace-artifacts.ts
+- Paths: packages/cursor-extension/src/workspace-artifacts.ts, packages/cursor-extension/src/workspace-json.ts
 - Views: Arch4ExtensionComponents
-- Owners: Maintainer
+- Owners: Arch4
 - Confidence: high
+
+Notes:
+```json
+{
+  "summary": "Installs Arch4-owned Cursor helpers, reads rendered build artifacts, and removes confirmed workspace artifacts on user request."
+}
+```
 - Contributors: Paul Stoeckle (1)
 
 Recent commits:
-- 2026-06-14 55b9cc93 First release commit
+- 2026-06-14 1d74a893 Initial Arch4 release
 

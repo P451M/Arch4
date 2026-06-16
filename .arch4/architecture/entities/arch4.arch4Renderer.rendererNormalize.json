@@ -1,9 +1,11 @@
 {
   "schemaVersion": 1,
   "entityId": "arch4.arch4Renderer.rendererNormalize",
-  "owners": ["Maintainer"],
+  "owners": ["Arch4"],
   "paths": ["packages/renderer-structurizr/src/normalize.ts"],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Transforms Structurizr export JSON into Arch4 diagram nodes, edges, boundaries, and diagnostics."
+  }
 }

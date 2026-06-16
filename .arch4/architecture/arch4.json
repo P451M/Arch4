@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "arch4",
-  "createdAt": "2026-06-13T21:48:23.912Z",
+  "createdAt": "2026-06-16T09:58:34.526Z",
   "source": {
     "dsl": "workspace.dsl",
     "entitiesDir": "entities",

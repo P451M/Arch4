@@ -4,13 +4,17 @@
 
 - Entity: aiAgent
 - Type: person
-- Description: Updates architecture models and retrieves architecture context during agent workflows.
+- Description: Cursor agent that seeds and updates the architecture model from repository evidence.
 - Tags: Element, Person
-- Paths: .cursor/commands/**, .cursor/skills/**
+- Paths: .cursor/commands/seed-arch4.md, .cursor/commands/update-arch4.md, .cursor/commands/review-arch4.md, .cursor/skills/arch4/SKILL.md, .cursor/skills/c4/SKILL.md, .cursor/rules/arch4.mdc
 - Views: Arch4Containers, Arch4SystemContext
+- Owners: Arch4
 - Confidence: high
-- Contributors: Paul Stoeckle (1)
 
-Recent commits:
-- 2026-06-14 55b9cc93 First release commit
+Notes:
+```json
+{
+  "summary": "Cursor agent invoked by Arch4: Create/Update Architecture Model to seed or maintain workspace.dsl and entity metadata from repository evidence."
+}
+```
 

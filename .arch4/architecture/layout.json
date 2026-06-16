@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "views": {
     "Arch4Containers": {
-      "direction": "DOWN"
+      "direction": "RIGHT"
     }
   }
 }

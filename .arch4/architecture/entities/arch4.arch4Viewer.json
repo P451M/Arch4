@@ -1,9 +1,11 @@
 {
   "schemaVersion": 1,
   "entityId": "arch4.arch4Viewer",
-  "owners": ["Maintainer"],
-  "paths": ["packages/viewer/**"],
+  "owners": ["Arch4"],
+  "paths": ["packages/viewer/**/*"],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "React and React Flow viewer that renders diagram specs with navigation, element details, and layout controls."
+  }
 }

@@ -1,9 +1,11 @@
 {
   "schemaVersion": 1,
   "entityId": "arch4.arch4Cli",
-  "owners": ["Maintainer"],
-  "paths": ["packages/cli/**"],
+  "owners": ["Arch4"],
+  "paths": ["packages/cli/**/*"],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Node CLI that initializes Arch4 workspaces and runs validate, render, index, context, and doctor commands against repository-local architecture artifacts."
+  }
 }

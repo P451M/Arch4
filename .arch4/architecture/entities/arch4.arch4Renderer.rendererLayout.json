@@ -1,9 +1,11 @@
 {
   "schemaVersion": 1,
   "entityId": "arch4.arch4Renderer.rendererLayout",
-  "owners": ["Maintainer"],
+  "owners": ["Arch4"],
   "paths": ["packages/renderer-structurizr/src/layout.ts"],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Applies Arch4 layout direction and manual node positions to normalized diagram specs before output is written."
+  }
 }

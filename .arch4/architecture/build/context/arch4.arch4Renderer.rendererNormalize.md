@@ -1,17 +1,24 @@
 # Arch4 Context
 
-## Renderer Normalize
+## Workspace Normalizer
 
 - Entity: arch4.arch4Renderer.rendererNormalize
 - Type: component
-- Description: Transforms Structurizr workspace JSON into DiagramSpec.
+- Description: Converts Structurizr export JSON into diagram nodes, edges, and boundaries.
 - Tags: Element, Component
 - Paths: packages/renderer-structurizr/src/normalize.ts
 - Views: Arch4RendererComponents
-- Owners: Maintainer
+- Owners: Arch4
 - Confidence: high
+
+Notes:
+```json
+{
+  "summary": "Transforms Structurizr export JSON into Arch4 diagram nodes, edges, boundaries, and diagnostics."
+}
+```
 - Contributors: Paul Stoeckle (1)
 
 Recent commits:
-- 2026-06-14 55b9cc93 First release commit
+- 2026-06-14 1d74a893 Initial Arch4 release
 

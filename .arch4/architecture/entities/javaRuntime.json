@@ -1,9 +1,11 @@
 {
   "schemaVersion": 1,
   "entityId": "javaRuntime",
-  "owners": [],
-  "paths": ["runtime/**", "docs/runtime-packaging.md"],
+  "owners": ["Arch4"],
+  "paths": ["runtime/**/*", "docs/runtime-packaging.md"],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Pinned JVM bundled per platform so Structurizr CLI can run without relying on a system Java install."
+  }
 }

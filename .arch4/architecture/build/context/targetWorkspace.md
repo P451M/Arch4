@@ -1,26 +1,22 @@
 # Arch4 Context
 
-## Target Workspace
+## Target Repository
 
 - Entity: targetWorkspace
 - Type: softwareSystem
-- Description: Repository where Arch4 is installed and whose architecture DSL, entities, and source files are modeled.
+- Description: Repository workspace where Arch4 stores architecture source and derived artifacts under .arch4/.
 - Tags: Element, Software System
-- Paths: examples/minimal-repo/**
+- Paths: .arch4/**/*
 - Views: Arch4CliComponents, Arch4Containers, Arch4ExtensionComponents, Arch4RendererComponents, Arch4SystemContext
-- Confidence: medium
+- Confidence: high
 
 Open questions:
-- Should target workspaces always be modeled as external systems, or only when Arch4 is installed outside this repository?
+- Should repository-local .arch4/ state be modeled as an external system, a container, or a data store when Arch4 models its own host repository?
 
 Notes:
 ```json
 {
-  "devExample": "examples/minimal-repo is the evidenced target workspace used by pnpm dev:cursor."
+  "summary": "Repository workspace where Arch4 stores architecture source, entity metadata, and derived build artifacts."
 }
 ```
-- Contributors: Paul Stoeckle (1)
-
-Recent commits:
-- 2026-06-14 55b9cc93 First release commit
 

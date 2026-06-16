@@ -1,9 +1,11 @@
 {
   "schemaVersion": 1,
   "entityId": "arch4.arch4Cli.cliIndexer",
-  "owners": ["Maintainer"],
-  "paths": ["packages/cli/src/indexer.ts"],
+  "owners": ["Arch4"],
+  "paths": ["packages/cli/src/indexer.ts", "packages/cli/src/repo-files.ts"],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Builds architecture-index.json, per-entity context markdown, and git-enriched contributor metadata from rendered views and entity paths."
+  }
 }

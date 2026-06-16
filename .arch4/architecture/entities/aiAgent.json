@@ -1,9 +1,18 @@
 {
   "schemaVersion": 1,
   "entityId": "aiAgent",
-  "owners": [],
-  "paths": [".cursor/commands/**", ".cursor/skills/**"],
+  "owners": ["Arch4"],
+  "paths": [
+    ".cursor/commands/seed-arch4.md",
+    ".cursor/commands/update-arch4.md",
+    ".cursor/commands/review-arch4.md",
+    ".cursor/skills/arch4/SKILL.md",
+    ".cursor/skills/c4/SKILL.md",
+    ".cursor/rules/arch4.mdc"
+  ],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Cursor agent invoked by Arch4: Create/Update Architecture Model to seed or maintain workspace.dsl and entity metadata from repository evidence."
+  }
 }

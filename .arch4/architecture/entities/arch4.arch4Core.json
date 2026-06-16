@@ -1,9 +1,11 @@
 {
   "schemaVersion": 1,
   "entityId": "arch4.arch4Core",
-  "owners": ["Maintainer"],
-  "paths": ["packages/core/**"],
+  "owners": ["Arch4"],
+  "paths": ["packages/core/**/*"],
   "confidence": "high",
   "openQuestions": [],
-  "notes": {}
+  "notes": {
+    "summary": "Shared TypeScript contracts and helpers for Arch4 workspace layout, diagram specs, diagnostics, and JSON validation."
+  }
 }

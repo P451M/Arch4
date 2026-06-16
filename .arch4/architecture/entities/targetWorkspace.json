@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "entityId": "targetWorkspace",
   "owners": [],
-  "paths": ["examples/minimal-repo/**"],
-  "confidence": "medium",
+  "paths": [".arch4/**/*"],
+  "confidence": "high",
   "openQuestions": [
-    "Should target workspaces always be modeled as external systems, or only when Arch4 is installed outside this repository?"
+    "Should repository-local .arch4/ state be modeled as an external system, a container, or a data store when Arch4 models its own host repository?"
   ],
   "notes": {
-    "devExample": "examples/minimal-repo is the evidenced target workspace used by pnpm dev:cursor."
+    "summary": "Repository workspace where Arch4 stores architecture source, entity metadata, and derived build artifacts."
   }
 }
