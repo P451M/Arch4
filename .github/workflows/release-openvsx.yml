@@ -79,7 +79,118 @@ jobs:
         with:
           name: arch4-${{ matrix.platform }}-vsix
           path: artifacts/arch4-${{ steps.extension.outputs.version }}-${{ matrix.platform }}.vsix
-      - if: ${{ inputs.publish == 'true' && startsWith(github.ref, 'refs/tags/') }}
-        run: node scripts/publish-openvsx.mjs artifacts/arch4-${{ steps.extension.outputs.version }}-${{ matrix.platform }}.vsix
+
+  release:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.2.2
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - id: extension
+        run: node scripts/write-extension-version-output.mjs
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: arch4-*-vsix
+          path: artifacts
+          merge-multiple: true
+      - name: Verify release artifacts
+        run: |
+          set -euo pipefail
+          version="${{ steps.extension.outputs.version }}"
+          expected=(
+            "arch4-${version}-darwin-arm64.vsix"
+            "arch4-${version}-darwin-x64.vsix"
+            "arch4-${version}-linux-x64.vsix"
+            "arch4-${version}-win32-x64.vsix"
+          )
+          for artifact in "${expected[@]}"; do
+            test -f "artifacts/${artifact}" || {
+              echo "Missing release artifact: artifacts/${artifact}" >&2
+              exit 1
+            }
+          done
+          found="$(find artifacts -maxdepth 1 -type f -name "arch4-${version}-*.vsix" | wc -l | tr -d ' ')"
+          test "${found}" = "${#expected[@]}" || {
+            echo "Expected ${#expected[@]} VSIX artifacts for ${version}, found ${found}." >&2
+            find artifacts -maxdepth 1 -type f -name '*.vsix' -print >&2
+            exit 1
+          }
+      - if: ${{ inputs.publish == 'true' }}
+        name: Prepare GitHub Release
+        run: |
+          set -euo pipefail
+          version="${{ steps.extension.outputs.version }}"
+          tag="v${version}"
+          test "${GITHUB_REF}" = "refs/tags/${tag}" || {
+            echo "Publishing requires refs/tags/${tag}; got ${GITHUB_REF}." >&2
+            exit 1
+          }
+
+          awk -v version="${version}" '
+            $0 == "## " version { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          grep -q '[^[:space:]]' release-notes.md || {
+            echo "CHANGELOG.md has no release notes for ${version}." >&2
+            exit 1
+          }
+
+          if gh release view "${tag}" --json isDraft --jq .isDraft > release-draft-state.txt 2>/dev/null; then
+            if grep -qx "true" release-draft-state.txt; then
+              gh release delete "${tag}" --yes
+            else
+              echo "GitHub Release ${tag} already exists and is not a draft." >&2
+              exit 1
+            fi
+          fi
+
+          gh release create "${tag}" \
+            --draft \
+            --verify-tag \
+            --title "${tag}" \
+            --notes-file release-notes.md \
+            artifacts/arch4-${version}-darwin-arm64.vsix \
+            artifacts/arch4-${version}-darwin-x64.vsix \
+            artifacts/arch4-${version}-linux-x64.vsix \
+            artifacts/arch4-${version}-win32-x64.vsix
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - if: ${{ inputs.publish == 'true' }}
+        name: Publish to OpenVSX
+        run: |
+          set -euo pipefail
+          version="${{ steps.extension.outputs.version }}"
+          extension="arch4-cursor-extension"
+          publisher="arch4"
+          platforms=(darwin-arm64 darwin-x64 linux-x64 win32-x64)
+          for platform in "${platforms[@]}"; do
+            artifact="artifacts/arch4-${version}-${platform}.vsix"
+            status="$(curl -s -o /dev/null -w '%{http_code}' "https://open-vsx.org/api/${publisher}/${extension}/${platform}/${version}")"
+            case "${status}" in
+              200)
+                echo "OpenVSX already has ${extension} ${version}@${platform}; skipping."
+                ;;
+              404)
+                node scripts/publish-openvsx.mjs "${artifact}"
+                ;;
+              *)
+                echo "Unexpected OpenVSX lookup status for ${version}@${platform}: ${status}" >&2
+                exit 1
+                ;;
+            esac
+          done
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
+      - if: ${{ inputs.publish == 'true' }}
+        name: Publish GitHub Release
+        run: gh release edit "v${{ steps.extension.outputs.version }}" --draft=false --latest
+        env:
+          GH_TOKEN: ${{ github.token }}
