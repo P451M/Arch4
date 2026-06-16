@@ -13,6 +13,21 @@ Use the C4 skill for C4 modeling terminology and diagram semantics.
 - Architecture DSL: `.arch4/architecture/workspace.dsl`
 - Entity metadata: `.arch4/architecture/entities/*.json`
 - Derived output: `.arch4/architecture/build/**`
+- Local agent launcher: `.arch4/bin/**`
+- Cursor workflow helpers: `.cursor/commands/*`, `.cursor/rules/arch4.mdc`,
+  and `.cursor/skills/*`
+
+## Git Status Classification
+
+- Expected Arch4 source edits: `.arch4/architecture/workspace.dsl` and
+  `.arch4/architecture/entities/*.json`.
+- Expected Arch4 generated or local artifacts: `.arch4/architecture/build/**`,
+  `.arch4/bin/**`, `.cursor/commands/*`, `.cursor/rules/arch4.mdc`, and
+  `.cursor/skills/*`.
+- Unexpected changes: any other repository files unless the user explicitly
+  requested them or they were already present before the Arch4 workflow.
+- Do not label Arch4-owned initialization artifacts under `.cursor/**` or
+  `.arch4/bin/**` as unexpected.
 
 ## Entity Metadata Schema
 
@@ -84,15 +99,20 @@ already obvious from the DSL, paths, owners, or relationships.
 ## Workflow
 
 1. Read the current Arch4 source files and relevant repository files.
-2. Decide whether the change affects architecture responsibilities, boundaries,
+2. Run `.arch4/bin/arch4 doctor`. If the local launcher, workspace, CLI, or
+   runtime is missing, stop without edits and tell the user to run
+   `Arch4: Create/Update Architecture Model` or reinstall Arch4.
+3. Decide whether the change affects architecture responsibilities, boundaries,
    dependencies, deployment topology, data ownership, runtime technology,
    ownership metadata, or path coverage.
-3. If it does, update `.arch4/architecture/workspace.dsl` and the relevant
+4. If it does, update `.arch4/architecture/workspace.dsl` and the relevant
    `.arch4/architecture/entities/*.json` metadata files.
-4. Keep `.arch4/architecture/build/**` disposable and derived; do not edit it
+5. Keep `.arch4/architecture/build/**` disposable and derived; do not edit it
    as source.
-5. When a CLI is available, validate/render/index the model after source edits.
-6. Before committing or completing architecture-impacting work, review changed
+6. Validate/render/index the model after source edits with
+   `.arch4/bin/arch4 validate`, `.arch4/bin/arch4 render`, and
+   `.arch4/bin/arch4 index`. Treat command failure as a blocking error.
+7. Before committing or completing architecture-impacting work, review changed
    files against mapped entities and confirm relevant
    `.arch4/architecture/entities/*.json` notes are still accurate.
 
@@ -109,11 +129,13 @@ For large DSL changes, use staged validation before metadata generation:
 
 ## CLI Commands
 
-- `arch4 validate`: validate the Structurizr workspace and write diagnostics.
-- `arch4 render`: render DSL views into `.arch4/architecture/build/views/`.
-- `arch4 index`: build `.arch4/architecture/build/architecture-index.json`
+- `.arch4/bin/arch4 doctor`: verify the local Arch4 launcher, bundled CLI,
+  and runtime.
+- `.arch4/bin/arch4 validate`: validate the Structurizr workspace and write diagnostics.
+- `.arch4/bin/arch4 render`: render DSL views into `.arch4/architecture/build/views/`.
+- `.arch4/bin/arch4 index`: build `.arch4/architecture/build/architecture-index.json`
   and `.arch4/architecture/build/context/*.md`.
-- `arch4 context --changed-files <paths...>`: retrieve compact architecture
+- `.arch4/bin/arch4 context --changed-files <paths...>`: retrieve compact architecture
   context for changed files.
 
 ## Evidence Rules

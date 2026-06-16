@@ -39,7 +39,6 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:arch4.init",
     "onCommand:arch4.openMap",
     "onCommand:arch4.buildArtifacts",
     "onCommand:arch4.updateModel",
@@ -50,10 +49,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "arch4.init",
-        "title": "Arch4: Initialize Workspace"
-      },
-      {
         "command": "arch4.openMap",
         "title": "Arch4: Open Architecture Map"
       },
@@ -63,7 +58,7 @@
       },
       {
         "command": "arch4.updateModel",
-        "title": "Arch4: Update Architecture Model"
+        "title": "Arch4: Create/Update Architecture Model"
       },
       {
         "command": "arch4.removeArtifacts",

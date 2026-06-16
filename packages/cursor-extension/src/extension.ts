@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { chmod, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import * as vscode from "vscode";
@@ -63,9 +63,6 @@ export function activate(context: vscode.ExtensionContext) {
     ...registerArch4ArtifactWatchers(artifactRefresh.schedule),
   );
   context.subscriptions.push(
-    command("arch4.init", async () => initializeWorkspace(context, provider)),
-  );
-  context.subscriptions.push(
     command("arch4.openMap", async () => openMap(context, mapPanels)),
   );
   context.subscriptions.push(
@@ -74,7 +71,9 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
   context.subscriptions.push(
-    command("arch4.updateModel", async () => updateArchitectureModel()),
+    command("arch4.updateModel", async () =>
+      updateArchitectureModel(context, provider),
+    ),
   );
   context.subscriptions.push(
     command("arch4.removeArtifacts", async () =>
@@ -144,18 +143,6 @@ function registerArch4ArtifactWatchers(
       watcher.onDidDelete(scheduleArtifactRefresh),
     ];
   });
-}
-
-async function initializeWorkspace(
-  context: vscode.ExtensionContext,
-  provider: Arch4TreeProvider,
-): Promise<void> {
-  await runCli(["init"], context);
-  await installCursorContext({ notify: false });
-  provider.refresh();
-  void vscode.window.showInformationMessage(
-    "Initialized Arch4 workspace with Cursor rules, skills, and commands. Next: run Arch4: Update Architecture Model.",
-  );
 }
 
 async function runCli(
@@ -421,8 +408,22 @@ async function buildArchitectureArtifacts(
   );
 }
 
-async function updateArchitectureModel(): Promise<void> {
+async function updateArchitectureModel(
+  context: vscode.ExtensionContext,
+  provider: Arch4TreeProvider,
+): Promise<void> {
+  await prepareArchitectureModelWorkspace(context, provider);
   await openCursorPrompt(updateArchitectureRouterPrompt());
+}
+
+async function prepareArchitectureModelWorkspace(
+  context: vscode.ExtensionContext,
+  provider: Arch4TreeProvider,
+): Promise<void> {
+  await runCli(["init"], context);
+  await installCursorContext({ notify: false });
+  await installWorkspaceLauncher();
+  provider.refresh();
 }
 
 async function removeWorkspaceArtifacts(
@@ -488,6 +489,31 @@ async function installCursorContext(
       "Installed Arch4 Cursor rule, C4/Arch4 skills, and /seed-arch4, /update-arch4, and /review-arch4 commands.",
     );
   }
+}
+
+async function installWorkspaceLauncher(): Promise<void> {
+  const root = workspaceRoot();
+  const binDir = path.join(root, ".arch4", "bin");
+  await mkdir(binDir, { recursive: true });
+  const launcherPath = path.join(binDir, "arch4");
+  const windowsLauncherPath = path.join(binDir, "arch4.cmd");
+  const packageJsonPath = path.join(binDir, "package.json");
+  await writeArch4OwnedFile(
+    packageJsonPath,
+    arch4LauncherPackageJsonTemplate(),
+    "Arch4 launcher",
+  );
+  await writeArch4OwnedFile(
+    launcherPath,
+    arch4LauncherTemplate(),
+    "Arch4 launcher",
+  );
+  await chmod(launcherPath, 0o755);
+  await writeArch4OwnedFile(
+    windowsLauncherPath,
+    arch4WindowsLauncherTemplate(),
+    "Arch4 launcher",
+  );
 }
 
 function renderWebviewHtml(
@@ -575,13 +601,14 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 export async function writeArch4OwnedFile(
   filePath: string,
   content: string,
+  artifactKind = "Cursor file",
 ): Promise<void> {
   const markedContent = withArch4OwnershipMarker(content);
   try {
     const existing = await readFile(filePath, "utf8");
     if (!canReplaceArch4OwnedContent(existing, content)) {
       throw new Error(
-        `Refusing to overwrite user-owned Cursor file: ${filePath}`,
+        `Refusing to overwrite user-owned ${artifactKind}: ${filePath}`,
       );
     }
   } catch (error) {
@@ -624,6 +651,79 @@ function cursorContextArtifacts(): readonly CursorContextArtifact[] {
       content: reviewArch4CommandTemplate(),
     },
   ];
+}
+
+function arch4LauncherTemplate(): string {
+  return `#!/usr/bin/env node
+// ${ARCH4_OWNERSHIP_MARKER}
+import { existsSync, readdirSync, statSync } from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { spawnSync } from "node:child_process";
+
+const extensionDir = findArch4ExtensionDir();
+if (!extensionDir) {
+  fail("Could not find an installed Arch4 Cursor extension. Reinstall Arch4 in Cursor, then run Arch4: Create/Update Architecture Model.");
+}
+
+const cliPath = path.join(extensionDir, "cli", "index.js");
+const runtimeDir = path.join(extensionDir, "runtime");
+if (!existsSync(cliPath)) {
+  fail(\`Installed Arch4 extension is missing bundled CLI at \${cliPath}. Reinstall Arch4 in Cursor, then run Arch4: Create/Update Architecture Model.\`);
+}
+if (!existsSync(runtimeDir)) {
+  fail(\`Installed Arch4 extension is missing bundled runtime at \${runtimeDir}. Reinstall Arch4 in Cursor, then run Arch4: Create/Update Architecture Model.\`);
+}
+
+const result = spawnSync(process.execPath, [cliPath, ...process.argv.slice(2)], {
+  stdio: "inherit",
+  env: { ...process.env, ARCH4_RUNTIME_DIR: runtimeDir },
+});
+
+if (result.error) fail(result.error.message);
+if (typeof result.status === "number") process.exit(result.status);
+process.exit(1);
+
+function findArch4ExtensionDir() {
+  const roots = [
+    process.env.CURSOR_EXTENSIONS_DIR,
+    process.env.VSCODE_EXTENSIONS,
+    path.join(os.homedir(), ".cursor", "extensions"),
+  ].filter(Boolean);
+  const candidates = [];
+  for (const root of roots) {
+    if (!root || !existsSync(root)) continue;
+    for (const entry of readdirSync(root)) {
+      if (!entry.startsWith("arch4.arch4-cursor-extension-")) continue;
+      const candidate = path.join(root, entry);
+      const stats = statSync(candidate);
+      if (stats.isDirectory()) candidates.push({ path: candidate, mtimeMs: stats.mtimeMs });
+    }
+  }
+  candidates.sort((left, right) => right.mtimeMs - left.mtimeMs);
+  return candidates[0]?.path;
+}
+
+function fail(message) {
+  console.error(\`arch4.launcher: \${message}\`);
+  process.exit(1);
+}
+`;
+}
+
+function arch4WindowsLauncherTemplate(): string {
+  return `@echo off
+rem ${ARCH4_OWNERSHIP_MARKER}
+node "%~dp0arch4" %*
+`;
+}
+
+function arch4LauncherPackageJsonTemplate(): string {
+  return `{
+  "${ARCH4_OWNERSHIP_MARKER}": true,
+  "type": "module"
+}
+`;
 }
 
 function withArch4OwnershipMarker(content: string): string {
@@ -947,6 +1047,21 @@ Use the C4 skill for C4 modeling terminology and diagram semantics.
 - Architecture DSL: \`.arch4/architecture/workspace.dsl\`
 - Entity metadata: \`.arch4/architecture/entities/*.json\`
 - Derived output: \`.arch4/architecture/build/**\`
+- Local agent launcher: \`.arch4/bin/**\`
+- Cursor workflow helpers: \`.cursor/commands/*\`, \`.cursor/rules/arch4.mdc\`,
+  and \`.cursor/skills/*\`
+
+## Git Status Classification
+
+- Expected Arch4 source edits: \`.arch4/architecture/workspace.dsl\` and
+  \`.arch4/architecture/entities/*.json\`.
+- Expected Arch4 generated or local artifacts: \`.arch4/architecture/build/**\`,
+  \`.arch4/bin/**\`, \`.cursor/commands/*\`, \`.cursor/rules/arch4.mdc\`, and
+  \`.cursor/skills/*\`.
+- Unexpected changes: any other repository files unless the user explicitly
+  requested them or they were already present before the Arch4 workflow.
+- Do not label Arch4-owned initialization artifacts under \`.cursor/**\` or
+  \`.arch4/bin/**\` as unexpected.
 
 ## Entity Metadata Schema
 
@@ -1018,22 +1133,27 @@ already obvious from the DSL, paths, owners, or relationships.
 ## Workflow
 
 1. Read the current Arch4 source files and relevant repository files.
-2. Decide whether the change affects architecture responsibilities, boundaries,
+2. Run \`.arch4/bin/arch4 doctor\`. If the local launcher, workspace, CLI, or
+   runtime is missing, stop without edits and tell the user to run
+   \`Arch4: Create/Update Architecture Model\` or reinstall Arch4.
+3. Decide whether the change affects architecture responsibilities, boundaries,
    dependencies, deployment topology, data ownership, runtime technology,
    ownership metadata, or path coverage.
-3. If it does, update \`.arch4/architecture/workspace.dsl\` and the relevant
+4. If it does, update \`.arch4/architecture/workspace.dsl\` and the relevant
    \`.arch4/architecture/entities/*.json\` metadata files.
-4. Keep \`.arch4/architecture/build/**\` disposable and derived; do not edit it
+5. Keep \`.arch4/architecture/build/**\` disposable and derived; do not edit it
    as source.
-5. When a CLI is available, validate/render/index the model after source edits.
-6. After rendering, inspect generated view JSON and report node, edge, and
+6. Validate/render/index the model after source edits with
+   \`.arch4/bin/arch4 validate\`, \`.arch4/bin/arch4 render\`, and
+   \`.arch4/bin/arch4 index\`. Treat command failure as a blocking error.
+7. After rendering, inspect generated view JSON and report node, edge, and
    boundary counts for each view. Treat zero-edge component views as a quality
    problem unless intentionally justified.
-7. Before committing or completing architecture-impacting work, review changed
+8. Before committing or completing architecture-impacting work, review changed
    files against mapped entities and confirm relevant
    \`.arch4/architecture/entities/*.json\` notes are still accurate.
-8. Run \`git status --short\` after architecture workflows and call out any
-   unexpected changes outside allowed Arch4 source files.
+9. Run \`git status --short\` after architecture workflows and classify changes
+   using the Git Status Classification rules above.
 
 ## Large Architecture Edit Workflow
 
@@ -1048,11 +1168,13 @@ For large DSL changes, use staged validation before metadata generation:
 
 ## CLI Commands
 
-- \`arch4 validate\`: validate the Structurizr workspace and write diagnostics.
-- \`arch4 render\`: render DSL views into \`.arch4/architecture/build/views/\`.
-- \`arch4 index\`: build \`.arch4/architecture/build/architecture-index.json\`
+- \`.arch4/bin/arch4 doctor\`: verify the local Arch4 launcher, bundled CLI,
+  and runtime.
+- \`.arch4/bin/arch4 validate\`: validate the Structurizr workspace and write diagnostics.
+- \`.arch4/bin/arch4 render\`: render DSL views into \`.arch4/architecture/build/views/\`.
+- \`.arch4/bin/arch4 index\`: build \`.arch4/architecture/build/architecture-index.json\`
   and \`.arch4/architecture/build/context/*.md\`.
-- \`arch4 context --changed-files <paths...>\`: retrieve compact architecture
+- \`.arch4/bin/arch4 context --changed-files <paths...>\`: retrieve compact architecture
   context for changed files.
 
 ## Evidence Rules
@@ -1080,16 +1202,18 @@ function reviewArch4CommandTemplate(): string {
 }
 
 function updateArchitectureRouterPrompt(): string {
-  return `# Update Arch4 Architecture Model
+  return `# Create/Update Arch4 Architecture Model
 
-Update this repository's Arch4 architecture model using the correct Arch4 workflow for the current model state.
+Create or update this repository's Arch4 architecture model using the correct Arch4 workflow for the current model state.
 
 Use both the C4 skill and the Arch4 skill. Follow this routing workflow:
 
-1. Read \`.arch4/architecture/workspace.dsl\` and any entity metadata under \`.arch4/architecture/entities/\`.
-2. Determine the DSL identifier mode. If \`!identifiers hierarchical\` is present, draft an identifier inventory before writing many relationships, views, or metadata files.
-3. Decide whether \`.arch4/architecture/workspace.dsl\` is empty, scaffold-only, or still minimal.
-4. If the model is empty or minimal, follow the same first-time seeding workflow as \`/seed-arch4\`:
+1. Confirm \`.arch4/architecture/workspace.dsl\` and \`.arch4/bin/arch4\` exist.
+2. Run \`.arch4/bin/arch4 doctor\`. If the local launcher, workspace, CLI, or runtime is missing, stop without edits and tell the user to run \`Arch4: Create/Update Architecture Model\` or reinstall Arch4.
+3. Read \`.arch4/architecture/workspace.dsl\` and any entity metadata under \`.arch4/architecture/entities/\`.
+4. Determine the DSL identifier mode. If \`!identifiers hierarchical\` is present, draft an identifier inventory before writing many relationships, views, or metadata files.
+5. Decide whether \`.arch4/architecture/workspace.dsl\` is empty, scaffold-only, or still minimal.
+6. If the model is empty or minimal, follow the same first-time seeding workflow as \`/seed-arch4\`:
    - inspect repository source files, dependency manifests, deployment/config files, tests, docs, and existing architecture notes
    - create or refresh the initial C4 model from evidenced facts only
    - include system context and relevant container/component views supported by evidence
@@ -1100,21 +1224,21 @@ Use both the C4 skill and the Arch4 skill. Follow this routing workflow:
    - create or update \`.arch4/architecture/entities/*.json\` metadata from validated identifiers for modeled entities
    - write entity notes using the Arch4 skill's entity notes guidance
    - do not create dynamic views during initial seeding; suggest candidates instead
-5. If the model already contains meaningful architecture facts, follow the same ongoing maintenance workflow as \`/update-arch4\`:
+7. If the model already contains meaningful architecture facts, follow the same ongoing maintenance workflow as \`/update-arch4\`:
    - inspect repository source files, dependency manifests, deployment/config files, and tests needed to understand the actual architecture
    - identify architecture-relevant changes to responsibilities, boundaries, containers, components, relationships, deployment topology, runtime technologies, data ownership, and path ownership
    - maintain the existing model from changed facts without reseeding from scratch
    - preserve existing qualified identifiers unless a rename is explicitly justified
    - update relevant entity notes when mapped responsibilities, boundaries, dependencies, data ownership, runtime technology, runtime behavior, ownership, or paths changed
-6. Update only Arch4 architecture source files when facts changed:
+8. Update only Arch4 architecture source files when facts changed:
    - \`.arch4/architecture/workspace.dsl\`
    - \`.arch4/architecture/entities/*.json\`
-7. Use staged validation before metadata generation for large DSL edits.
-8. Do not invent architecture facts. If evidence is insufficient, add an open question or leave the model unchanged and explain the uncertainty.
-9. Do not edit files under \`.arch4/architecture/build/**\`; they are derived output.
-10. If an Arch4 CLI is available, run \`arch4 validate\`, \`arch4 render\`, and \`arch4 index\` after source edits and report the result.
-11. Inspect rendered view JSON and report node, edge, and boundary counts for each view.
-12. Run \`git status --short\` and call out unexpected changes outside \`.arch4/architecture/workspace.dsl\` and \`.arch4/architecture/entities/*.json\`.
+9. Use staged validation before metadata generation for large DSL edits.
+10. Do not invent architecture facts. If evidence is insufficient, add an open question or leave the model unchanged and explain the uncertainty.
+11. Do not edit files under \`.arch4/architecture/build/**\`; they are derived output.
+12. Run \`.arch4/bin/arch4 validate\`, \`.arch4/bin/arch4 render\`, and \`.arch4/bin/arch4 index\` after source edits and report the result. Treat command failure as a blocking error.
+13. Inspect rendered view JSON and report node, edge, and boundary counts for each view.
+14. Run \`git status --short\` and classify changes as Arch4 source edits, Arch4 generated/local artifacts, and unexpected non-Arch4 files. Do not label Arch4-owned initialization artifacts under \`.cursor/**\` or \`.arch4/bin/**\` as unexpected.
 
 Return a concise summary of which workflow was used, model changes, evidence used, and any open questions.`;
 }
@@ -1126,23 +1250,25 @@ Create this repository's initial Arch4 architecture model.
 
 Use both the C4 skill and the Arch4 skill. Follow this workflow:
 
-1. Read \`.arch4/architecture/workspace.dsl\` and any entity metadata under \`.arch4/architecture/entities/\`.
-2. Determine the DSL identifier mode. If \`!identifiers hierarchical\` is present, draft an identifier inventory before writing many relationships, views, or metadata files.
-3. Inspect repository source files, dependency manifests, deployment/config files, tests, docs, and existing architecture notes needed to understand the actual architecture.
-4. Create or refresh the initial C4 model in \`.arch4/architecture/workspace.dsl\` using only evidenced facts:
+1. Confirm \`.arch4/architecture/workspace.dsl\` and \`.arch4/bin/arch4\` exist.
+2. Run \`.arch4/bin/arch4 doctor\`. If the local launcher, workspace, CLI, or runtime is missing, stop without edits and tell the user to run \`Arch4: Create/Update Architecture Model\` or reinstall Arch4.
+3. Read \`.arch4/architecture/workspace.dsl\` and any entity metadata under \`.arch4/architecture/entities/\`.
+4. Determine the DSL identifier mode. If \`!identifiers hierarchical\` is present, draft an identifier inventory before writing many relationships, views, or metadata files.
+5. Inspect repository source files, dependency manifests, deployment/config files, tests, docs, and existing architecture notes needed to understand the actual architecture.
+6. Create or refresh the initial C4 model in \`.arch4/architecture/workspace.dsl\` using only evidenced facts:
    - include a system context view; if actors or external dependencies are unknown, include at least the target software system and record open questions
    - include all relevant container views supported by evidence
    - include only component views that have meaningful evidenced relationships; skip or justify relationship-free component candidates
    - include deployment views only when deployment/runtime evidence exists
    - use relationship labels that read as \`<source> <label> <target>\`, including needed prepositions
    - treat package-as-container modeling as an explicit convention when runtime boundaries are not evidenced
-5. Use staged validation before metadata generation for large DSL edits.
-6. Create or update \`.arch4/architecture/entities/*.json\` metadata from validated identifiers for modeled entities, including paths, owners when known, confidence, open questions, and notes that follow the Arch4 skill's entity notes guidance.
-7. Do not create dynamic views during initial seeding. Instead, identify suitable dynamic view candidates.
-8. Do not edit files under \`.arch4/architecture/build/**\`; they are derived output.
-9. If an Arch4 CLI is available, run \`arch4 validate\`, \`arch4 render\`, and \`arch4 index\` after source edits and report the result.
-10. Inspect rendered view JSON and report node, edge, and boundary counts for each view.
-11. Run \`git status --short\` and call out unexpected changes outside \`.arch4/architecture/workspace.dsl\` and \`.arch4/architecture/entities/*.json\`.
+7. Use staged validation before metadata generation for large DSL edits.
+8. Create or update \`.arch4/architecture/entities/*.json\` metadata from validated identifiers for modeled entities, including paths, owners when known, confidence, open questions, and notes that follow the Arch4 skill's entity notes guidance.
+9. Do not create dynamic views during initial seeding. Instead, identify suitable dynamic view candidates.
+10. Do not edit files under \`.arch4/architecture/build/**\`; they are derived output.
+11. Run \`.arch4/bin/arch4 validate\`, \`.arch4/bin/arch4 render\`, and \`.arch4/bin/arch4 index\` after source edits and report the result. Treat command failure as a blocking error.
+12. Inspect rendered view JSON and report node, edge, and boundary counts for each view.
+13. Run \`git status --short\` and classify changes as Arch4 source edits, Arch4 generated/local artifacts, and unexpected non-Arch4 files. Do not label Arch4-owned initialization artifacts under \`.cursor/**\` or \`.arch4/bin/**\` as unexpected.
 
 Return a concise summary of model changes, evidence used, open questions, and suggested dynamic views. Ask which suggested dynamic views should be created next.`;
 }
@@ -1154,22 +1280,24 @@ Update this repository's Arch4 architecture model.
 
 Use both the C4 skill and the Arch4 skill. Follow this workflow:
 
-1. Read \`.arch4/architecture/workspace.dsl\` and any entity metadata under \`.arch4/architecture/entities/\`.
-2. Determine the DSL identifier mode. If \`!identifiers hierarchical\` is present, draft an identifier inventory before writing many relationships, views, or metadata files.
-3. Inspect repository source files, dependency manifests, deployment/config files, and tests needed to understand the actual architecture.
-4. Identify architecture-relevant changes: responsibilities, boundaries, containers, components, relationships, deployment topology, runtime technologies, data ownership, and path ownership.
-5. Maintain the existing model from the changed facts. Do not reseed from scratch unless \`.arch4/architecture/workspace.dsl\` is still empty or minimal.
-6. Preserve existing qualified identifiers unless a rename is explicitly justified.
-7. Update only Arch4 architecture source files when facts changed:
+1. Confirm \`.arch4/architecture/workspace.dsl\` and \`.arch4/bin/arch4\` exist.
+2. Run \`.arch4/bin/arch4 doctor\`. If the local launcher, workspace, CLI, or runtime is missing, stop without edits and tell the user to run \`Arch4: Create/Update Architecture Model\` or reinstall Arch4.
+3. Read \`.arch4/architecture/workspace.dsl\` and any entity metadata under \`.arch4/architecture/entities/\`.
+4. Determine the DSL identifier mode. If \`!identifiers hierarchical\` is present, draft an identifier inventory before writing many relationships, views, or metadata files.
+5. Inspect repository source files, dependency manifests, deployment/config files, and tests needed to understand the actual architecture.
+6. Identify architecture-relevant changes: responsibilities, boundaries, containers, components, relationships, deployment topology, runtime technologies, data ownership, and path ownership.
+7. Maintain the existing model from the changed facts. Do not reseed from scratch unless \`.arch4/architecture/workspace.dsl\` is still empty or minimal.
+8. Preserve existing qualified identifiers unless a rename is explicitly justified.
+9. Update only Arch4 architecture source files when facts changed:
    - \`.arch4/architecture/workspace.dsl\`
    - \`.arch4/architecture/entities/*.json\`
-8. Update relevant entity notes when mapped responsibilities, boundaries, dependencies, data ownership, runtime technology, runtime behavior, ownership, or paths changed.
-9. Use staged validation before metadata generation for large DSL edits.
-10. Do not invent architecture facts. If evidence is insufficient, add an open question or leave the model unchanged and explain the uncertainty.
-11. Do not edit files under \`.arch4/architecture/build/**\`; they are derived output.
-12. If an Arch4 CLI is available, run \`arch4 validate\`, \`arch4 render\`, and \`arch4 index\` after source edits and report the result.
-13. Inspect rendered view JSON and report node, edge, and boundary counts for each view.
-14. Run \`git status --short\` and call out unexpected changes outside \`.arch4/architecture/workspace.dsl\` and \`.arch4/architecture/entities/*.json\`.
+10. Update relevant entity notes when mapped responsibilities, boundaries, dependencies, data ownership, runtime technology, runtime behavior, ownership, or paths changed.
+11. Use staged validation before metadata generation for large DSL edits.
+12. Do not invent architecture facts. If evidence is insufficient, add an open question or leave the model unchanged and explain the uncertainty.
+13. Do not edit files under \`.arch4/architecture/build/**\`; they are derived output.
+14. Run \`.arch4/bin/arch4 validate\`, \`.arch4/bin/arch4 render\`, and \`.arch4/bin/arch4 index\` after source edits and report the result. Treat command failure as a blocking error.
+15. Inspect rendered view JSON and report node, edge, and boundary counts for each view.
+16. Run \`git status --short\` and classify changes as Arch4 source edits, Arch4 generated/local artifacts, and unexpected non-Arch4 files. Do not label Arch4-owned initialization artifacts under \`.cursor/**\` or \`.arch4/bin/**\` as unexpected.
 
 Return a concise summary of model changes, evidence used, and any open questions.`;
 }
@@ -1181,18 +1309,20 @@ Review whether the current repository changes require Arch4 updates.
 
 Use both the C4 skill and the Arch4 skill. Follow this workflow:
 
-1. Inspect changed files using git status and git diff. Include staged and unstaged changes when available.
-2. Decide whether the changes affect architecture responsibilities, boundaries, containers, components, relationships, deployment topology, runtime technologies, data ownership, ownership metadata, or path ownership.
-3. Review changed files against mapped entities and confirm relevant \`.arch4/architecture/entities/*.json\` notes are still accurate.
-4. If architecture source must change, update only:
+1. Confirm \`.arch4/architecture/workspace.dsl\` and \`.arch4/bin/arch4\` exist.
+2. Run \`.arch4/bin/arch4 doctor\`. If the local launcher, workspace, CLI, or runtime is missing, stop without edits and tell the user to run \`Arch4: Create/Update Architecture Model\` or reinstall Arch4.
+3. Inspect changed files using git status and git diff. Include staged and unstaged changes when available.
+4. Decide whether the changes affect architecture responsibilities, boundaries, containers, components, relationships, deployment topology, runtime technologies, data ownership, ownership metadata, or path ownership.
+5. Review changed files against mapped entities and confirm relevant \`.arch4/architecture/entities/*.json\` notes are still accurate.
+6. If architecture source must change, update only:
    - \`.arch4/architecture/workspace.dsl\`
    - \`.arch4/architecture/entities/*.json\`
-5. When entity notes are stale, update them using the Arch4 skill's entity notes guidance.
-6. Do not edit files under \`.arch4/architecture/build/**\`; they are derived output.
-7. If only derived output is stale, run \`arch4 render\` and \`arch4 index\` when available.
-8. If render/index runs, inspect rendered view JSON and report node, edge, and boundary counts for each view.
-9. Run \`git status --short\` and call out unexpected changes outside the intended architecture files.
-10. If no Arch4 source change is needed, say so and explain why.
+7. When entity notes are stale, update them using the Arch4 skill's entity notes guidance.
+8. Do not edit files under \`.arch4/architecture/build/**\`; they are derived output.
+9. If only derived output is stale, run \`.arch4/bin/arch4 render\` and \`.arch4/bin/arch4 index\`. Treat command failure as a blocking error.
+10. If render/index runs, inspect rendered view JSON and report node, edge, and boundary counts for each view.
+11. Run \`git status --short\` and classify changes as Arch4 source edits, Arch4 generated/local artifacts, and unexpected non-Arch4 files. Do not label Arch4-owned initialization artifacts under \`.cursor/**\` or \`.arch4/bin/**\` as unexpected.
+12. If no Arch4 source change is needed, say so and explain why.
 
 Return a concise commit-review summary: changed files inspected, architecture impact, Arch4 updates made or intentionally skipped, validation/rendering result, and open questions.`;
 }

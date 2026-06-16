@@ -15,16 +15,17 @@ codebase before changing it.
 ## Getting Started
 
 1. Install Arch4 from Cursor's Extensions pane.
-2. Run `Arch4: Initialize Workspace` from the Command Palette.
-3. Run `Arch4: Update Architecture Model`.
-4. Run `Arch4: Open Architecture Map`.
+2. Run `Arch4: Create/Update Architecture Model`.
+3. Run `Arch4: Open Architecture Map`.
 
-Arch4 creates repository-local architecture files and Cursor workflow helpers.
-Review generated model changes before committing them.
+Arch4 creates repository-local architecture files, Cursor workflow helpers, and
+the local `.arch4/bin/arch4` launcher used by agent workflows. Review generated
+model changes before committing them.
 
 ## Features
 
-- Initialize `.arch4/architecture/` with a Structurizr DSL workspace.
+- Initialize `.arch4/architecture/` with a Structurizr DSL workspace when
+  creating or updating the model.
 - Render interactive architecture maps directly inside Cursor.
 - Browse context, container, and component diagrams from an explorer view.
 - Inspect selected elements, related views, relationships, notes, and open
@@ -37,8 +38,7 @@ Review generated model changes before committing them.
 
 ![Cursor Command Palette showing Arch4 commands](../../assets/media/arch4-command-palette.png)
 
-- `Arch4: Initialize Workspace`
-- `Arch4: Update Architecture Model`
+- `Arch4: Create/Update Architecture Model`
 - `Arch4: Build Architecture Artifacts`
 - `Arch4: Open Architecture Map`
 - `Arch4: Remove Workspace Artifacts`
@@ -52,6 +52,9 @@ Review generated model changes before committing them.
   they want fresh checkouts to include ready-to-inspect maps.
 - `.cursor/commands/*`, `.cursor/rules/arch4.mdc`, and `.cursor/skills/*` are
   installed with Arch4 ownership markers.
+- `.arch4/bin/arch4` is generated local tooling for Cursor agents. It discovers
+  the installed Arch4 extension runtime and should be treated as disposable
+  Arch4-owned state.
 
 Arch4 refuses to overwrite unmarked user-owned Cursor files. It does not create
 backup copies before updating or removing Arch4-owned files, so use Git or
@@ -76,7 +79,7 @@ Supported packaged platforms:
 Run:
 
 ```sh
-arch4 doctor
+.arch4/bin/arch4 doctor
 ```
 
 Include the Arch4 version, platform, Cursor version, command output, and any

@@ -4,7 +4,9 @@ import {
   type ArchitectureIndex,
   type Diagnostic,
   ensureArch4Layout,
+  isArch4WorkspaceInitialized,
   readJson,
+  requireArch4Workspace,
   resolveArch4Paths,
   toPosixPath,
   writeJson,
@@ -52,7 +54,7 @@ function init(ctx: CommandContext): void {
 }
 
 function scan(ctx: CommandContext): void {
-  ensureArch4Layout(ctx.root);
+  requireArch4Workspace(ctx.root);
   console.error(
     "arch4 scan has been removed. Use Cursor /update-arch4 to generate architecture from repository evidence.",
   );
@@ -60,7 +62,7 @@ function scan(ctx: CommandContext): void {
 }
 
 function validate(ctx: CommandContext): void {
-  const paths = ensureArch4Layout(ctx.root);
+  const paths = requireArch4Workspace(ctx.root);
   const result = renderArch4Workspace({
     projectRoot: ctx.root,
     structurizrCliPath:
@@ -74,7 +76,7 @@ function validate(ctx: CommandContext): void {
 }
 
 function render(ctx: CommandContext): void {
-  const paths = ensureArch4Layout(ctx.root);
+  const paths = requireArch4Workspace(ctx.root);
   const result = renderArch4Workspace({
     projectRoot: ctx.root,
     structurizrCliPath:
@@ -90,7 +92,7 @@ function render(ctx: CommandContext): void {
 }
 
 function index(ctx: CommandContext): void {
-  const paths = ensureArch4Layout(ctx.root);
+  const paths = requireArch4Workspace(ctx.root);
   const index = buildArchitectureIndex(ctx.root);
   writeJson(paths.architectureIndexPath, index);
   writeContextFiles(ctx.root, index);
@@ -100,7 +102,7 @@ function index(ctx: CommandContext): void {
 }
 
 function context(ctx: CommandContext): void {
-  const paths = ensureArch4Layout(ctx.root);
+  const paths = requireArch4Workspace(ctx.root);
   if (!existsSync(paths.architectureIndexPath)) {
     writeJson(paths.architectureIndexPath, buildArchitectureIndex(ctx.root));
   }
@@ -153,7 +155,9 @@ function doctor(ctx: CommandContext): void {
   } else {
     diagnostics.push(...runtimeDiagnostics(manifest));
   }
-  writeJson(resolveArch4Paths(ctx.root).diagnosticsPath, diagnostics);
+  if (isArch4WorkspaceInitialized(ctx.root)) {
+    writeJson(resolveArch4Paths(ctx.root).diagnosticsPath, diagnostics);
+  }
   diagnostics.forEach((item) =>
     console.log(`${item.level.toUpperCase()} ${item.code}: ${item.message}`),
   );

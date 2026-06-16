@@ -8,8 +8,8 @@ import {
   type DiagramSpec,
   type EntityContextFile,
   type EntityMetadata,
-  ensureArch4Layout,
   parseJsonFile,
+  requireArch4Workspace,
   safeId,
   toPosixPath,
   validateDiagramSpec,
@@ -20,7 +20,7 @@ import { generatedAt } from "./generated.js";
 import { listRepoFiles } from "./repo-files.js";
 
 export function buildArchitectureIndex(root: string): ArchitectureIndex {
-  const paths = ensureArch4Layout(root);
+  const paths = requireArch4Workspace(root);
   const specsResult = readSpecs(root, paths.viewsDir);
   const specs = specsResult.specs;
   const metadataResult = readEntityMetadata(root, paths.entitiesDir);
@@ -149,7 +149,7 @@ export function writeContextFiles(
   root: string,
   index: ArchitectureIndex,
 ): EntityContextFile[] {
-  const paths = ensureArch4Layout(root);
+  const paths = requireArch4Workspace(root);
   mkdirSync(paths.contextDir, { recursive: true });
   return index.elements.map((element) => {
     const markdownPath = path.join(

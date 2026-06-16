@@ -235,24 +235,21 @@ describe("cursor extension agent instructions", () => {
         event.startsWith("onCommand:"),
       ),
     ).toEqual([
-      "onCommand:arch4.init",
       "onCommand:arch4.openMap",
       "onCommand:arch4.buildArtifacts",
       "onCommand:arch4.updateModel",
       "onCommand:arch4.removeArtifacts",
     ]);
     expect(manifest.contributes.commands.map((item) => item.command)).toEqual([
-      "arch4.init",
       "arch4.openMap",
       "arch4.buildArtifacts",
       "arch4.updateModel",
       "arch4.removeArtifacts",
     ]);
     expect(manifest.contributes.commands.map((item) => item.title)).toEqual([
-      "Arch4: Initialize Workspace",
       "Arch4: Open Architecture Map",
       "Arch4: Build Architecture Artifacts",
-      "Arch4: Update Architecture Model",
+      "Arch4: Create/Update Architecture Model",
       "Arch4: Remove Workspace Artifacts",
     ]);
   });
@@ -286,6 +283,11 @@ describe("cursor extension agent instructions", () => {
     expect(source).toContain("arch4.arch4Renderer.rendererExport");
     expect(source).toContain("identifier inventory");
     expect(source).toContain("staged validation before metadata generation");
+    expect(source).toContain(".arch4/bin/arch4 doctor");
+    expect(source).toContain(".arch4/bin/arch4 validate");
+    expect(source).toContain("Treat command failure as a blocking error");
+    expect(source).not.toContain("If an Arch4 CLI is available");
+    expect(source).not.toContain("When a CLI is available");
     expect(source).toContain("notes.summary");
     expect(source).toContain("technologyNotes");
     expect(source).toContain("dependencyNotes");
@@ -296,10 +298,14 @@ describe("cursor extension agent instructions", () => {
     );
   });
 
-  it("routes the public update command to seed or update workflows by model state", () => {
+  it("routes the public create/update command to seed or update workflows by model state", () => {
     const source = readFileSync(path.resolve("src/extension.ts"), "utf8");
 
     expect(source).toContain("updateArchitectureRouterPrompt()");
+    expect(source).toContain("Create/Update Arch4 Architecture Model");
+    expect(source).toContain("prepareArchitectureModelWorkspace");
+    expect(source).toContain('await runCli(["init"], context)');
+    expect(source).toContain("installWorkspaceLauncher");
     expect(source).toContain("If the model is empty or minimal");
     expect(source).toContain(
       "same first-time seeding workflow as \\`/seed-arch4\\`",
@@ -309,6 +315,25 @@ describe("cursor extension agent instructions", () => {
     );
     expect(source).not.toContain('command("arch4.seedModel"');
     expect(source).not.toContain('command("arch4.reviewModel"');
+  });
+
+  it("generates local Arch4 launchers without hardcoded installed extension paths", () => {
+    const source = readFileSync(path.resolve("src/extension.ts"), "utf8");
+
+    expect(source).toContain('path.join(root, ".arch4", "bin")');
+    expect(source).toContain('path.join(binDir, "arch4")');
+    expect(source).toContain('path.join(binDir, "arch4.cmd")');
+    expect(source).toContain('path.join(binDir, "package.json")');
+    expect(source).toContain("arch4LauncherTemplate");
+    expect(source).toContain("arch4WindowsLauncherTemplate");
+    expect(source).toContain("arch4LauncherPackageJsonTemplate");
+    expect(source).toContain("arch4.arch4-cursor-extension-");
+    expect(source).toContain("CURSOR_EXTENSIONS_DIR");
+    expect(source).toContain("ARCH4_RUNTIME_DIR");
+    expect(source).toContain("process.execPath");
+    expect(source).not.toContain(
+      ".cursor/extensions/arch4.arch4-cursor-extension-0.",
+    );
   });
 
   it("routes the public build command through deterministic render and index steps", () => {
@@ -429,7 +454,7 @@ describe("cursor extension agent instructions", () => {
 
     expect(source).not.toContain("model/path-map.json");
     expect(source).not.toContain("model/elements");
-    expect(source).not.toContain("generated/");
+    expect(source).not.toContain(".arch4/architecture/generated/");
     expect(source).not.toContain("context-packs");
   });
 
@@ -541,7 +566,7 @@ describe("cursor extension agent instructions", () => {
 
     expect(ARCH4_OWNERSHIP_MARKER).toBe("arch4-owned: true");
     expect(source).toContain("ARCH4_OWNERSHIP_MARKER");
-    expect(source).toContain("Refusing to overwrite user-owned Cursor file");
+    expect(source).toContain("Refusing to overwrite user-owned");
   });
 
   it("allows initialize to mark exact legacy generated Cursor content", () => {

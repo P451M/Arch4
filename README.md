@@ -34,9 +34,8 @@ connected to the repository.
 Install Arch4 from Cursor's Extensions pane. Search for `Arch4`, install the
 extension for your platform, then run:
 
-1. `Arch4: Initialize Workspace`
-2. `Arch4: Update Architecture Model`
-3. `Arch4: Open Architecture Map`
+1. `Arch4: Create/Update Architecture Model`
+2. `Arch4: Open Architecture Map`
 
 Local source checkout reinstall:
 
@@ -48,7 +47,7 @@ pnpm reinstall:cursor
 
 - Installs as a Cursor plugin and adds Arch4 commands, views, rules, and skills.
 - Initializes a repository-local C4 documentation workspace under
-  `.arch4/architecture/`.
+  `.arch4/architecture/` when creating or updating the model.
 - Generates and validates Structurizr DSL models from repository context.
 - Renders enriched C4 architecture views in an interactive Cursor webview.
 - Indexes architecture entities with ownership, repository paths, confidence,
@@ -87,8 +86,7 @@ Interactive architecture map with repository context and element details:
 
 Cursor commands:
 
-- `Arch4: Initialize Workspace`
-- `Arch4: Update Architecture Model`
+- `Arch4: Create/Update Architecture Model`
 - `Arch4: Build Architecture Artifacts`
 - `Arch4: Open Architecture Map`
 - `Arch4: Remove Workspace Artifacts`
@@ -118,6 +116,9 @@ atomically replaces generated view JSON after a successful render.
 - `.cursor/commands/*`, `.cursor/rules/arch4.mdc`, and `.cursor/skills/*` are
   installed with Arch4 ownership markers. Arch4 refuses to overwrite unmarked
   user-owned Cursor files.
+- `.arch4/bin/arch4` is generated local tooling for Cursor agents. It discovers
+  the installed Arch4 extension runtime and should be treated as disposable
+  Arch4-owned state, not architecture source.
 - `.arch4` is Arch4-owned workspace state. `Arch4: Remove Workspace Artifacts`
   removes it only after explicit confirmation.
 - Arch4 does not create backup copies before updating or removing Arch4-owned
@@ -241,8 +242,9 @@ Every release must include `README.md`, `CHANGELOG.md`, `SUPPORT.md`, `LICENSE`,
 
 Use [GitHub Issues](https://github.com/P451M/Arch4/issues) for bugs,
 installation problems, and feature requests after the repository is public. Run
-`arch4 doctor` before opening an issue and include the output with the Arch4
-version, platform, and Cursor version.
+`.arch4/bin/arch4 doctor` in initialized Cursor workspaces, or `arch4 doctor`
+for manual CLI installs, before opening an issue and include the output with the
+Arch4 version, platform, and Cursor version.
 
 ## Security
 

@@ -2,7 +2,13 @@ import {
   execFileSync,
   type ExecFileSyncOptionsWithStringEncoding,
 } from "node:child_process";
-import { chmodSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
 import { mkdir, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -289,6 +295,26 @@ describe("arch4 cli", () => {
     expect(await readdir(viewsDir)).toEqual([]);
   });
 
+  it("fails workspace commands before initialization without creating Arch4 files", async () => {
+    const root = tempRepo();
+
+    for (const command of ["validate", "render", "index", "context"]) {
+      const failure = runFailure(root, command);
+
+      expect(failure.status).not.toBe(0);
+      expect(failure.stderr).toContain("arch4.workspace.not_initialized");
+    }
+    expect(existsSync(path.join(root, ".arch4"))).toBe(false);
+  });
+
+  it("runs doctor before initialization without creating Arch4 files", () => {
+    const root = tempRepo();
+    const output = run(root, "doctor");
+
+    expect(output).toContain("arch4.");
+    expect(existsSync(path.join(root, ".arch4"))).toBe(false);
+  });
+
   it("writes diagnostics for Structurizr validation failures and clears stale output only when rendering", async () => {
     const root = tempRepo();
     run(root, "init");
@@ -351,6 +377,7 @@ process.exit(0);
 
   it("fails render when runtime tools cannot be resolved", async () => {
     const root = tempRepo();
+    run(root, "init");
     const emptyBin = path.join(root, "empty-bin");
     await mkdir(emptyBin, { recursive: true });
 

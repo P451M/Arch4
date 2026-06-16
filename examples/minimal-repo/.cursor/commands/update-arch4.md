@@ -1,22 +1,26 @@
-# Update Arch4 Architecture Model
+# Create/Update Arch4 Architecture Model
 
-Update this repository's Arch4 architecture model.
+Create or update this repository's Arch4 architecture model.
 
 Use both the C4 skill and the Arch4 skill. Follow this workflow:
 
-1. Read `.arch4/architecture/workspace.dsl` and any entity metadata under `.arch4/architecture/entities/`.
-2. Determine the DSL identifier mode. If `!identifiers hierarchical` is present, draft an identifier inventory before writing many relationships, views, or metadata files.
-3. Inspect repository source files, dependency manifests, deployment/config files, and tests needed to understand the actual architecture.
-4. Identify architecture-relevant changes: responsibilities, boundaries, containers, components, relationships, deployment topology, runtime technologies, data ownership, and path ownership.
-5. Maintain the existing model from the changed facts. Do not reseed from scratch unless `.arch4/architecture/workspace.dsl` is still empty or minimal.
-6. Preserve existing qualified identifiers unless a rename is explicitly justified.
-7. Update only Arch4 architecture source files when facts changed:
+1. Confirm `.arch4/architecture/workspace.dsl` and `.arch4/bin/arch4` exist.
+2. Run `.arch4/bin/arch4 doctor`. If the local launcher, workspace, CLI, or runtime is missing, stop without edits and tell the user to run `Arch4: Create/Update Architecture Model` or reinstall Arch4.
+3. Read `.arch4/architecture/workspace.dsl` and any entity metadata under `.arch4/architecture/entities/`.
+4. Determine the DSL identifier mode. If `!identifiers hierarchical` is present, draft an identifier inventory before writing many relationships, views, or metadata files.
+5. Inspect repository source files, dependency manifests, deployment/config files, and tests needed to understand the actual architecture.
+6. Identify architecture-relevant changes: responsibilities, boundaries, containers, components, relationships, deployment topology, runtime technologies, data ownership, and path ownership.
+7. Maintain the existing model from the changed facts. Do not reseed from scratch unless `.arch4/architecture/workspace.dsl` is still empty or minimal.
+8. Preserve existing qualified identifiers unless a rename is explicitly justified.
+9. Update only Arch4 architecture source files when facts changed:
    - `.arch4/architecture/workspace.dsl`
    - `.arch4/architecture/entities/*.json`
-8. Update relevant entity notes when mapped responsibilities, boundaries, dependencies, data ownership, runtime technology, runtime behavior, ownership, or paths changed.
-9. Use staged validation before metadata generation for large DSL edits.
-10. Do not invent architecture facts. If evidence is insufficient, add an open question or leave the model unchanged and explain the uncertainty.
-11. Do not edit files under `.arch4/architecture/build/**`; they are derived output.
-12. If an Arch4 CLI is available, run `arch4 validate`, `arch4 render`, and `arch4 index` after source edits and report the result.
+10. Update relevant entity notes when mapped responsibilities, boundaries, dependencies, data ownership, runtime technology, runtime behavior, ownership, or paths changed.
+11. Use staged validation before metadata generation for large DSL edits.
+12. Do not invent architecture facts. If evidence is insufficient, add an open question or leave the model unchanged and explain the uncertainty.
+13. Do not edit files under `.arch4/architecture/build/**`; they are derived output.
+14. Run `.arch4/bin/arch4 validate`, `.arch4/bin/arch4 render`, and `.arch4/bin/arch4 index` after source edits and report the result. Treat command failure as a blocking error.
+15. Inspect rendered view JSON and report node, edge, and boundary counts for each view.
+16. Run `git status --short` and classify changes as Arch4 source edits, Arch4 generated/local artifacts, and unexpected non-Arch4 files. Do not label Arch4-owned initialization artifacts under `.cursor/**` or `.arch4/bin/**` as unexpected.
 
 Return a concise summary of model changes, evidence used, and any open questions.

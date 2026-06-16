@@ -593,8 +593,8 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
                 Open the Command Palette with{" "}
                 <KeyboardShortcut keys={commandPaletteShortcuts[0]} /> or{" "}
                 <KeyboardShortcut keys={commandPaletteShortcuts[1]} />, then run{" "}
-                <kbd>Arch4: Update Architecture Model</kbd> to seed the initial
-                diagrams.
+                <kbd>Arch4: Create/Update Architecture Model</kbd> to seed the
+                initial diagrams.
               </span>
             </div>
           </div>

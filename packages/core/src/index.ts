@@ -295,6 +295,19 @@ export function ensureArch4Layout(
   return paths;
 }
 
+export function isArch4WorkspaceInitialized(projectRoot: string): boolean {
+  const paths = resolveArch4Paths(projectRoot);
+  return existsSync(paths.manifestPath) && existsSync(paths.workspaceDslPath);
+}
+
+export function requireArch4Workspace(projectRoot: string): Arch4Paths {
+  const paths = resolveArch4Paths(projectRoot);
+  if (isArch4WorkspaceInitialized(projectRoot)) return paths;
+  throw new Error(
+    "arch4.workspace.not_initialized: Arch4 workspace is not initialized. Run `arch4 init` or, in Cursor, run `Arch4: Create/Update Architecture Model`.",
+  );
+}
+
 export function defaultManifest(name: string): Arch4ProjectManifest {
   return {
     schemaVersion: 1,
