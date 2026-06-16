@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Cli.cliContext",
+  "owners": ["Arch4"],
+  "paths": ["packages/cli/src/context.ts"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {
+    "summary": "Maps changed repository files to architecture elements and renders compact markdown context for agents and tooling."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Renderer.rendererOutput",
+  "owners": ["Arch4"],
+  "paths": ["packages/renderer-structurizr/src/output.ts"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {
+    "summary": "Atomically replaces rendered view JSON files under .arch4/architecture/build/views/ after a successful render."
+  }
+}

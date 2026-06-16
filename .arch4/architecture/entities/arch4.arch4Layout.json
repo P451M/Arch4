@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Layout",
+  "owners": ["Arch4"],
+  "paths": ["packages/layout/**/*"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {
+    "summary": "Dagre-based layout engine that positions diagram nodes and boundaries for rendered Arch4 views."
+  }
+}

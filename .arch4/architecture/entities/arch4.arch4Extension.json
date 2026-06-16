@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Extension",
+  "owners": ["Arch4"],
+  "paths": ["packages/cursor-extension/**/*"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {
+    "summary": "Cursor extension that exposes Arch4 commands, explorer tree, webview map, workspace artifact installation, and CLI orchestration."
+  }
+}

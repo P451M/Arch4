@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "entityId": "git",
+  "owners": [],
+  "paths": ["packages/cli/src/indexer.ts"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {
+    "summary": "Source-control history consulted during indexing to attach contributors and recent commits to mapped architecture elements."
+  }
+}

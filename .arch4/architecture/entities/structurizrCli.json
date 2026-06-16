@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "entityId": "structurizrCli",
+  "owners": ["Structurizr"],
+  "paths": [
+    "runtime/**/*",
+    "docs/runtime-packaging.md",
+    "scripts/setup-runtime.mjs",
+    "scripts/verify-runtime-manifests.mjs"
+  ],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {
+    "summary": "External Structurizr CLI bundled with Arch4 to validate workspace.dsl and export workspace JSON before Arch4 performs TypeScript layout and view output."
+  }
+}

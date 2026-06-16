@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Renderer",
+  "owners": ["Arch4"],
+  "paths": ["packages/renderer-structurizr/**/*"],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {
+    "summary": "Renderer pipeline that exports Structurizr workspace JSON, normalizes it into diagram specs, applies layout, and writes view output."
+  }
+}

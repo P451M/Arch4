@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "entityId": "arch4.arch4Extension.extensionArtifacts",
+  "owners": ["Arch4"],
+  "paths": [
+    "packages/cursor-extension/src/workspace-artifacts.ts",
+    "packages/cursor-extension/src/workspace-json.ts"
+  ],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {
+    "summary": "Installs Arch4-owned Cursor helpers, reads rendered build artifacts, and removes confirmed workspace artifacts on user request."
+  }
+}

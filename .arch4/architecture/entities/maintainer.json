@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "entityId": "maintainer",
+  "owners": ["Arch4"],
+  "paths": [
+    "docs/openvsx-release.md",
+    "docs/release-policy.md",
+    "CONTRIBUTING.md",
+    "SUPPORT.md"
+  ],
+  "confidence": "high",
+  "openQuestions": [],
+  "notes": {
+    "summary": "Maintains release tooling, OpenVSX publication, and support processes for the Arch4 extension."
+  }
+}
