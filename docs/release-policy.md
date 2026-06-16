@@ -13,7 +13,7 @@ Release blockers:
 - `README.md`, `CHANGELOG.md`, `SUPPORT.md`, `LICENSE`, `NOTICE`, and
   `THIRD_PARTY_NOTICES.md` are included in every extension distribution.
 
-Reviewed `.arch4/architecture/build/**` outputs for this repository and its
-examples may be committed so fresh checkouts can inspect diagrams without first
-rendering them. Runtime bundles, package staging directories, VSIX files, and
-unreviewed local Cursor profile state are not committed.
+`.arch4/architecture/build/**` outputs are generated and should not be
+committed for examples; regenerate them with Arch4 build commands when needed.
+Runtime bundles, package staging directories, VSIX files, and unreviewed local
+Cursor profile state are not committed.

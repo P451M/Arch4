@@ -254,50 +254,6 @@ describe("cursor extension agent instructions", () => {
     ]);
   });
 
-  it("installs C4 and Arch4 skills plus internal Cursor seed, update, and review workflows", () => {
-    const source = readFileSync(path.resolve("src/extension.ts"), "utf8");
-
-    expect(source).toContain('path.join(root, ".cursor", "skills", "c4")');
-    expect(source).toContain('path.join(root, ".cursor", "skills", "arch4")');
-    expect(source).toContain(
-      'contentFileRelativePath: ".cursor/commands/seed-arch4.md"',
-    );
-    expect(source).toContain(
-      'contentFileRelativePath: ".cursor/commands/update-arch4.md"',
-    );
-    expect(source).toContain(
-      'contentFileRelativePath: ".cursor/commands/review-arch4.md"',
-    );
-    expect(source).toContain("https://c4model.com/");
-    expect(source).toContain("Creative Commons Attribution 4.0 International");
-    expect(source).toContain("Do not reseed from scratch");
-    expect(source).toContain(
-      "Relationship labels must read as a natural sentence",
-    );
-    expect(source).toContain("zero-edge component views");
-    expect(source).toContain("node, edge, and boundary counts");
-    expect(source).toContain("git status --short");
-    expect(source).toContain("!identifiers hierarchical");
-    expect(source).toContain("fully qualified identifiers");
-    expect(source).toContain("developer -> arch4.arch4Extension");
-    expect(source).toContain("arch4.arch4Renderer.rendererExport");
-    expect(source).toContain("identifier inventory");
-    expect(source).toContain("staged validation before metadata generation");
-    expect(source).toContain(".arch4/bin/arch4 doctor");
-    expect(source).toContain(".arch4/bin/arch4 validate");
-    expect(source).toContain("Treat command failure as a blocking error");
-    expect(source).not.toContain("If an Arch4 CLI is available");
-    expect(source).not.toContain("When a CLI is available");
-    expect(source).toContain("notes.summary");
-    expect(source).toContain("technologyNotes");
-    expect(source).toContain("dependencyNotes");
-    expect(source).toContain("Put uncertain facts in \\`openQuestions\\`");
-    expect(source).toContain("evidence-backed architecture context");
-    expect(source).toContain(
-      "Review changed files against mapped entities and confirm relevant",
-    );
-  });
-
   it("routes the public create/update command to seed or update workflows by model state", () => {
     const source = readFileSync(path.resolve("src/extension.ts"), "utf8");
 

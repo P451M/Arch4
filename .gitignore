@@ -32,7 +32,9 @@ packages/cursor-extension/**/*.vsix
 
 # Generated architecture artifacts
 **/.arch4/bin/
+**/.arch4/architecture/build/
 **/.arch4/architecture/generated/
+examples/minimal-repo/.cursor/
 
 # Intentional example fixtures
 !examples/minimal-repo/.arch4/
@@ -42,11 +44,3 @@ packages/cursor-extension/**/*.vsix
 !examples/minimal-repo/.arch4/architecture/layout.json
 !examples/minimal-repo/.arch4/architecture/entities/
 !examples/minimal-repo/.arch4/architecture/entities/**/*.json
-!examples/minimal-repo/.cursor/
-!examples/minimal-repo/.cursor/commands/
-!examples/minimal-repo/.cursor/commands/*.md
-!examples/minimal-repo/.cursor/rules/
-!examples/minimal-repo/.cursor/rules/*.mdc
-!examples/minimal-repo/.cursor/skills/
-!examples/minimal-repo/.cursor/skills/**/
-!examples/minimal-repo/.cursor/skills/**/*.md

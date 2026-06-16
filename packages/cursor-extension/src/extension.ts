@@ -1022,9 +1022,13 @@ Use this skill to decide what belongs in C4 architecture models and views.
 - Relationship labels must read as a natural sentence when placed between the
   source and target names: \`<source> <label> <target>\`. Include needed
   prepositions such as from, to, in, through, with, or by.
-- System context views normally show the target software system as one node;
-  container views show its internal boundary. Ask for product/rendering guidance
-  before forcing a visible boundary into a system context view.
+- Keep C4 scopes explicit: system context views show the target software system
+  as one node, container views show containers inside the software system in
+  scope, and component views are scoped to one container.
+- Treat external systems as outside the scoped system; do not decompose them in
+  its views.
+- Use visual grouping only when it improves readability without implying false
+  ownership, runtime containment, or decomposition.
 - Avoid inventing actors, external systems, deployment topology, technologies,
   or relationships without evidence.
 - Preserve uncertainty as open questions or low-confidence metadata.
@@ -1129,6 +1133,14 @@ already obvious from the DSL, paths, owners, or relationships.
   the DSL tree and use that inventory for relationships, views, and metadata.
 - Do not batch-create metadata from local nested names when hierarchical
   identifiers are enabled.
+
+## Boundary Rendering
+
+- Arch4 renders boundaries from DSL containment, deployment nodes, component
+  view subjects, and Structurizr \`group\`.
+- Preserve C4 containment in the DSL; use \`group\` for semantic or readability
+  grouping only when labels do not imply false ownership, runtime containment,
+  or decomposition.
 
 ## Workflow
 

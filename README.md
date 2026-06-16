@@ -69,7 +69,7 @@ pnpm reinstall:cursor
 
 The [minimal repository example](examples/minimal-repo/README.md) contains a
 reviewed mock travel-booking architecture with context, container, component,
-deployment, and dynamic views. It is the quickest way to inspect the rendered
+deployment, and dynamic views. It is the quickest way to build and inspect a
 map and validate extension behavior during development.
 
 ## Screenshots
@@ -110,9 +110,9 @@ atomically replaces generated view JSON after a successful render.
 - `.arch4/architecture/workspace.dsl` is the architecture source of truth.
 - `.arch4/architecture/entities/*.json` stores entity owners, repository paths,
   confidence, open questions, and notes.
-- `.arch4/architecture/build/**` is generated output. This repository commits
-  reviewed build output so fresh checkouts can inspect maps without first
-  rendering them; other repositories can choose to ignore it.
+- `.arch4/architecture/build/**` is generated output. This repository ignores
+  example build output; run `Arch4: Build Architecture Artifacts` or
+  `arch4 render && arch4 index` to regenerate maps.
 - `.cursor/commands/*`, `.cursor/rules/arch4.mdc`, and `.cursor/skills/*` are
   installed with Arch4 ownership markers. Arch4 refuses to overwrite unmarked
   user-owned Cursor files.
