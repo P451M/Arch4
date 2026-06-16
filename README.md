@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/media/arch4-demo-cropped.gif" alt="Looping Arch4 demo in Cursor showing workspace initialization, architecture model update, and interactive C4 map exploration">
+  <img src="assets/media/arch4-demo.gif" alt="Looping Arch4 demo in Cursor showing workspace initialization, architecture model update, and interactive C4 map exploration">
 </p>
 
 Arch4 is a Cursor plugin that keeps C4 architecture documentation next to the

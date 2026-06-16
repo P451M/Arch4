@@ -132,7 +132,6 @@ function copySharedMediaAssets(targetExtensionDir) {
   mkdirSync(mediaTargetDir, { recursive: true });
   for (const [source, destination] of [
     ["arch4-icon-512.png", "icon.png"],
-    ["arch4-demo-cropped.gif", "arch4-demo-cropped.gif"],
     ["arch4-command-palette.png", "arch4-command-palette.png"],
     ["arch4-full-screenshot.png", "arch4-full-screenshot.png"],
     ["arch4-overview.png", "arch4-overview.png"],
@@ -239,7 +238,6 @@ function verifyStagedExtension(targetExtensionDir, targetPlatform) {
     "THIRD_PARTY_NOTICES.md",
     "dist/extension.js",
     "media/icon.png",
-    "media/arch4-demo-cropped.gif",
     "media/arch4-command-palette.png",
     "media/arch4-full-screenshot.png",
     "media/arch4-overview.png",

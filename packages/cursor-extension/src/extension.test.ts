@@ -154,19 +154,21 @@ describe("release packaging", () => {
     );
     expect(packageScript).toContain('"arch4-icon-512.png", "icon.png"');
     expect(packageScript).toContain('"media/icon.png"');
-    expect(packageScript).toContain('"media/arch4-demo-cropped.gif"');
     expect(packageScript).toContain('"media/arch4-command-palette.png"');
     expect(packageScript).toContain('"media/arch4-full-screenshot.png"');
     expect(packageScript).toContain('"media/arch4-overview.png"');
     expect(packageScript).toContain("runtimeManifestErrors");
     expect(packageScript).toContain("verifyCopiedRuntime");
+    expect(packageScript).not.toContain('"media/arch4-demo.gif"');
+    expect(packageScript).not.toContain("arch4-demo-cropped.gif");
     expect(packageScript).not.toContain('execFileSync(\n  "zip"');
   });
 
   it("keeps marketplace overview media visible in packaged README output", () => {
     const readme = readFileSync(path.resolve("README.md"), "utf8");
 
-    expect(readme).toContain("arch4-demo-cropped.gif");
+    expect(readme).toContain("arch4-demo.gif");
+    expect(readme).not.toContain("arch4-demo-cropped.gif");
     expect(readme).toContain("arch4-full-screenshot.png");
     expect(readme).toContain("Arch4 architecture map showing generated C4");
   });

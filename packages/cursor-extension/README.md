@@ -6,7 +6,7 @@ Arch4 adds a repository-local architecture workspace, interactive C4 maps, and
 architecture-aware Cursor workflows so teams and AI agents can understand a
 codebase before changing it.
 
-![Looping Arch4 demo in Cursor showing workspace initialization, architecture model update, and interactive C4 map exploration](../../assets/media/arch4-demo-cropped.gif)
+![Looping Arch4 demo in Cursor showing workspace initialization, architecture model update, and interactive C4 map exploration](../../assets/media/arch4-demo.gif)
 
 ## Architecture Map
 
