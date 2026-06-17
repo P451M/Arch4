@@ -1,20 +1,13 @@
 {
-  "name": "@arch4/cli",
+  "name": "@arch4/workflows",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "license": "Apache-2.0",
-  "bin": {
-    "arch4": "./dist/index.js"
-  },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./src/index.ts",
       "import": "./dist/index.js"
-    },
-    "./indexer": {
-      "types": "./dist/indexer.d.ts",
-      "import": "./dist/indexer.js"
     }
   },
   "scripts": {
@@ -23,9 +16,10 @@
     "test": "vitest run --passWithNoTests --exclude '**/dist/**'"
   },
   "dependencies": {
+    "@arch4/cli": "workspace:*",
     "@arch4/core": "workspace:*",
-    "@arch4/renderer-structurizr": "workspace:*",
-    "minimatch": "^10.0.1"
+    "@arch4/layout": "workspace:*",
+    "@arch4/renderer-structurizr": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.7.0",

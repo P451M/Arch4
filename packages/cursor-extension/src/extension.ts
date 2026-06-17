@@ -1,30 +1,25 @@
 import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
 import { chmod, mkdir, readFile, writeFile } from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import * as vscode from "vscode";
 import {
-  type Arch4LayoutConfig,
-  type Arch4ManualLayout,
   type ArchitectureIndex,
   type DiagramSpec,
   type Diagnostic,
   type LayoutDirection,
-  defaultArch4LayoutConfig,
-  defaultArch4ManualLayout,
   isLayoutDirection,
-  readArch4LayoutConfig,
-  readArch4ManualLayout,
   resolveArch4Paths,
-  writeArch4LayoutConfig,
-  writeArch4ManualLayout,
 } from "@arch4/core";
 import {
+  createViewerPayload,
   readArchitectureIndex,
   readDiagrams,
   readWorkspaceDiagnostics,
-} from "./workspace-json.js";
+  updateArchitectureLayout,
+} from "@arch4/workflows";
 import {
   ARCH4_OWNERSHIP_MARKER,
   type Arch4OwnedArtifact,
@@ -48,13 +43,15 @@ type Arch4ArtifactRefreshScheduler = vscode.Disposable & {
   schedule: () => void;
 };
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+  const output = vscode.window.createOutputChannel("Arch4");
   const provider = new Arch4TreeProvider();
   const mapPanels: MapPanelSet = new Set();
   const artifactRefresh = createArch4ArtifactRefreshScheduler(
     provider,
     mapPanels,
   );
+  context.subscriptions.push(output);
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider("arch4.explorer", provider),
   );
@@ -80,6 +77,21 @@ export function activate(context: vscode.ExtensionContext) {
       removeWorkspaceArtifacts(provider),
     ),
   );
+  try {
+    await installCursorLocalMcpPluginForWorkspace(context, output);
+  } catch (error) {
+    output.appendLine(
+      `Could not install the Cursor MCP plugin automatically: ${errorMessage(error)}`,
+    );
+    void vscode.window
+      .showWarningMessage(
+        "Arch4 could not install its Cursor Agent MCP plugin automatically.",
+        "Open Logs",
+      )
+      .then((choice) => {
+        if (choice === "Open Logs") output.show();
+      });
+  }
 }
 
 export function deactivate() {}
@@ -165,10 +177,8 @@ async function openMap(
   mapPanels: MapPanelSet,
 ): Promise<void> {
   const root = workspaceRoot();
-  const paths = resolveArch4Paths(root);
-  let diagramResult = await readDiagrams(root, paths.viewsDir);
-  let diagrams = diagramResult.diagrams;
-  if (diagrams.length) {
+  let payload = await createViewerPayload(root);
+  if (payload.diagrams.length) {
     await refreshArchitectureIndex(context);
   }
   const panel = vscode.window.createWebviewPanel(
@@ -185,36 +195,18 @@ async function openMap(
   panel.onDidDispose(() => {
     mapPanels.delete(panel);
   });
-  diagramResult = await readDiagrams(root, paths.viewsDir);
-  diagrams = diagramResult.diagrams;
-  const indexResult = await readArchitectureIndex(
-    root,
-    paths.architectureIndexPath,
-  );
-  const diagnostics = await readWorkspaceDiagnostics(
-    root,
-    paths,
-    diagramResult,
-    indexResult,
-  );
-  const layoutConfig = readArch4LayoutConfig(paths.layoutConfigPath);
-  const manualLayout = readArch4ManualLayout(paths.manualLayoutPath);
-  const payloadDiagnostics = [
-    ...diagnostics,
-    ...layoutConfig.diagnostics,
-    ...manualLayout.diagnostics,
-  ];
+  payload = await createViewerPayload(root);
   panel.webview.onDidReceiveMessage((message: unknown) => {
     void handleWebviewMessage(context, panel, message);
   });
   panel.webview.html = renderWebviewHtml(
     context,
     panel.webview,
-    diagrams,
-    indexResult.index,
-    payloadDiagnostics,
-    layoutDirectionsFromConfig(layoutConfig.value),
-    manualLayoutDiagramIdsFromConfig(manualLayout.value),
+    payload.diagrams,
+    payload.index,
+    payload.diagnostics,
+    payload.layoutDirections,
+    payload.manualLayoutDiagramIds,
   );
 }
 
@@ -258,20 +250,7 @@ async function persistLayoutDirection(
   direction: LayoutDirection,
 ): Promise<void> {
   const root = workspaceRoot();
-  const paths = resolveArch4Paths(root);
-  const current = readArch4LayoutConfig(paths.layoutConfigPath);
-  const config: Arch4LayoutConfig = current.value ?? defaultArch4LayoutConfig();
-  writeArch4LayoutConfig(paths.layoutConfigPath, {
-    ...config,
-    views: {
-      ...config.views,
-      [diagramId]: {
-        ...config.views[diagramId],
-        direction,
-      },
-    },
-  });
-  clearManualLayoutView(paths.manualLayoutPath, diagramId);
+  updateArchitectureLayout(root, { diagramId, direction });
   await runCli(["render"], context);
   await runCli(["index"], context);
   await postCurrentPayload(panel);
@@ -286,23 +265,7 @@ async function persistNodePosition(
   y: number,
 ): Promise<void> {
   const root = workspaceRoot();
-  const paths = resolveArch4Paths(root);
-  const current = readArch4ManualLayout(paths.manualLayoutPath);
-  const manualLayout: Arch4ManualLayout =
-    current.value ?? defaultArch4ManualLayout();
-  writeArch4ManualLayout(paths.manualLayoutPath, {
-    ...manualLayout,
-    views: {
-      ...manualLayout.views,
-      [diagramId]: {
-        ...(manualLayout.views[diagramId] ?? {}),
-        nodes: {
-          ...(manualLayout.views[diagramId]?.nodes ?? {}),
-          [nodeId]: { x, y },
-        },
-      },
-    },
-  });
+  updateArchitectureLayout(root, { diagramId, nodeId, x, y });
   await runCli(["render"], context);
   await postCurrentPayload(panel);
 }
@@ -313,23 +276,9 @@ async function resetManualLayout(
   diagramId: string,
 ): Promise<void> {
   const root = workspaceRoot();
-  const paths = resolveArch4Paths(root);
-  clearManualLayoutView(paths.manualLayoutPath, diagramId);
+  updateArchitectureLayout(root, { diagramId, resetManualLayout: true });
   await runCli(["render"], context);
   await postCurrentPayload(panel);
-}
-
-function clearManualLayoutView(filePath: string, diagramId: string): void {
-  const current = readArch4ManualLayout(filePath);
-  const manualLayout: Arch4ManualLayout =
-    current.value ?? defaultArch4ManualLayout();
-  if (!manualLayout.views[diagramId]) return;
-  const views = { ...manualLayout.views };
-  delete views[diagramId];
-  writeArch4ManualLayout(filePath, {
-    ...manualLayout,
-    views,
-  });
 }
 
 async function refreshOpenMapPanels(mapPanels: MapPanelSet): Promise<void> {
@@ -338,33 +287,7 @@ async function refreshOpenMapPanels(mapPanels: MapPanelSet): Promise<void> {
 
 async function postCurrentPayload(panel: vscode.WebviewPanel): Promise<void> {
   const root = workspaceRoot();
-  const paths = resolveArch4Paths(root);
-  const diagramResult = await readDiagrams(root, paths.viewsDir);
-  const indexResult = await readArchitectureIndex(
-    root,
-    paths.architectureIndexPath,
-  );
-  const diagnostics = await readWorkspaceDiagnostics(
-    root,
-    paths,
-    diagramResult,
-    indexResult,
-  );
-  const layoutConfig = readArch4LayoutConfig(paths.layoutConfigPath);
-  const manualLayout = readArch4ManualLayout(paths.manualLayoutPath);
-  const payload = {
-    diagrams: diagramResult.diagrams,
-    index: indexResult.index,
-    diagnostics: [
-      ...diagnostics,
-      ...layoutConfig.diagnostics,
-      ...manualLayout.diagnostics,
-    ],
-    layoutDirections: layoutDirectionsFromConfig(layoutConfig.value),
-    manualLayoutDiagramIds: manualLayoutDiagramIdsFromConfig(
-      manualLayout.value,
-    ),
-  };
+  const payload = await createViewerPayload(root);
   const digest = JSON.stringify(payload);
   if (lastPayloadDigestByPanel.get(panel) === digest) return;
   lastPayloadDigestByPanel.set(panel, digest);
@@ -466,6 +389,86 @@ async function openCursorPrompt(prompt: string): Promise<void> {
   await vscode.env.openExternal(vscode.Uri.parse(link.toString()));
 }
 
+async function installCursorLocalMcpPluginForWorkspace(
+  context: vscode.ExtensionContext,
+  output: vscode.OutputChannel,
+): Promise<void> {
+  const syncPlugin = async () => {
+    const root = maybeWorkspaceRoot();
+    if (root) await installCursorLocalMcpPlugin(context, root);
+  };
+
+  await syncPlugin();
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeWorkspaceFolders(() => {
+      void syncPlugin().catch((error) => {
+        output.appendLine(
+          `Could not refresh the Cursor MCP plugin workspace root: ${errorMessage(error)}`,
+        );
+      });
+    }),
+  );
+}
+
+async function installCursorLocalMcpPlugin(
+  context: vscode.ExtensionContext,
+  root: string,
+): Promise<string> {
+  const pluginPath = cursorLocalMcpPluginPath();
+  const manifestDir = path.join(pluginPath, ".cursor-plugin");
+  await mkdir(manifestDir, { recursive: true });
+  await writeFile(
+    path.join(manifestDir, "plugin.json"),
+    `${JSON.stringify(cursorExtensionMcpPluginManifest(context), null, 2)}\n`,
+    "utf8",
+  );
+  await writeFile(
+    path.join(pluginPath, "mcp.json"),
+    `${JSON.stringify(
+      {
+        mcpServers: {
+          arch4: extensionMcpServerConfig(context, root),
+        },
+      },
+      null,
+      2,
+    )}\n`,
+    "utf8",
+  );
+  return pluginPath;
+}
+
+function cursorLocalMcpPluginPath(): string {
+  return path.join(os.homedir(), ".cursor", "plugins", "local", "arch4-mcp");
+}
+
+function cursorExtensionMcpPluginManifest(
+  context: vscode.ExtensionContext,
+): Record<string, unknown> {
+  const packageJson = context.extension.packageJSON as
+    | { version?: unknown }
+    | undefined;
+  return {
+    name: "arch4-mcp",
+    version:
+      typeof packageJson?.version === "string" ? packageJson.version : "0.0.0",
+    description: "Arch4 MCP tools from the installed Arch4 Cursor extension.",
+    mcpServers: "mcp.json",
+  };
+}
+
+function extensionMcpServerConfig(
+  context: vscode.ExtensionContext,
+  root: string,
+): Record<string, unknown> {
+  return {
+    type: "stdio",
+    command: process.execPath,
+    args: [resolveMcpPath(context), "--root", root],
+    env: mcpEnv(context),
+  };
+}
+
 async function installCursorContext(
   options: { notify?: boolean } = {},
 ): Promise<void> {
@@ -565,25 +568,6 @@ function renderWebviewHtml(
 </html>`;
 }
 
-function layoutDirectionsFromConfig(
-  config: Arch4LayoutConfig | undefined,
-): Record<string, LayoutDirection> {
-  const directions: Record<string, LayoutDirection> = {};
-  for (const [viewId, viewConfig] of Object.entries(config?.views ?? {})) {
-    if (viewConfig.direction) directions[viewId] = viewConfig.direction;
-  }
-  return directions;
-}
-
-function manualLayoutDiagramIdsFromConfig(
-  config: Arch4ManualLayout | undefined,
-): string[] {
-  return Object.entries(config?.views ?? {})
-    .filter(([, view]) => Object.keys(view.nodes ?? {}).length > 0)
-    .map(([viewId]) => viewId)
-    .sort();
-}
-
 function stringMessageField(value: unknown): string {
   return typeof value === "string" ? value : "";
 }
@@ -596,6 +580,10 @@ function numberMessageField(value: unknown): number | undefined {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 export async function writeArch4OwnedFile(
@@ -875,16 +863,18 @@ function resolveCliPath(context: vscode.ExtensionContext): string {
   return path.resolve(extensionRoot, "..", "cli", "dist", "index.js");
 }
 
+function resolveMcpPath(context: vscode.ExtensionContext): string {
+  const extensionRoot = context.extensionUri.fsPath;
+  const bundledMcp = path.join(extensionRoot, "mcp", "index.js");
+  if (existsSync(bundledMcp)) return bundledMcp;
+  return path.resolve(extensionRoot, "..", "mcp", "dist", "stdio.js");
+}
+
 function resolveCliEnv(context: vscode.ExtensionContext): NodeJS.ProcessEnv {
   const extensionRoot = context.extensionUri.fsPath;
-  const packagedRuntimeDir = path.join(extensionRoot, "runtime");
-  if (existsSync(packagedRuntimeDir)) {
-    return { ...process.env, ARCH4_RUNTIME_DIR: packagedRuntimeDir };
-  }
-
-  const sourceRuntimeDir = path.resolve(extensionRoot, "..", "..", "runtime");
-  if (isSourceDevelopmentExtension(context) && existsSync(sourceRuntimeDir)) {
-    return { ...process.env, ARCH4_RUNTIME_DIR: sourceRuntimeDir };
+  const runtimeDir = resolveRuntimeDir(context);
+  if (runtimeDir) {
+    return { ...process.env, ARCH4_RUNTIME_DIR: runtimeDir };
   }
 
   const bundledCli = path.join(extensionRoot, "cli", "index.js");
@@ -895,6 +885,30 @@ function resolveCliEnv(context: vscode.ExtensionContext): NodeJS.ProcessEnv {
   }
 
   return process.env;
+}
+
+function resolveRuntimeDir(
+  context: vscode.ExtensionContext,
+): string | undefined {
+  const extensionRoot = context.extensionUri.fsPath;
+  const packagedRuntimeDir = path.join(extensionRoot, "runtime");
+  if (existsSync(packagedRuntimeDir)) return packagedRuntimeDir;
+
+  const sourceRuntimeDir = path.resolve(extensionRoot, "..", "..", "runtime");
+  if (isSourceDevelopmentExtension(context) && existsSync(sourceRuntimeDir)) {
+    return sourceRuntimeDir;
+  }
+
+  return undefined;
+}
+
+function mcpEnv(context: vscode.ExtensionContext): Record<string, string> {
+  const env: Record<string, string> = {
+    ELECTRON_RUN_AS_NODE: "1",
+  };
+  const runtimeDir = resolveRuntimeDir(context);
+  if (runtimeDir) env.ARCH4_RUNTIME_DIR = runtimeDir;
+  return env;
 }
 
 function isSourceDevelopmentExtension(

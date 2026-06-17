@@ -1,0 +1,15 @@
+{
+  "name": "arch4-mcp",
+  "version": "0.1.0",
+  "description": "Architecture modeling and visualization tools for Cursor Agent.",
+  "author": {
+    "name": "Arch4"
+  },
+  "homepage": "https://github.com/P451M/Arch4#readme",
+  "repository": "https://github.com/P451M/Arch4",
+  "license": "Apache-2.0",
+  "keywords": ["architecture", "c4", "mcp", "cursor", "visualization"],
+  "mcpServers": "mcp.json",
+  "skills": "skills",
+  "commands": "commands"
+}

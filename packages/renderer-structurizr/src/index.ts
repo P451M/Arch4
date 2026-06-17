@@ -26,7 +26,9 @@ export function renderArch4Workspace(options: RenderOptions): RenderResult {
   const diagnostics: Diagnostic[] = [];
   const fail = (items: Diagnostic[]): RenderResult => {
     if (writeOutputs) {
-      replaceRenderedViews(paths.viewsDir, []);
+      if (!options.preserveViewsOnError) {
+        replaceRenderedViews(paths.viewsDir, []);
+      }
       writeJson(paths.diagnosticsPath, items);
     }
     return { diagnostics: items, specs: [] };

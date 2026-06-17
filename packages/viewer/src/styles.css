@@ -54,6 +54,8 @@
   --arch4-infrastructure-accent: #64748b;
   --arch4-deployment-view-accent: #7c8da1;
   --arch4-dynamic-view-accent: #2f9f8f;
+  --arch4-control-inset: 12px;
+  --arch4-control-right-inset: var(--arch4-control-inset);
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
   height: 100%;
@@ -93,6 +95,10 @@
     var(--arch4-background);
 }
 
+.arch4-canvas:focus {
+  outline: none;
+}
+
 /* React Flow integration */
 .arch4-viewer .react-flow {
   --xy-edge-stroke-default: var(--arch4-text-muted);
@@ -127,6 +133,26 @@
   border: 1px solid var(--arch4-border);
   border-radius: 8px;
   box-shadow: 0 0 0 1px var(--arch4-shadow);
+}
+
+.arch4-viewer .react-flow__panel {
+  margin: 0;
+}
+
+.arch4-viewer .react-flow__panel.left {
+  left: var(--arch4-control-inset);
+}
+
+.arch4-viewer .react-flow__panel.right {
+  right: var(--arch4-control-right-inset);
+}
+
+.arch4-viewer .react-flow__panel.top {
+  top: var(--arch4-control-inset);
+}
+
+.arch4-viewer .react-flow__panel.bottom {
+  bottom: var(--arch4-control-inset);
 }
 
 .arch4-viewer .react-flow__controls-button {
@@ -183,14 +209,14 @@
 
 .arch4-sidebar-reopen {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: var(--arch4-control-inset);
+  left: var(--arch4-control-inset);
   z-index: 20;
   box-shadow: 0 4px 12px var(--arch4-shadow);
 }
 
 .arch4-layout-panel {
-  margin: 12px;
+  margin: 0;
 }
 
 .arch4-layout-settings {

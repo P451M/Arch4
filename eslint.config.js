@@ -13,6 +13,7 @@ export default [
       "**/dist/**",
       "**/.arch4/architecture/build/**",
       "packages/cursor-extension/cli/**",
+      "packages/cursor-extension/mcp/**",
       "packages/cursor-extension/media/**",
     ],
   },

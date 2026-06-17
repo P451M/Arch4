@@ -5,6 +5,7 @@ export type RenderOptions = {
   structurizrCliPath?: string;
   javaPath?: string;
   writeOutputs?: boolean;
+  preserveViewsOnError?: boolean;
 };
 
 export type RenderResult = {

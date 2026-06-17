@@ -1,0 +1,16 @@
+{
+  "name": "arch4-marketplace",
+  "owner": {
+    "name": "Arch4"
+  },
+  "metadata": {
+    "description": "Arch4 Cursor plugins"
+  },
+  "plugins": [
+    {
+      "name": "arch4-mcp",
+      "source": "plugins/cursor/arch4-mcp",
+      "description": "Architecture modeling and visualization tools for Cursor Agent"
+    }
+  ]
+}

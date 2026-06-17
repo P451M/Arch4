@@ -95,6 +95,29 @@ describe("cursor extension development launcher", () => {
     expect(source).toContain("ARCH4_RUNTIME_DIR");
     expect(source).toContain("pnpm setup:runtime and pnpm build");
   });
+
+  it("verifies bundled MCP artifacts and local plugin after reinstalling the Cursor VSIX", () => {
+    const source = readFileSync(
+      path.resolve("../../scripts/reinstall-cursor-extension.mjs"),
+      "utf8",
+    );
+
+    expect(source).toContain("verifyInstalledFile");
+    expect(source).toContain("expectedPackagedFilePath");
+    expect(source).toContain("currentPlatformId");
+    expect(source).toContain('path.join("media", "webview.js")');
+    expect(source).toContain('path.join("mcp", "index.js")');
+    expect(source).toContain('path.join("mcp", "widget", "index.html")');
+    expect(source).toContain("verifyCursorLocalMcpPlugin");
+    expect(source).toContain("cursorLocalMcpPluginIsValid");
+    expect(source).toContain('"arch4-mcp"');
+    expect(source).toContain("server.args[2] === workspacePath");
+    expect(source).toContain('server.env?.ELECTRON_RUN_AS_NODE === "1"');
+    expect(source).toContain("valid Cursor local MCP plugin config");
+    expect(source).toContain("Timed out waiting for");
+    expect(source).not.toContain('"cursor-plugins"');
+    expect(source).toContain("does not match packaged file");
+  });
 });
 
 describe("release packaging", () => {
@@ -157,6 +180,17 @@ describe("release packaging", () => {
     expect(packageScript).toContain('"media/arch4-command-palette.png"');
     expect(packageScript).toContain('"media/arch4-full-screenshot.png"');
     expect(packageScript).toContain('"media/arch4-overview.png"');
+    expect(packageScript).toContain('"mcp/index.js"');
+    expect(packageScript).toContain('"mcp/widget/index.html"');
+    expect(packageScript).not.toContain("copyExtensionCursorPlugin");
+    expect(packageScript).toContain('"cursor-plugins"');
+    expect(packageScript).not.toContain("delete pluginManifest.mcpServers");
+    expect(packageScript).toContain(
+      "Packaged extension must not include Cursor plugin files",
+    );
+    expect(packageScript).not.toContain(
+      '"cursor-plugins/arch4-mcp/.cursor-plugin/plugin.json"',
+    );
     expect(packageScript).toContain("runtimeManifestErrors");
     expect(packageScript).toContain("verifyCopiedRuntime");
     expect(packageScript).not.toContain('"media/arch4-demo.gif"');
@@ -242,6 +276,7 @@ describe("cursor extension agent instructions", () => {
       "onCommand:arch4.updateModel",
       "onCommand:arch4.removeArtifacts",
     ]);
+    expect(manifest.activationEvents).toContain("onStartupFinished");
     expect(manifest.contributes.commands.map((item) => item.command)).toEqual([
       "arch4.openMap",
       "arch4.buildArtifacts",
@@ -289,9 +324,51 @@ describe("cursor extension agent instructions", () => {
     expect(source).toContain("CURSOR_EXTENSIONS_DIR");
     expect(source).toContain("ARCH4_RUNTIME_DIR");
     expect(source).toContain("process.execPath");
+    expect(source).not.toContain("arch4McpLauncherTemplate");
+    expect(source).not.toContain("arch4WindowsMcpLauncherTemplate");
     expect(source).not.toContain(
       ".cursor/extensions/arch4.arch4-cursor-extension-0.",
     );
+  });
+
+  it("installs a native local Cursor plugin as the VSIX MCP provider", () => {
+    const source = readFileSync(path.resolve("src/extension.ts"), "utf8");
+
+    expect(source).toContain('vscode.window.createOutputChannel("Arch4")');
+    expect(source).toContain("context.subscriptions.push(output)");
+    expect(source).toContain(
+      "installCursorLocalMcpPluginForWorkspace(context, output)",
+    );
+    expect(source).toContain("output.appendLine(");
+    expect(source).toContain("errorMessage(error)");
+    expect(source).toContain('"Open Logs"');
+    expect(source).toContain("output.show()");
+    expect(source).toContain("onDidChangeWorkspaceFolders(() =>");
+    expect(source).toContain("maybeWorkspaceRoot()");
+    expect(source).toContain('path.join(os.homedir(), ".cursor"');
+    expect(source).toContain('"plugins",');
+    expect(source).toContain('"local",');
+    expect(source).toContain('"arch4-mcp"');
+    expect(source).toContain('name: "arch4-mcp"');
+    expect(source).toContain('mcpServers: "mcp.json"');
+    expect(source).toContain("extensionMcpServerConfig(context, root)");
+    expect(source).toContain('args: [resolveMcpPath(context), "--root", root]');
+    expect(source).toContain('ELECTRON_RUN_AS_NODE: "1"');
+    expect(source).not.toContain("registerServer");
+    expect(source).not.toContain("unregisterServer");
+    expect(source).not.toContain("api.addPlugin");
+    expect(source).not.toContain("api.removePlugin");
+    expect(source).not.toContain('command("arch4.installMcp"');
+    expect(source).not.toContain("writeWorkspaceMcpConfig");
+  });
+
+  it("does not register direct Cursor MCP servers from the VSIX install path", () => {
+    const source = readFileSync(path.resolve("src/extension.ts"), "utf8");
+
+    expect(source).not.toContain("registerCursorPluginPath");
+    expect(source).not.toContain("api.registerPath");
+    expect(source).not.toContain("cursor?.mcp");
+    expect(source).not.toContain("api.registerServer");
   });
 
   it("routes the public build command through deterministic render and index steps", () => {
@@ -375,9 +452,7 @@ describe("cursor extension agent instructions", () => {
 
     expect(source).toContain("persistNodePosition");
     expect(source).not.toContain("persistEdgeLabelPosition");
-    expect(source).toContain("readArch4ManualLayout");
-    expect(source).toContain("writeArch4ManualLayout");
-    expect(source).toContain("clearManualLayoutView");
+    expect(source).toContain("updateArchitectureLayout");
     expect(source).toContain('runCli(["render"], context)');
     expect(source).toContain("lastPayloadDigestByPanel");
     expect(webviewSource).toContain("onNodePositionChange");

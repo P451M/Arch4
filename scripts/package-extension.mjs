@@ -54,6 +54,7 @@ copyFiltered(path.join(sourceDir, "dist"), path.join(extensionDir, "dist"));
 copyFiltered(path.join(sourceDir, "media"), path.join(extensionDir, "media"));
 copySharedMediaAssets(extensionDir);
 copyFiltered(path.join(sourceDir, "cli"), path.join(extensionDir, "cli"));
+copyFiltered(path.join(sourceDir, "mcp"), path.join(extensionDir, "mcp"));
 writeFileSync(
   path.join(extensionDir, "README.md"),
   stagedExtensionReadme(),
@@ -244,12 +245,20 @@ function verifyStagedExtension(targetExtensionDir, targetPlatform) {
     "media/webview.js",
     "media/webview.css",
     "cli/index.js",
+    "mcp/index.js",
+    "mcp/widget/index.html",
     `runtime/manifests/${targetPlatform}.json`,
   ];
   for (const file of requiredFiles) {
     if (!existsSync(path.join(targetExtensionDir, file))) {
       throw new Error(`Packaged extension is missing ${file}`);
     }
+  }
+  const packagedPluginPath = path.join(targetExtensionDir, "cursor-plugins");
+  if (existsSync(packagedPluginPath)) {
+    throw new Error(
+      "Packaged extension must not include Cursor plugin files; the VSIX and Cursor MCP plugin are separate install paths.",
+    );
   }
   const bundleRoot = path.join(targetExtensionDir, "runtime", "bundles");
   const bundles = readdirSync(bundleRoot).filter((entry) =>

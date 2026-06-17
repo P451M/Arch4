@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Background,
   BackgroundVariant,
@@ -105,6 +112,7 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
     useState<Set<string>>(() => new Set());
   const [isLayoutMenuOpen, setIsLayoutMenuOpen] = useState(false);
   const layoutMenuRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLElement | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [collapsedSidebarSections, setCollapsedSidebarSections] = useState<
     Set<string>
@@ -116,6 +124,7 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
   const [zoom, setZoom] = useState(1);
   const [fitViewSignal, setFitViewSignal] = useState(1);
   const suppressNodeClickRef = useRef(false);
+  const shouldFocusMapAfterLayoutRef = useRef(false);
   const diagrams = useMemo(
     () =>
       applyLayoutDirections(
@@ -161,6 +170,17 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
       setFitViewSignal((current) => current + 1);
     },
     [],
+  );
+  const refocusMap = useCallback((options?: { focusMap?: boolean }) => {
+    if (options?.focusMap) shouldFocusMapAfterLayoutRef.current = true;
+    setFitViewSignal((current) => current + 1);
+  }, []);
+  const setSidebarOpen = useCallback(
+    (isOpen: boolean) => {
+      setIsSidebarOpen(isOpen);
+      refocusMap({ focusMap: true });
+    },
+    [refocusMap],
   );
   const toggleSelectedNode = useCallback((node: DiagramNode) => {
     setSelectedNode((current) => (current?.id === node.id ? null : node));
@@ -341,6 +361,22 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
       document.removeEventListener("pointerdown", closeOnOutsidePointer, true);
     };
   }, [isLayoutMenuOpen]);
+  useLayoutEffect(() => {
+    if (!shouldFocusMapAfterLayoutRef.current) return;
+    const focusCanvas = () => {
+      canvasRef.current?.focus({ preventScroll: true });
+    };
+    focusCanvas();
+    const focusFrame = window.requestAnimationFrame(focusCanvas);
+    const focusTimeout = window.setTimeout(() => {
+      focusCanvas();
+      shouldFocusMapAfterLayoutRef.current = false;
+    }, 50);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      window.clearTimeout(focusTimeout);
+    };
+  }, [fitViewSignal, isSidebarOpen]);
 
   return (
     <div className={`arch4-viewer ${isSidebarOpen ? "" : "sidebar-collapsed"}`}>
@@ -356,7 +392,7 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
               className="arch4-icon-button arch4-sidebar-toggle"
               title="Collapse architecture tree"
               type="button"
-              onClick={() => setIsSidebarOpen(false)}
+              onClick={() => setSidebarOpen(false)}
             >
               <PanelLeftClose size={19} />
             </button>
@@ -439,14 +475,14 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
           )}
         </aside>
       ) : null}
-      <main className="arch4-canvas">
+      <main className="arch4-canvas" ref={canvasRef} tabIndex={-1}>
         {!isSidebarOpen && (
           <button
             aria-label="Expand architecture tree"
             className="arch4-icon-button arch4-sidebar-toggle arch4-sidebar-reopen"
             title="Expand architecture tree"
             type="button"
-            onClick={() => setIsSidebarOpen(true)}
+            onClick={() => setSidebarOpen(true)}
           >
             <PanelLeftOpen size={19} />
           </button>

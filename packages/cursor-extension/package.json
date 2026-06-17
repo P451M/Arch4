@@ -39,6 +39,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onStartupFinished",
     "onCommand:arch4.openMap",
     "onCommand:arch4.buildArtifacts",
     "onCommand:arch4.updateModel",
@@ -75,13 +76,15 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json && node ../../scripts/bundle-extension-host.mjs && vite build && node ../../scripts/bundle-extension-cli.mjs",
+    "build": "tsc -p tsconfig.json && node ../../scripts/bundle-extension-host.mjs && vite build && node ../../scripts/bundle-extension-cli.mjs && node ../../scripts/bundle-extension-mcp.mjs",
     "check": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests --exclude '**/dist/**'"
   },
   "dependencies": {
     "@arch4/core": "workspace:*",
+    "@arch4/mcp": "workspace:*",
     "@arch4/viewer": "workspace:*",
+    "@arch4/workflows": "workspace:*",
     "@vitejs/plugin-react": "^5.1.1",
     "vite": "^7.2.0",
     "react": "^19.0.0",

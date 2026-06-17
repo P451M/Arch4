@@ -6,6 +6,7 @@ runtime/bundles/
 **/dist/
 **/.arch4/architecture/build/
 packages/cursor-extension/cli/
+packages/cursor-extension/mcp/
 packages/cursor-extension/media/
 assets/media/
 pnpm-lock.yaml

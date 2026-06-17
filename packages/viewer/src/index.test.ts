@@ -81,8 +81,16 @@ describe("viewer navigation helpers", () => {
     expect(source).toContain("onNodePositionChange");
     expect(source).toContain("onManualLayoutReset");
     expect(source).toContain("layoutDiagramSpec");
+    expect(source).toContain("const refocusMap = useCallback");
+    expect(source).toContain("const setSidebarOpen = useCallback");
+    expect(source).toContain("shouldFocusMapAfterLayoutRef");
+    expect(source).toContain("ref={canvasRef} tabIndex={-1}");
+    expect(source).toContain("setSidebarOpen(false)");
     expect(styles).toContain(".arch4-layout-menu .arch4-layout-reset");
     expect(styles).toContain("grid-column: 1 / -1;");
+    expect(styles).toContain("--arch4-control-right-inset");
+    expect(styles).toContain("left: var(--arch4-control-inset)");
+    expect(styles).toContain("right: var(--arch4-control-right-inset)");
   });
 
   it("guards fitView so payload refreshes do not refit the unchanged signal", () => {

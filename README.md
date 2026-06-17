@@ -5,13 +5,11 @@
 <h1 align="center">Arch4</h1>
 
 <p align="center">
-  <strong>A Cursor plugin for generating and viewing enriched C4 documentation.</strong>
+  <strong>A Cursor extension for generating and viewing enriched C4 documentation.</strong>
 </p>
 
 <p align="center">
-  <a href="https://www.cursor.com">
-    <img alt="Cursor plugin" src="https://img.shields.io/badge/Cursor-plugin-111827?style=for-the-badge&logo=cursor&logoColor=white">
-  </a>
+  <a href="https://www.cursor.com"><img alt="Cursor extension" src="https://img.shields.io/badge/Cursor-extension-111827?style=for-the-badge&logo=cursor&logoColor=white"></a>
   <img alt="C4 documentation" src="https://img.shields.io/badge/C4-documentation-2563eb?style=for-the-badge">
   <img alt="Structurizr" src="https://img.shields.io/badge/Structurizr-renderer-0891b2?style=for-the-badge">
 </p>
@@ -20,7 +18,7 @@
   <img src="assets/media/arch4-demo.gif" alt="Looping Arch4 demo in Cursor showing workspace initialization, architecture model update, and interactive C4 map exploration">
 </p>
 
-Arch4 is a Cursor plugin that keeps C4 architecture documentation next to the
+Arch4 is a Cursor extension that keeps C4 architecture documentation next to the
 code, generates repository-aware Structurizr DSL artifacts, and opens enriched
 interactive C4 maps directly inside Cursor.
 
@@ -45,7 +43,7 @@ pnpm reinstall:cursor
 
 ## What Arch4 Does
 
-- Installs as a Cursor plugin and adds Arch4 commands, views, rules, and skills.
+- Installs as a Cursor extension and adds Arch4 commands, views, rules, and skills.
 - Initializes a repository-local C4 documentation workspace under
   `.arch4/architecture/` when creating or updating the model.
 - Generates and validates Structurizr DSL models from repository context.
@@ -144,6 +142,7 @@ issue intake depend on the current publication and repository visibility state.
 ## Documentation
 
 - [Architecture overview](docs/architecture.md)
+- [Cursor MCP integration](docs/cursor-mcp.md)
 - [Runtime packaging](docs/runtime-packaging.md)
 - [OpenVSX release process](docs/openvsx-release.md)
 - [Release policy](docs/release-policy.md)
@@ -194,9 +193,18 @@ pnpm reinstall:cursor
 
 `pnpm reinstall:cursor` runs `pnpm build`, packages the extension for the
 current platform, uninstalls the existing Arch4 extension from Cursor, installs
-the new VSIX with `--force`, verifies the installed webview bundle, and reopens
-this workspace. The reinstall worker runs in the background and writes progress
-to the temp-directory log path printed by the command.
+the new VSIX with `--force`, verifies the installed webview and bundled MCP
+server artifacts, reopens this workspace, and verifies the generated local
+Cursor MCP plugin. The reinstall worker runs in the background and writes
+progress to the temp-directory log path printed by the command.
+
+The extension installs/updates Arch4's native local Cursor MCP plugin
+automatically when Cursor activates Arch4, so MCP tools are available in
+Cursor's detached Agent Window as well as the main workspace. The standalone
+Cursor MCP plugin is an alternative install path for users who do not install
+the VSIX/OpenVSX extension; do not install both in the same Cursor profile. See
+[Cursor MCP integration](docs/cursor-mcp.md) for the full local test and
+publishing flow.
 
 Package local artifacts:
 

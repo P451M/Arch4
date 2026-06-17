@@ -449,6 +449,40 @@ describe("renderArch4Workspace outputs", () => {
     ).toBe(true);
   });
 
+  it("preserves stale view output on render failure when requested", async () => {
+    const root = mkdtempSync(path.join(tmpdir(), "arch4-render-preserve-"));
+    const viewsDir = path.join(
+      root,
+      ".arch4",
+      "architecture",
+      "build",
+      "views",
+    );
+    const diagnosticsPath = path.join(
+      root,
+      ".arch4",
+      "architecture",
+      "build",
+      "diagnostics.json",
+    );
+    await mkdir(viewsDir, { recursive: true });
+    writeFileSync(path.join(viewsDir, "stale.json"), "{}\n", "utf8");
+
+    const result = renderArch4Workspace({
+      projectRoot: root,
+      writeOutputs: true,
+      preserveViewsOnError: true,
+    });
+
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({ code: "arch4.workspace.missing" }),
+    );
+    expect(readdirSync(viewsDir)).toEqual(["stale.json"]);
+    expect(JSON.parse(readFileSync(diagnosticsPath, "utf8"))).toContainEqual(
+      expect.objectContaining({ code: "arch4.workspace.missing" }),
+    );
+  });
+
   it("preserves stale views during Structurizr validation failures when validating", async () => {
     const project = createRenderProcessProject(`
 if (args[0] === "validate") {

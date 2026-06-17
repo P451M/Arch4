@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import {
   cursorExtensionDir,
   cursorExtensionId,
+  currentPlatformId,
   extensionVsixPath,
   installedCursorExtensionDir,
   root,
@@ -108,31 +109,131 @@ async function runWorker({ cursorBin, vsixPath, workspacePath, extensionId }) {
   } else {
     run(cursorBin, [workspacePath]);
   }
+  await verifyCursorLocalMcpPlugin({ workspacePath });
 
   log("Cursor reinstall complete.");
 }
 
 function verifyInstalledExtension({ vsixPath }) {
   const extensionDir = installedCursorExtensionDir();
-  const installedWebviewPath = path.join(extensionDir, "media", "webview.js");
-  if (!existsSync(installedWebviewPath)) {
+  verifyInstalledFile({
+    extensionDir,
+    relativePath: path.join("media", "webview.js"),
+    vsixPath,
+  });
+  verifyInstalledFile({
+    extensionDir,
+    relativePath: path.join("mcp", "index.js"),
+    vsixPath,
+  });
+  verifyInstalledFile({
+    extensionDir,
+    relativePath: path.join("mcp", "widget", "index.html"),
+    vsixPath,
+  });
+}
+
+function verifyInstalledFile({ extensionDir, relativePath, vsixPath }) {
+  const installedPath = path.join(extensionDir, relativePath);
+  if (!existsSync(installedPath)) {
     throw new Error(
-      `Installed extension is missing media/webview.js at ${installedWebviewPath}`,
+      `Installed extension is missing ${relativePath} at ${installedPath}`,
     );
   }
-  const expectedWebviewPath = path.join(
-    cursorExtensionDir,
-    "media",
-    "webview.js",
-  );
-  const expectedHash = sha256(readFileSync(expectedWebviewPath));
-  const installedHash = sha256(readFileSync(installedWebviewPath));
+  const expectedPath = expectedPackagedFilePath(relativePath);
+  const expectedHash = sha256(readFileSync(expectedPath));
+  const installedHash = sha256(readFileSync(installedPath));
   if (installedHash !== expectedHash) {
     throw new Error(
-      `Installed Cursor extension webview does not match packaged webview from ${vsixPath}.\nExpected ${expectedHash}; got ${installedHash}.`,
+      `Installed Cursor extension file ${relativePath} does not match packaged file from ${vsixPath}.\nExpected ${expectedHash}; got ${installedHash}.`,
     );
   }
-  log(`Verified installed webview: ${installedWebviewPath}`);
+  log(`Verified installed extension file: ${installedPath}`);
+}
+
+async function verifyCursorLocalMcpPlugin({ workspacePath }) {
+  const pluginDir = path.join(
+    os.homedir(),
+    ".cursor",
+    "plugins",
+    "local",
+    "arch4-mcp",
+  );
+  const manifestPath = path.join(pluginDir, ".cursor-plugin", "plugin.json");
+  const mcpPath = path.join(pluginDir, "mcp.json");
+  const installedMcpPath = path.join(
+    installedCursorExtensionDir(),
+    "mcp",
+    "index.js",
+  );
+  const installedRuntimePath = path.join(
+    installedCursorExtensionDir(),
+    "runtime",
+  );
+  await waitFor(
+    () =>
+      cursorLocalMcpPluginIsValid({
+        manifestPath,
+        mcpPath,
+        installedMcpPath,
+        installedRuntimePath,
+        workspacePath,
+      }),
+    `valid Cursor local MCP plugin config at ${pluginDir}`,
+  );
+
+  log(`Verified Cursor local MCP plugin: ${pluginDir}`);
+}
+
+function cursorLocalMcpPluginIsValid({
+  manifestPath,
+  mcpPath,
+  installedMcpPath,
+  installedRuntimePath,
+  workspacePath,
+}) {
+  if (!existsSync(manifestPath) || !existsSync(mcpPath)) return false;
+  try {
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    if (manifest.name !== "arch4-mcp" || manifest.mcpServers !== "mcp.json") {
+      return false;
+    }
+
+    const config = JSON.parse(readFileSync(mcpPath, "utf8"));
+    const server = config?.mcpServers?.arch4;
+    return (
+      server?.type === "stdio" &&
+      Array.isArray(server.args) &&
+      server.args[0] === installedMcpPath &&
+      server.args[1] === "--root" &&
+      server.args[2] === workspacePath &&
+      server.env?.ELECTRON_RUN_AS_NODE === "1" &&
+      server.env?.ARCH4_RUNTIME_DIR === installedRuntimePath
+    );
+  } catch {
+    return false;
+  }
+}
+
+async function waitFor(predicate, description) {
+  const deadline = Date.now() + 30_000;
+  while (Date.now() < deadline) {
+    if (predicate()) return;
+    await sleep(500);
+  }
+  throw new Error(`Timed out waiting for ${description}`);
+}
+
+function expectedPackagedFilePath(relativePath) {
+  const sourcePath = path.join(cursorExtensionDir, relativePath);
+  if (existsSync(sourcePath)) return sourcePath;
+  return path.join(
+    root,
+    "artifacts",
+    `arch4-extension-vsix-${currentPlatformId()}`,
+    "extension",
+    relativePath,
+  );
 }
 
 function sha256(buffer) {

@@ -22,6 +22,12 @@ Arch4 creates repository-local architecture files, Cursor workflow helpers, and
 the local `.arch4/bin/arch4` launcher used by agent workflows. Review generated
 model changes before committing them.
 
+For MCP Agent workflows, the extension installs/updates Arch4's native local
+Cursor MCP plugin automatically when it activates. No separate MCP installation
+command is required for extension users. Do not install the standalone Arch4
+Cursor MCP plugin on top of the extension; current Cursor versions treat each
+plugin directory as a separate MCP provider.
+
 ## Features
 
 - Initialize `.arch4/architecture/` with a Structurizr DSL workspace when
