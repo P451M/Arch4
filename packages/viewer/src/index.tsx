@@ -38,12 +38,6 @@ import { ElementInfoPanel } from "./details.js";
 import { Arch4Edge } from "./edges.js";
 import { resolveEdgeRouting } from "./edge-routing.js";
 import { buildFlowEdges, rebuildBoundaryFlowNodes, toFlow } from "./flow.js";
-import {
-  diagramIconForType,
-  diagramIconVariant,
-  diagramTreeLabel,
-  variantClass,
-} from "./icons.js";
 import { LegendSwatch } from "./legend.js";
 import {
   buildElementInfo,
@@ -54,7 +48,11 @@ import {
   resolveRelatedNavigationTargets,
 } from "./navigation.js";
 import { Arch4Boundary, Arch4Node } from "./nodes.js";
-import { CollapsibleSidebarSection, groupDiagrams } from "./sidebar.js";
+import {
+  CollapsibleSidebarSection,
+  createDiagramTreeItems,
+} from "./sidebar.js";
+import { Arch4Tree } from "./tree.js";
 import type {
   Arch4NodeData,
   Arch4RelatedNavigationTarget,
@@ -69,12 +67,14 @@ export type {
 } from "./types.js";
 export {
   buildElementInfo,
+  createDiagramTreeItems,
   findNodeForEntity,
   resolveCurrentViewRelationships,
   resolveEdgeRouting,
   resolveIndexedRelationshipsOutsideCurrentView,
   resolveRelatedNavigationTargets,
 };
+export type { Arch4TreeItem, Arch4TreeProps } from "./tree.js";
 
 const nodeTypes = { arch4Node: Arch4Node, arch4Boundary: Arch4Boundary };
 const edgeTypes = { arch4Edge: Arch4Edge };
@@ -99,9 +99,10 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
   const onLayoutDirectionChange = props.onLayoutDirectionChange;
   const onManualLayoutReset = props.onManualLayoutReset;
   const onNodePositionChange = props.onNodePositionChange;
-  const [activeDiagramId, setActiveDiagramId] = useState(
-    props.initialDiagramId ?? props.diagrams[0]?.id,
-  );
+  const [uncontrolledActiveDiagramId, setUncontrolledActiveDiagramId] =
+    useState<string | undefined>(
+      props.initialDiagramId ?? props.diagrams[0]?.id,
+    );
   const [layoutDirections, setLayoutDirections] = useState<
     Record<string, LayoutDirection>
   >(() => props.initialLayoutDirections ?? {});
@@ -134,9 +135,16 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
       ),
     [layoutDirections, locallyResetManualDiagramIds, props.diagrams],
   );
+  const showSidebar = props.chrome?.sidebar ?? true;
+  const showDiagnostics = props.chrome?.diagnostics ?? true;
+  const activeDiagramId =
+    props.activeDiagramId ?? uncontrolledActiveDiagramId ?? diagrams[0]?.id;
   const activeDiagram =
     diagrams.find((diagram) => diagram.id === activeDiagramId) ?? diagrams[0];
-  const diagramGroups = useMemo(() => groupDiagrams(diagrams), [diagrams]);
+  const diagramTreeItems = useMemo(
+    () => createDiagramTreeItems(diagrams),
+    [diagrams],
+  );
   const elementById = useMemo(() => {
     const mapped = new Map<string, ArchitectureIndex["elements"][number]>();
     props.architectureIndex?.elements.forEach((element) =>
@@ -152,6 +160,18 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
     setLayoutDirections(props.initialLayoutDirections ?? {});
   }, [props.initialLayoutDirections]);
   useEffect(() => {
+    if (props.activeDiagramId !== undefined) return;
+    if (!diagrams.length) {
+      setUncontrolledActiveDiagramId(undefined);
+      return;
+    }
+    if (
+      !diagrams.some((diagram) => diagram.id === uncontrolledActiveDiagramId)
+    ) {
+      setUncontrolledActiveDiagramId(diagrams[0]?.id);
+    }
+  }, [diagrams, props.activeDiagramId, uncontrolledActiveDiagramId]);
+  useEffect(() => {
     const nextManualIds = new Set(props.initialManualLayoutDiagramIds ?? []);
     setManualLayoutDiagramIds(nextManualIds);
     setLocallyResetManualDiagramIds((current) => {
@@ -164,12 +184,33 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
   }, [props.initialManualLayoutDiagramIds]);
   const navigateToRelatedTarget = useCallback(
     (target: Arch4RelatedNavigationTarget) => {
-      setActiveDiagramId(target.diagram.id);
+      if (props.activeDiagramId === undefined) {
+        setUncontrolledActiveDiagramId(target.diagram.id);
+      }
+      props.onActiveDiagramChange?.(target.diagram.id);
       setPendingNodeEntityId(target.entityId);
       setZoom(1);
       setFitViewSignal((current) => current + 1);
     },
-    [],
+    [props],
+  );
+  const clearSelection = useCallback(() => {
+    setSelectedNode(null);
+    props.onSelectionChange?.(null);
+  }, [props]);
+  const selectDiagram = useCallback(
+    (diagramId: string) => {
+      if (props.activeDiagramId === undefined) {
+        setUncontrolledActiveDiagramId(diagramId);
+      }
+      props.onActiveDiagramChange?.(diagramId);
+      clearSelection();
+      setPendingNodeEntityId(null);
+      setZoom(1);
+      setFitViewSignal((current) => current + 1);
+      setIsLayoutMenuOpen(false);
+    },
+    [clearSelection, props],
   );
   const refocusMap = useCallback((options?: { focusMap?: boolean }) => {
     if (options?.focusMap) shouldFocusMapAfterLayoutRef.current = true;
@@ -182,9 +223,16 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
     },
     [refocusMap],
   );
-  const toggleSelectedNode = useCallback((node: DiagramNode) => {
-    setSelectedNode((current) => (current?.id === node.id ? null : node));
-  }, []);
+  const toggleSelectedNode = useCallback(
+    (node: DiagramNode) => {
+      setSelectedNode((current) => {
+        const next = current?.id === node.id ? null : node;
+        props.onSelectionChange?.(next);
+        return next;
+      });
+    },
+    [props],
+  );
   const changeLayoutDirection = useCallback(
     (diagram: DiagramSpec, direction: LayoutDirection) => {
       setLayoutDirections((current) => ({
@@ -267,6 +315,7 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
   }, [flow.edges, flow.nodes, setFlowEdges, setFlowNodes]);
   const updateDraggedNode = useCallback(
     (node: Node) => {
+      if (props.readonly) return;
       if (!activeDiagram) return;
       const moved = flowNodesRef.current.map((item) =>
         item.id === node.id ? { ...item, position: node.position } : item,
@@ -282,10 +331,17 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
         buildFlowEdges(activeDiagram, rebuilt, props.showEdgeLabels ?? true),
       );
     },
-    [activeDiagram, props.showEdgeLabels, setFlowEdges, setFlowNodes],
+    [
+      activeDiagram,
+      props.readonly,
+      props.showEdgeLabels,
+      setFlowEdges,
+      setFlowNodes,
+    ],
   );
   const persistDraggedNode = useCallback(
     (node: Node) => {
+      if (props.readonly) return;
       if (!activeDiagram) return;
       const data = node.data as Arch4NodeData | undefined;
       if (data?.kind !== "element") return;
@@ -305,7 +361,7 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
         console.error("Arch4 could not persist node position.", error);
       });
     },
-    [activeDiagram, onNodePositionChange],
+    [activeDiagram, onNodePositionChange, props.readonly],
   );
   const selectedElement = selectedNode
     ? elementById.get(selectedNode.entityId ?? selectedNode.id)
@@ -345,8 +401,23 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
     if (!pendingNodeEntityId || !activeDiagram) return;
     const nextNode = findNodeForEntity(activeDiagram, pendingNodeEntityId);
     setSelectedNode(nextNode ?? null);
+    props.onSelectionChange?.(nextNode ?? null);
     setPendingNodeEntityId(null);
-  }, [activeDiagram, pendingNodeEntityId]);
+  }, [activeDiagram, pendingNodeEntityId, props]);
+  useEffect(() => {
+    if (props.selectedEntityId === undefined) return;
+    if (!props.selectedEntityId || !activeDiagram) {
+      clearSelection();
+      return;
+    }
+    const nextNode = findNodeForEntity(activeDiagram, props.selectedEntityId);
+    setSelectedNode(nextNode ?? null);
+    props.onSelectionChange?.(nextNode ?? null);
+  }, [activeDiagram, clearSelection, props]);
+  useEffect(() => {
+    if (props.fitViewSignal === undefined) return;
+    setFitViewSignal((current) => current + 1);
+  }, [props.fitViewSignal]);
   useEffect(() => {
     if (!isLayoutMenuOpen) return;
     const closeOnOutsidePointer = (event: PointerEvent) => {
@@ -379,14 +450,26 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
   }, [fitViewSignal, isSidebarOpen]);
 
   return (
-    <div className={`arch4-viewer ${isSidebarOpen ? "" : "sidebar-collapsed"}`}>
-      {isSidebarOpen ? (
+    <div
+      className={[
+        "arch4-viewer",
+        isSidebarOpen && showSidebar ? "" : "sidebar-collapsed",
+        props.className ?? "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      data-arch4-theme={props.theme}
+      style={props.style}
+    >
+      {showSidebar && isSidebarOpen ? (
         <aside className="arch4-sidebar">
           <div className="arch4-brand">
-            <span>
-              <strong>Arch4</strong>
-              <span>Architecture Maps</span>
-            </span>
+            {props.chrome?.brand ?? (
+              <span>
+                <strong>Arch4</strong>
+                <span>Architecture Maps</span>
+              </span>
+            )}
             <button
               aria-label="Collapse architecture tree"
               className="arch4-icon-button arch4-sidebar-toggle"
@@ -403,57 +486,15 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
             title="Diagrams"
             onToggle={toggleSidebarSection}
           >
-            <div className="arch4-tree">
-              {diagramGroups.map((group) => (
-                <CollapsibleSidebarSection
-                  id={`diagram-group:${group.type}`}
-                  isNested
-                  isOpen={isSectionOpen(`diagram-group:${group.type}`)}
-                  key={group.type}
-                  title={group.label}
-                  onToggle={toggleSidebarSection}
-                >
-                  <div className="arch4-list">
-                    {group.diagrams.map((diagram) => {
-                      const DiagramIcon = diagramIconForType(diagram.type);
-                      const diagramLabel = diagramTreeLabel(diagram);
-                      return (
-                        <button
-                          aria-current={
-                            diagram.id === activeDiagram?.id
-                              ? "page"
-                              : undefined
-                          }
-                          className={
-                            diagram.id === activeDiagram?.id ? "active" : ""
-                          }
-                          key={diagram.id}
-                          type="button"
-                          onClick={() => {
-                            setActiveDiagramId(diagram.id);
-                            setSelectedNode(null);
-                            setPendingNodeEntityId(null);
-                            setZoom(1);
-                            setFitViewSignal((current) => current + 1);
-                            setIsLayoutMenuOpen(false);
-                          }}
-                        >
-                          <span
-                            className={`arch4-tree-item-icon ${variantClass(diagramIconVariant(diagram.type))}`}
-                            aria-hidden="true"
-                          >
-                            <DiagramIcon size={14} strokeWidth={2.35} />
-                          </span>
-                          <strong>{diagramLabel}</strong>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </CollapsibleSidebarSection>
-              ))}
-            </div>
+            <Arch4Tree
+              className="arch4-sidebar-tree"
+              emptyTitle="No diagrams match"
+              items={diagramTreeItems}
+              onSelect={selectDiagram}
+              selectedId={activeDiagram?.id}
+            />
           </CollapsibleSidebarSection>
-          {Boolean(props.diagnostics?.length) && (
+          {showDiagnostics && Boolean(props.diagnostics?.length) && (
             <CollapsibleSidebarSection
               id="diagnostics"
               isOpen={isSectionOpen("diagnostics")}
@@ -476,7 +517,7 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
         </aside>
       ) : null}
       <main className="arch4-canvas" ref={canvasRef} tabIndex={-1}>
-        {!isSidebarOpen && (
+        {showSidebar && !isSidebarOpen && (
           <button
             aria-label="Expand architecture tree"
             className="arch4-icon-button arch4-sidebar-toggle arch4-sidebar-reopen"
@@ -501,7 +542,7 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
             nodes={flowNodes}
             autoPanOnNodeDrag={false}
             nodesConnectable={false}
-            nodesDraggable
+            nodesDraggable={!props.readonly}
             nodeTypes={nodeTypes}
             onEdgesChange={onEdgesChange}
             onMove={(_, viewport) => setZoom(viewport.zoom)}
@@ -522,7 +563,7 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
               if (data.kind === "element") toggleSelectedNode(data.node);
             }}
             onNodesChange={onNodesChange}
-            onPaneClick={() => setSelectedNode(null)}
+            onPaneClick={clearSelection}
             panOnDrag
             proOptions={proOptions}
             selectionOnDrag={false}
@@ -532,65 +573,67 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
               elementNodeIds={fitViewElementIds}
               signal={fitViewSignal}
             />
-            <Panel className="arch4-layout-panel" position="top-right">
-              <div
-                className="arch4-layout-settings"
-                ref={layoutMenuRef}
-                onKeyDown={(event) => {
-                  if (event.key === "Escape") setIsLayoutMenuOpen(false);
-                }}
-              >
-                <button
-                  aria-expanded={isLayoutMenuOpen}
-                  aria-haspopup="menu"
-                  aria-label="Layout settings"
-                  className="arch4-icon-button arch4-layout-settings-trigger"
-                  title="Layout settings"
-                  type="button"
-                  onClick={() => setIsLayoutMenuOpen((current) => !current)}
+            {!props.readonly && (
+              <Panel className="arch4-layout-panel" position="top-right">
+                <div
+                  className="arch4-layout-settings"
+                  ref={layoutMenuRef}
+                  onKeyDown={(event) => {
+                    if (event.key === "Escape") setIsLayoutMenuOpen(false);
+                  }}
                 >
-                  <Settings size={18} />
-                </button>
-                {isLayoutMenuOpen && activeDiagram ? (
-                  <div className="arch4-layout-menu nodrag nopan" role="menu">
-                    {layoutDirectionOptions.map(
-                      ({ direction, Icon, label }) => (
+                  <button
+                    aria-expanded={isLayoutMenuOpen}
+                    aria-haspopup="menu"
+                    aria-label="Layout settings"
+                    className="arch4-icon-button arch4-layout-settings-trigger"
+                    title="Layout settings"
+                    type="button"
+                    onClick={() => setIsLayoutMenuOpen((current) => !current)}
+                  >
+                    <Settings size={18} />
+                  </button>
+                  {isLayoutMenuOpen && activeDiagram ? (
+                    <div className="arch4-layout-menu nodrag nopan" role="menu">
+                      {layoutDirectionOptions.map(
+                        ({ direction, Icon, label }) => (
+                          <button
+                            aria-checked={activeDiagram.direction === direction}
+                            className={
+                              activeDiagram.direction === direction
+                                ? "active"
+                                : ""
+                            }
+                            key={direction}
+                            role="menuitemradio"
+                            title={`Layout ${label}`}
+                            type="button"
+                            onClick={() =>
+                              changeLayoutDirection(activeDiagram, direction)
+                            }
+                          >
+                            <Icon size={15} />
+                            <span>{label}</span>
+                          </button>
+                        ),
+                      )}
+                      {manualLayoutDiagramIds.has(activeDiagram.id) && (
                         <button
-                          aria-checked={activeDiagram.direction === direction}
-                          className={
-                            activeDiagram.direction === direction
-                              ? "active"
-                              : ""
-                          }
-                          key={direction}
-                          role="menuitemradio"
-                          title={`Layout ${label}`}
+                          className="arch4-layout-reset"
+                          role="menuitem"
+                          title="Reset manual layout"
                           type="button"
-                          onClick={() =>
-                            changeLayoutDirection(activeDiagram, direction)
-                          }
+                          onClick={() => resetManualLayout(activeDiagram)}
                         >
-                          <Icon size={15} />
-                          <span>{label}</span>
+                          <Settings size={15} />
+                          <span>Reset</span>
                         </button>
-                      ),
-                    )}
-                    {manualLayoutDiagramIds.has(activeDiagram.id) && (
-                      <button
-                        className="arch4-layout-reset"
-                        role="menuitem"
-                        title="Reset manual layout"
-                        type="button"
-                        onClick={() => resetManualLayout(activeDiagram)}
-                      >
-                        <Settings size={15} />
-                        <span>Reset</span>
-                      </button>
-                    )}
-                  </div>
-                ) : null}
-              </div>
-            </Panel>
+                      )}
+                    </div>
+                  ) : null}
+                </div>
+              </Panel>
+            )}
             {Boolean(activeDiagram.legend?.length) && (
               <Panel className="arch4-legend" position="bottom-left">
                 {activeDiagram.legend?.map((entry) => (
@@ -640,11 +683,16 @@ export function Arch4Viewer(props: Arch4ViewerProps) {
         <ElementInfoPanel
           activeDiagram={activeDiagram}
           diagrams={diagrams}
+          extension={props.detailsExtension?.({
+            activeDiagram,
+            architectureIndex: props.architectureIndex,
+            node: selectedNode,
+          })}
           info={selectedInfo}
           node={selectedNode}
           relatedTargets={selectedRelatedTargets}
           onNavigate={navigateToRelatedTarget}
-          onClose={() => setSelectedNode(null)}
+          onClose={clearSelection}
         />
       )}
     </div>

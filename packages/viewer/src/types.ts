@@ -1,3 +1,4 @@
+import type { CSSProperties, ReactNode } from "react";
 import type {
   ArchitectureIndex,
   DiagramBoundary,
@@ -8,8 +9,21 @@ import type {
 
 export type Arch4ViewerProps = {
   architectureIndex?: ArchitectureIndex;
+  activeDiagramId?: string;
+  chrome?: {
+    brand?: ReactNode;
+    diagnostics?: boolean;
+    sidebar?: boolean;
+  };
+  className?: string;
   diagnostics?: Array<{ level: string; code: string; message: string }>;
   diagrams: DiagramSpec[];
+  detailsExtension?: (context: {
+    activeDiagram: DiagramSpec;
+    architectureIndex?: ArchitectureIndex;
+    node: DiagramNode;
+  }) => ReactNode;
+  fitViewSignal?: number;
   initialDiagramId?: string;
   initialLayoutDirections?: Record<string, LayoutDirection>;
   initialManualLayoutDiagramIds?: string[];
@@ -17,6 +31,7 @@ export type Arch4ViewerProps = {
     diagramId: string;
     direction: LayoutDirection;
   }) => Promise<void> | void;
+  onActiveDiagramChange?: (diagramId: string) => void;
   onManualLayoutReset?: (change: { diagramId: string }) => Promise<void> | void;
   onNodePositionChange?: (change: {
     diagramId: string;
@@ -24,7 +39,12 @@ export type Arch4ViewerProps = {
     x: number;
     y: number;
   }) => Promise<void> | void;
+  onSelectionChange?: (node: DiagramNode | null) => void;
+  readonly?: boolean;
+  selectedEntityId?: string | null;
   showEdgeLabels?: boolean;
+  style?: CSSProperties;
+  theme?: "dark" | "light";
 };
 
 export type Arch4RelatedNavigationTarget = {

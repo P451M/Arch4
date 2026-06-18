@@ -16,6 +16,7 @@ import type {
 export function ElementInfoPanel(props: {
   activeDiagram: DiagramSpec;
   diagrams: DiagramSpec[];
+  extension?: ReactNode;
   info: Arch4ElementInfo;
   node: DiagramNode;
   relatedTargets: Arch4RelatedNavigationTarget[];
@@ -45,6 +46,7 @@ export function ElementInfoPanel(props: {
         </button>
       </div>
       {props.info.description && <p>{props.info.description}</p>}
+      {props.extension}
       <dl>
         <Detail label="Entity" value={props.info.entityId} />
         <Detail label="Type" value={props.info.type} />

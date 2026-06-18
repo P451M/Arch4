@@ -5,6 +5,7 @@ import type { ArchitectureIndex, DiagramSpec } from "@arch4/core";
 import { routedPath } from "./edge-routing.js";
 import {
   buildElementInfo,
+  createDiagramTreeItems,
   findNodeForEntity,
   resolveCurrentViewRelationships,
   resolveEdgeRouting,
@@ -12,8 +13,52 @@ import {
   resolveRelatedNavigationTargets,
 } from "./index.js";
 import { buildFlowEdges, rebuildBoundaryFlowNodes, toFlow } from "./flow.js";
+import { buildArch4TreeItems } from "./tree.js";
 
 describe("viewer navigation helpers", () => {
+  it("builds generic tree nodes from item paths and search filters", () => {
+    const nodes = buildArch4TreeItems(
+      [
+        { id: "overview", label: "Overview", path: ["Docs", "Overview"] },
+        {
+          id: "risk-report",
+          label: "Risk",
+          path: ["Reports", "Risk"],
+          subtitle: "Report",
+        },
+      ],
+      "risk",
+    );
+
+    expect(nodes).toHaveLength(1);
+    expect(nodes[0]?.label).toBe("Reports");
+    expect(nodes[0]?.children[0]?.item?.id).toBe("risk-report");
+  });
+
+  it("creates diagram tree items with Arch4 labels and C4 grouping", () => {
+    const items = createDiagramTreeItems([
+      {
+        edges: [],
+        id: "travelbookingcontainers",
+        name: "TravelBookingContainers",
+        nodes: [],
+        type: "container",
+      },
+      {
+        edges: [],
+        id: "booktripflow",
+        name: "BookTripFlow",
+        nodes: [],
+        type: "dynamic",
+      },
+    ]);
+
+    expect(items.map((item) => [item.id, item.label, item.path?.[0]])).toEqual([
+      ["travelbookingcontainers", "TravelBooking", "Container"],
+      ["booktripflow", "BookTrip", "Dynamic"],
+    ]);
+  });
+
   it.each([
     [Position.Right, Position.Left, "M 100,100 C 228,100 372,100 500,100"],
     [Position.Bottom, Position.Top, "M 100,100 C 100,228 100,372 100,500"],

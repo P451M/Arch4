@@ -1,7 +1,14 @@
 import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 import type { DiagramSpec } from "@arch4/core";
-import { titleForType } from "./icons.js";
+import {
+  diagramIconForType,
+  diagramIconVariant,
+  diagramTreeLabel,
+  titleForType,
+  variantClass,
+} from "./icons.js";
+import type { Arch4TreeItem } from "./tree.js";
 
 export function CollapsibleSidebarSection(props: {
   children: ReactNode;
@@ -97,4 +104,19 @@ export function groupDiagrams(
       }
       return left.label.localeCompare(right.label);
     });
+}
+
+export function createDiagramTreeItems(
+  diagrams: DiagramSpec[],
+): Arch4TreeItem[] {
+  return groupDiagrams(diagrams).flatMap((group) =>
+    group.diagrams.map((diagram) => ({
+      icon: diagramIconForType(diagram.type),
+      iconClassName: variantClass(diagramIconVariant(diagram.type)),
+      id: diagram.id,
+      kind: diagram.type,
+      label: diagramTreeLabel(diagram),
+      path: [group.label, diagramTreeLabel(diagram)],
+    })),
+  );
 }
