@@ -26,7 +26,11 @@ For MCP Agent workflows, the extension installs/updates Arch4's native local
 Cursor MCP plugin automatically when it activates. No separate MCP installation
 command is required for extension users. Do not install the standalone Arch4
 Cursor MCP plugin on top of the extension; current Cursor versions treat each
-plugin directory as a separate MCP provider.
+plugin directory as a separate MCP provider. The generated plugin provides
+Agent slash commands for `/arch4-open-map`, `/arch4-build-artifacts`,
+`/arch4-update`, `/arch4-seed`, `/arch4-review`, and
+`/arch4-create-support-request`. Fully restart Cursor or reload the window
+after reinstalling if the slash menu still shows cached entries.
 
 ## Features
 
@@ -47,6 +51,7 @@ plugin directory as a separate MCP provider.
 - `Arch4: Create/Update Architecture Model`
 - `Arch4: Build Architecture Artifacts`
 - `Arch4: Open Architecture Map`
+- `Arch4: Create Feature Request or Report Issue`
 - `Arch4: Remove Workspace Artifacts`
 
 ## Workspace Files
@@ -106,6 +111,8 @@ or resource access.
 
 Use [GitHub Issues](https://github.com/P451M/Arch4/issues) for bugs,
 installation problems, and feature requests after the repository is public.
+Run `Arch4: Create Feature Request or Report Issue` in Cursor to let the agent
+collect sanitized Arch4 context and draft the issue for confirmation.
 Report security issues privately through GitHub Security Advisories.
 
 ## License

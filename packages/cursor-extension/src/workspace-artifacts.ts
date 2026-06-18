@@ -23,9 +23,14 @@ export const ARCH4_OWNED_WORKSPACE_ARTIFACTS = [
   ".cursor/rules/arch4.mdc",
   ".cursor/skills/c4",
   ".cursor/skills/arch4",
+  ".cursor/commands/arch4-seed.md",
+  ".cursor/commands/arch4-update.md",
+  ".cursor/commands/arch4-review.md",
+  ".cursor/commands/arch4-create-support-request.md",
   ".cursor/commands/seed-arch4.md",
   ".cursor/commands/update-arch4.md",
   ".cursor/commands/review-arch4.md",
+  ".cursor/commands/create-arch4-support-request.md",
 ] as const;
 
 export const ARCH4_OWNERSHIP_MARKER = "arch4-owned: true";

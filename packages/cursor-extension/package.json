@@ -43,6 +43,7 @@
     "onCommand:arch4.openMap",
     "onCommand:arch4.buildArtifacts",
     "onCommand:arch4.updateModel",
+    "onCommand:arch4.createSupportRequest",
     "onCommand:arch4.removeArtifacts",
     "onView:arch4.explorer"
   ],
@@ -60,6 +61,10 @@
       {
         "command": "arch4.updateModel",
         "title": "Arch4: Create/Update Architecture Model"
+      },
+      {
+        "command": "arch4.createSupportRequest",
+        "title": "Arch4: Create Feature Request or Report Issue"
       },
       {
         "command": "arch4.removeArtifacts",

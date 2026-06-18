@@ -55,6 +55,7 @@ copyFiltered(path.join(sourceDir, "media"), path.join(extensionDir, "media"));
 copySharedMediaAssets(extensionDir);
 copyFiltered(path.join(sourceDir, "cli"), path.join(extensionDir, "cli"));
 copyFiltered(path.join(sourceDir, "mcp"), path.join(extensionDir, "mcp"));
+copyCursorPluginTemplate(extensionDir);
 writeFileSync(
   path.join(extensionDir, "README.md"),
   stagedExtensionReadme(),
@@ -140,6 +141,20 @@ function copySharedMediaAssets(targetExtensionDir) {
     cpSync(
       path.join(mediaSourceDir, source),
       path.join(mediaTargetDir, destination),
+    );
+  }
+}
+
+function copyCursorPluginTemplate(targetExtensionDir) {
+  const pluginSourceDir = path.join(root, "plugins", "cursor", "arch4-mcp");
+  const templateTargetDir = path.join(
+    targetExtensionDir,
+    "cursor-plugin-template",
+  );
+  for (const directory of ["commands", "skills"]) {
+    copyFiltered(
+      path.join(pluginSourceDir, directory),
+      path.join(templateTargetDir, directory),
     );
   }
 }
@@ -247,6 +262,13 @@ function verifyStagedExtension(targetExtensionDir, targetPlatform) {
     "cli/index.js",
     "mcp/index.js",
     "mcp/widget/index.html",
+    "cursor-plugin-template/commands/arch4-open-map.md",
+    "cursor-plugin-template/commands/arch4-build-artifacts.md",
+    "cursor-plugin-template/commands/arch4-update.md",
+    "cursor-plugin-template/commands/arch4-seed.md",
+    "cursor-plugin-template/commands/arch4-review.md",
+    "cursor-plugin-template/commands/arch4-create-support-request.md",
+    "cursor-plugin-template/skills/arch4-mcp/SKILL.md",
     `runtime/manifests/${targetPlatform}.json`,
   ];
   for (const file of requiredFiles) {

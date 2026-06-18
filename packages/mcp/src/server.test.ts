@@ -35,7 +35,7 @@ describe("Arch4 MCP package contract", () => {
     expect(packageScripts.scripts.build).toContain("inline-mcp-widget.mjs");
   });
 
-  it("exposes the map app resource through canonical and Cursor-compatible URIs", async () => {
+  it("exposes the map app resource through the canonical widget URI only", async () => {
     const projectRoot = mkdtempSync(path.join(tmpdir(), "arch4-mcp-test-"));
     const server = createArch4McpServer({ projectRoot });
     const client = new Client({ name: "arch4-mcp-test", version: "0.0.0" });
@@ -46,24 +46,23 @@ describe("Arch4 MCP package contract", () => {
     await client.connect(clientTransport);
     try {
       const resources = await client.listResources();
-      expect(resources.resources.map((resource) => resource.uri)).toEqual(
-        expect.arrayContaining([
-          "ui://arch4/map.html",
-          "arch4://architecture-map",
-        ]),
-      );
+      expect(
+        resources.resources
+          .map((resource) => resource.uri)
+          .filter((uri) => uri.includes("arch4")),
+      ).toEqual(["ui://arch4/map.html"]);
 
-      for (const uri of ["ui://arch4/map.html", "arch4://architecture-map"]) {
-        const resource = await client.readResource({ uri });
-        expect(resource.contents).toHaveLength(1);
-        expect(resource.contents[0]).toMatchObject({
-          uri,
-          mimeType: "text/html;profile=mcp-app",
-        });
-        expect(
-          "text" in resource.contents[0] && resource.contents[0].text,
-        ).toContain("root");
-      }
+      const resource = await client.readResource({
+        uri: "ui://arch4/map.html",
+      });
+      expect(resource.contents).toHaveLength(1);
+      expect(resource.contents[0]).toMatchObject({
+        uri: "ui://arch4/map.html",
+        mimeType: "text/html;profile=mcp-app",
+      });
+      expect(
+        "text" in resource.contents[0] && resource.contents[0].text,
+      ).toContain("root");
     } finally {
       await client.close();
       await server.close();
@@ -75,9 +74,7 @@ describe("Arch4 MCP package contract", () => {
 
     expect(source).toContain('type: "resource_link"');
     expect(source).toContain("uri: MAP_RESOURCE_URI");
-    expect(source).toContain(
-      'const CURSOR_MAP_RESOURCE_URI = "arch4://architecture-map"',
-    );
+    expect(source).not.toContain("arch4://architecture-map");
   });
 
   it("bridges host theme context into the map widget", () => {

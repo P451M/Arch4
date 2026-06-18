@@ -36,17 +36,18 @@ pnpm reinstall:cursor
 6. Verifies the installed webview bundle, bundled MCP server, and MCP widget.
 7. Reopens this repo in Cursor.
 8. Waits for Cursor activation to write/update the local `arch4-mcp` plugin
-   and verifies its `mcp.json`.
+   and verifies its `mcp.json`, slash commands, and skill files.
 
 This command installs the extension and updates the bundled MCP server because
 the MCP server is packaged inside the VSIX at `mcp/index.js`.
 
-When Cursor activates the Arch4 extension, Arch4 writes a small native Cursor
-plugin to `~/.cursor/plugins/local/arch4-mcp`. That plugin's `mcp.json` points
-at the bundled VSIX MCP server and stores the active workspace path as the
-runtime root. Arch4 refreshes that file if Cursor's workspace folders change,
-so the detached Agents Window receives the same concrete root as the main
-workspace.
+When Cursor activates the Arch4 extension, Arch4 writes a native Cursor plugin
+to `~/.cursor/plugins/local/arch4-mcp`. That plugin's `mcp.json` points at the
+bundled VSIX MCP server and stores the active workspace path as the runtime
+root. Its `commands/` and `skills/` directories provide the Arch4 slash
+commands and Agent skill context. Arch4 refreshes the plugin if Cursor's
+workspace folders change, so the detached Agents Window receives the same
+concrete root as the main workspace.
 
 The VSIX does not write per-workspace `.cursor/mcp.json` config and does not
 require a separate MCP install command. Direct extension MCP registration with
@@ -55,15 +56,29 @@ with `vscode.cursor.plugins.addPlugin({ path })` are not used because Cursor
 3.7.42 exposes those providers in the main workspace but not reliably in the
 detached Agents Window.
 
-After Cursor reopens the workspace, test in Cursor Agent:
+After Cursor reopens the workspace, fully restart Cursor or reload the window,
+then start a fresh Agent chat. Cursor can cache plugin slash menus across
+existing Agent sessions.
+
+Type `/` in Cursor chat and in the detached Agent Window and verify these Arch4
+plugin commands appear:
+
+- `/arch4-open-map`
+- `/arch4-build-artifacts`
+- `/arch4-update`
+- `/arch4-seed`
+- `/arch4-review`
+- `/arch4-create-support-request`
+
+Then test the widget with either `/arch4-open-map` or this direct prompt:
 
 ```text
 Use the Arch4 MCP tool arch4_show_map with no arguments and display the returned architecture map widget. Do not edit files.
 ```
 
-Start a fresh Agent chat after reinstalling or reloading Cursor. Existing Agent
-sessions can keep the tool set from before activation and may not see newly
-installed MCP tools until a new session is opened.
+Existing Agent sessions can keep the tool set from before activation and may
+not see newly installed MCP tools or slash commands until a new session is
+opened.
 
 Expected result:
 
@@ -124,7 +139,9 @@ cp -R /absolute/path/to/arch4/plugins/cursor/arch4-mcp ~/.cursor/plugins/local/a
 ```
 
 Reload Cursor in a profile that does not have the Arch4 VSIX installed, then
-verify the Arch4 plugin/MCP server appears in Cursor's plugin or MCP settings.
+verify the Arch4 plugin/MCP server appears in Cursor's plugin or MCP settings
+and the same Arch4 slash commands are available in Cursor chat and the detached
+Agent Window.
 
 Cursor 3.7.42 rejects local plugin symlinks whose targets are outside
 `~/.cursor/plugins/local`, so use a copied local plugin for smoke tests. Do not

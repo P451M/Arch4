@@ -161,6 +161,8 @@ async function verifyCursorLocalMcpPlugin({ workspacePath }) {
   );
   const manifestPath = path.join(pluginDir, ".cursor-plugin", "plugin.json");
   const mcpPath = path.join(pluginDir, "mcp.json");
+  const commandPaths = arch4PluginCommandPaths(pluginDir);
+  const skillPath = path.join(pluginDir, "skills", "arch4-mcp", "SKILL.md");
   const installedMcpPath = path.join(
     installedCursorExtensionDir(),
     "mcp",
@@ -175,6 +177,8 @@ async function verifyCursorLocalMcpPlugin({ workspacePath }) {
       cursorLocalMcpPluginIsValid({
         manifestPath,
         mcpPath,
+        commandPaths,
+        skillPath,
         installedMcpPath,
         installedRuntimePath,
         workspacePath,
@@ -188,14 +192,28 @@ async function verifyCursorLocalMcpPlugin({ workspacePath }) {
 function cursorLocalMcpPluginIsValid({
   manifestPath,
   mcpPath,
+  commandPaths,
+  skillPath,
   installedMcpPath,
   installedRuntimePath,
   workspacePath,
 }) {
-  if (!existsSync(manifestPath) || !existsSync(mcpPath)) return false;
+  if (
+    !existsSync(manifestPath) ||
+    !existsSync(mcpPath) ||
+    !existsSync(skillPath) ||
+    commandPaths.some((commandPath) => !existsSync(commandPath))
+  ) {
+    return false;
+  }
   try {
     const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
-    if (manifest.name !== "arch4-mcp" || manifest.mcpServers !== "mcp.json") {
+    if (
+      manifest.name !== "arch4-mcp" ||
+      manifest.mcpServers !== "mcp.json" ||
+      manifest.commands !== "commands" ||
+      manifest.skills !== "skills"
+    ) {
       return false;
     }
 
@@ -213,6 +231,17 @@ function cursorLocalMcpPluginIsValid({
   } catch {
     return false;
   }
+}
+
+function arch4PluginCommandPaths(pluginDir) {
+  return [
+    "arch4-open-map.md",
+    "arch4-build-artifacts.md",
+    "arch4-update.md",
+    "arch4-seed.md",
+    "arch4-review.md",
+    "arch4-create-support-request.md",
+  ].map((fileName) => path.join(pluginDir, "commands", fileName));
 }
 
 async function waitFor(predicate, description) {

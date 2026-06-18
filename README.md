@@ -87,6 +87,7 @@ Cursor commands:
 - `Arch4: Create/Update Architecture Model`
 - `Arch4: Build Architecture Artifacts`
 - `Arch4: Open Architecture Map`
+- `Arch4: Create Feature Request or Report Issue`
 - `Arch4: Remove Workspace Artifacts`
 
 CLI commands:
@@ -200,11 +201,15 @@ progress to the temp-directory log path printed by the command.
 
 The extension installs/updates Arch4's native local Cursor MCP plugin
 automatically when Cursor activates Arch4, so MCP tools are available in
-Cursor's detached Agent Window as well as the main workspace. The standalone
-Cursor MCP plugin is an alternative install path for users who do not install
-the VSIX/OpenVSX extension; do not install both in the same Cursor profile. See
-[Cursor MCP integration](docs/cursor-mcp.md) for the full local test and
-publishing flow.
+Cursor's detached Agent Window as well as the main workspace. The generated
+plugin also provides Agent slash commands: `/arch4-open-map`,
+`/arch4-build-artifacts`, `/arch4-update`, `/arch4-seed`, `/arch4-review`,
+and `/arch4-create-support-request`. Fully restart Cursor or reload the window
+after reinstalling, because Cursor can cache plugin slash menus in existing
+Agent sessions. The standalone Cursor MCP plugin is an alternative install path
+for users who do not install the VSIX/OpenVSX extension; do not install both in
+the same Cursor profile. See [Cursor MCP integration](docs/cursor-mcp.md) for
+the full local test and publishing flow.
 
 Package local artifacts:
 
@@ -253,6 +258,9 @@ installation problems, and feature requests after the repository is public. Run
 `.arch4/bin/arch4 doctor` in initialized Cursor workspaces, or `arch4 doctor`
 for manual CLI installs, before opening an issue and include the output with the
 Arch4 version, platform, and Cursor version.
+Cursor users can also run `Arch4: Create Feature Request or Report Issue` to
+let the agent collect sanitized Arch4 context and draft the issue for
+confirmation.
 
 ## Security
 

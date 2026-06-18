@@ -11,6 +11,15 @@ The server exposes tools to prepare an Arch4 workspace, write validated
 architecture source, build rendered artifacts, inspect diagnostics, update
 layout, and display the interactive architecture map widget.
 
+The plugin contributes these Cursor Agent slash commands:
+
+- `/arch4-open-map`
+- `/arch4-build-artifacts`
+- `/arch4-update`
+- `/arch4-seed`
+- `/arch4-review`
+- `/arch4-create-support-request`
+
 For local testing, copy this directory to:
 
 ```sh
@@ -20,8 +29,9 @@ rm -rf ~/.cursor/plugins/local/arch4-mcp
 cp -R /absolute/path/to/arch4/plugins/cursor/arch4-mcp ~/.cursor/plugins/local/arch4-mcp
 ```
 
-Then reload Cursor in a profile without the Arch4 VSIX installed and verify the
-`arch4` MCP server appears in Cursor settings.
+Then fully restart or reload Cursor in a profile without the Arch4 VSIX
+installed and verify the `arch4` MCP server and Arch4 slash commands appear in
+Cursor Agent.
 
 Cursor 3.7.42 rejects local plugin symlinks whose targets are outside
 `~/.cursor/plugins/local`, so use a copied plugin directory for local smoke

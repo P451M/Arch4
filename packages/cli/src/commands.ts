@@ -56,7 +56,7 @@ function init(ctx: CommandContext): void {
 function scan(ctx: CommandContext): void {
   requireArch4Workspace(ctx.root);
   console.error(
-    "arch4 scan has been removed. Use Cursor /update-arch4 to generate architecture from repository evidence.",
+    "arch4 scan has been removed. Use Cursor /arch4-update to generate architecture from repository evidence.",
   );
   process.exitCode = 1;
 }

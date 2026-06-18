@@ -3,6 +3,9 @@
 Use GitHub Issues for bugs, installation problems, and feature requests after
 the repository is public.
 
+Cursor users can run `Arch4: Create Feature Request or Report Issue` to let the
+agent collect sanitized Arch4 context and draft the issue for confirmation.
+
 Before opening an issue, run:
 
 ```sh

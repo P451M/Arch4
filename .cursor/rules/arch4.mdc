@@ -19,11 +19,11 @@ Architecture source:
 
 Use the C4 and Arch4 skills for detailed workflow:
 
-- Use `/seed-arch4` for first-time model creation when
+- Use `/arch4-seed` for first-time model creation when
   `.arch4/architecture/workspace.dsl` is empty or still minimal.
-- Use `/update-arch4` for ongoing model maintenance when an architecture
+- Use `/arch4-update` for ongoing model maintenance when an architecture
   model already exists.
-- Use `/review-arch4` before committing architecture-impacting changes.
+- Use `/arch4-review` before committing architecture-impacting changes.
 
 Evidence boundaries:
 

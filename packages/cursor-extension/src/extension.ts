@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
 import { existsSync } from "node:fs";
-import { chmod, mkdir, readFile, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -37,6 +37,11 @@ type CursorContextArtifact = {
   content: string;
 };
 
+type LegacyCursorContextArtifact = {
+  relativePath: string;
+  generatedContent: string;
+};
+
 type MapPanelSet = Set<vscode.WebviewPanel>;
 
 type Arch4ArtifactRefreshScheduler = vscode.Disposable & {
@@ -71,6 +76,9 @@ export async function activate(context: vscode.ExtensionContext) {
     command("arch4.updateModel", async () =>
       updateArchitectureModel(context, provider),
     ),
+  );
+  context.subscriptions.push(
+    command("arch4.createSupportRequest", async () => createSupportRequest()),
   );
   context.subscriptions.push(
     command("arch4.removeArtifacts", async () =>
@@ -339,6 +347,20 @@ async function updateArchitectureModel(
   await openCursorPrompt(updateArchitectureRouterPrompt());
 }
 
+async function createSupportRequest(): Promise<void> {
+  const description = await vscode.window.showInputBox({
+    title: "Create Arch4 Feature Request or Report Issue",
+    prompt:
+      "Describe the Arch4 feature request or issue. Do not include secrets.",
+    placeHolder: "Arch4 should... / Arch4 fails when...",
+    ignoreFocusOut: true,
+  });
+  const trimmedDescription = description?.trim();
+  if (!trimmedDescription) return;
+  await installCursorContext({ notify: false });
+  await openCursorPrompt(supportRequestPrompt(trimmedDescription));
+}
+
 async function prepareArchitectureModelWorkspace(
   context: vscode.ExtensionContext,
   provider: Arch4TreeProvider,
@@ -417,6 +439,8 @@ async function installCursorLocalMcpPlugin(
   const pluginPath = cursorLocalMcpPluginPath();
   const manifestDir = path.join(pluginPath, ".cursor-plugin");
   await mkdir(manifestDir, { recursive: true });
+  await rm(path.join(pluginPath, "commands"), { recursive: true, force: true });
+  await rm(path.join(pluginPath, "skills"), { recursive: true, force: true });
   await writeFile(
     path.join(manifestDir, "plugin.json"),
     `${JSON.stringify(cursorExtensionMcpPluginManifest(context), null, 2)}\n`,
@@ -435,6 +459,7 @@ async function installCursorLocalMcpPlugin(
     )}\n`,
     "utf8",
   );
+  await installCursorMcpPluginTemplateFiles(context, pluginPath);
   return pluginPath;
 }
 
@@ -454,6 +479,8 @@ function cursorExtensionMcpPluginManifest(
       typeof packageJson?.version === "string" ? packageJson.version : "0.0.0",
     description: "Arch4 MCP tools from the installed Arch4 Cursor extension.",
     mcpServers: "mcp.json",
+    skills: "skills",
+    commands: "commands",
   };
 }
 
@@ -469,6 +496,45 @@ function extensionMcpServerConfig(
   };
 }
 
+async function installCursorMcpPluginTemplateFiles(
+  context: vscode.ExtensionContext,
+  pluginPath: string,
+): Promise<void> {
+  const templatePath = cursorMcpPluginTemplatePath(context);
+  for (const directory of ["commands", "skills"]) {
+    await cp(
+      path.join(templatePath, directory),
+      path.join(pluginPath, directory),
+      {
+        recursive: true,
+        force: true,
+      },
+    );
+  }
+}
+
+function cursorMcpPluginTemplatePath(context: vscode.ExtensionContext): string {
+  const packagedTemplatePath = path.join(
+    context.extensionUri.fsPath,
+    "cursor-plugin-template",
+  );
+  if (existsSync(packagedTemplatePath)) return packagedTemplatePath;
+
+  const sourcePluginPath = path.resolve(
+    context.extensionUri.fsPath,
+    "..",
+    "..",
+    "plugins",
+    "cursor",
+    "arch4-mcp",
+  );
+  if (existsSync(sourcePluginPath)) return sourcePluginPath;
+
+  throw new Error(
+    "Arch4 Cursor plugin command templates are missing. Reinstall the Arch4 extension.",
+  );
+}
+
 async function installCursorContext(
   options: { notify?: boolean } = {},
 ): Promise<void> {
@@ -481,6 +547,7 @@ async function installCursorContext(
   await mkdir(c4SkillsDir, { recursive: true });
   await mkdir(arch4SkillsDir, { recursive: true });
   await mkdir(commandsDir, { recursive: true });
+  await removeLegacyCursorContextArtifacts(root);
   for (const artifact of cursorContextArtifacts()) {
     await writeArch4OwnedFile(
       path.join(root, artifact.contentFileRelativePath),
@@ -489,8 +556,26 @@ async function installCursorContext(
   }
   if (options.notify ?? true) {
     void vscode.window.showInformationMessage(
-      "Installed Arch4 Cursor rule, C4/Arch4 skills, and /seed-arch4, /update-arch4, and /review-arch4 commands.",
+      "Installed Arch4 Cursor rule, C4/Arch4 skills, and Arch4 slash commands.",
     );
+  }
+}
+
+async function removeLegacyCursorContextArtifacts(root: string): Promise<void> {
+  for (const artifact of legacyCursorContextArtifacts()) {
+    const absolutePath = path.join(root, artifact.relativePath);
+    try {
+      const existing = await readFile(absolutePath, "utf8");
+      if (
+        canReplaceArch4OwnedContent(existing, artifact.generatedContent) ||
+        existing.includes(ARCH4_OWNERSHIP_MARKER)
+      ) {
+        await rm(absolutePath, { force: true });
+      }
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (code !== "ENOENT") throw error;
+    }
   }
 }
 
@@ -624,19 +709,46 @@ function cursorContextArtifacts(): readonly CursorContextArtifact[] {
       content: arch4SkillTemplate(),
     },
     {
-      relativePath: ".cursor/commands/seed-arch4.md",
-      contentFileRelativePath: ".cursor/commands/seed-arch4.md",
+      relativePath: ".cursor/commands/arch4-seed.md",
+      contentFileRelativePath: ".cursor/commands/arch4-seed.md",
       content: seedArch4CommandTemplate(),
     },
     {
-      relativePath: ".cursor/commands/update-arch4.md",
-      contentFileRelativePath: ".cursor/commands/update-arch4.md",
+      relativePath: ".cursor/commands/arch4-update.md",
+      contentFileRelativePath: ".cursor/commands/arch4-update.md",
       content: updateArch4CommandTemplate(),
     },
     {
-      relativePath: ".cursor/commands/review-arch4.md",
-      contentFileRelativePath: ".cursor/commands/review-arch4.md",
+      relativePath: ".cursor/commands/arch4-review.md",
+      contentFileRelativePath: ".cursor/commands/arch4-review.md",
       content: reviewArch4CommandTemplate(),
+    },
+    {
+      relativePath: ".cursor/commands/arch4-create-support-request.md",
+      contentFileRelativePath:
+        ".cursor/commands/arch4-create-support-request.md",
+      content: supportRequestCommandTemplate(),
+    },
+  ];
+}
+
+function legacyCursorContextArtifacts(): readonly LegacyCursorContextArtifact[] {
+  return [
+    {
+      relativePath: ".cursor/commands/seed-arch4.md",
+      generatedContent: seedArch4CommandTemplate(),
+    },
+    {
+      relativePath: ".cursor/commands/update-arch4.md",
+      generatedContent: updateArch4CommandTemplate(),
+    },
+    {
+      relativePath: ".cursor/commands/review-arch4.md",
+      generatedContent: reviewArch4CommandTemplate(),
+    },
+    {
+      relativePath: ".cursor/commands/create-arch4-support-request.md",
+      generatedContent: supportRequestCommandTemplate(),
     },
   ];
 }
@@ -951,11 +1063,11 @@ Architecture source:
 
 Use the C4 and Arch4 skills for detailed workflow:
 
-- Use \`/seed-arch4\` for first-time model creation when
+- Use \`/arch4-seed\` for first-time model creation when
   \`.arch4/architecture/workspace.dsl\` is empty or still minimal.
-- Use \`/update-arch4\` for ongoing model maintenance when an architecture
+- Use \`/arch4-update\` for ongoing model maintenance when an architecture
   model already exists.
-- Use \`/review-arch4\` before committing architecture-impacting changes.
+- Use \`/arch4-review\` before committing architecture-impacting changes.
 
 Evidence boundaries:
 
@@ -1227,6 +1339,10 @@ function reviewArch4CommandTemplate(): string {
   return reviewArchitecturePrompt();
 }
 
+function supportRequestCommandTemplate(): string {
+  return supportRequestPrompt();
+}
+
 function updateArchitectureRouterPrompt(): string {
   return `# Create/Update Arch4 Architecture Model
 
@@ -1239,7 +1355,7 @@ Use both the C4 skill and the Arch4 skill. Follow this routing workflow:
 3. Read \`.arch4/architecture/workspace.dsl\` and any entity metadata under \`.arch4/architecture/entities/\`.
 4. Determine the DSL identifier mode. If \`!identifiers hierarchical\` is present, draft an identifier inventory before writing many relationships, views, or metadata files.
 5. Decide whether \`.arch4/architecture/workspace.dsl\` is empty, scaffold-only, or still minimal.
-6. If the model is empty or minimal, follow the same first-time seeding workflow as \`/seed-arch4\`:
+6. If the model is empty or minimal, follow the same first-time seeding workflow as \`/arch4-seed\`:
    - inspect repository source files, dependency manifests, deployment/config files, tests, docs, and existing architecture notes
    - create or refresh the initial C4 model from evidenced facts only
    - include system context and relevant container/component views supported by evidence
@@ -1250,7 +1366,7 @@ Use both the C4 skill and the Arch4 skill. Follow this routing workflow:
    - create or update \`.arch4/architecture/entities/*.json\` metadata from validated identifiers for modeled entities
    - write entity notes using the Arch4 skill's entity notes guidance
    - do not create dynamic views during initial seeding; suggest candidates instead
-7. If the model already contains meaningful architecture facts, follow the same ongoing maintenance workflow as \`/update-arch4\`:
+7. If the model already contains meaningful architecture facts, follow the same ongoing maintenance workflow as \`/arch4-update\`:
    - inspect repository source files, dependency manifests, deployment/config files, and tests needed to understand the actual architecture
    - identify architecture-relevant changes to responsibilities, boundaries, containers, components, relationships, deployment topology, runtime technologies, data ownership, and path ownership
    - maintain the existing model from changed facts without reseeding from scratch
@@ -1351,4 +1467,54 @@ Use both the C4 skill and the Arch4 skill. Follow this workflow:
 12. If no Arch4 source change is needed, say so and explain why.
 
 Return a concise commit-review summary: changed files inspected, architecture impact, Arch4 updates made or intentionally skipped, validation/rendering result, and open questions.`;
+}
+
+function supportRequestPrompt(userRequest?: string): string {
+  const userRequestSection = userRequest
+    ? `
+
+## User Request
+
+\`\`\`text
+${fencedText(userRequest)}
+\`\`\``
+    : "";
+  return `# Create Arch4 Feature Request or Report Issue
+
+Help the user create a GitHub issue for Arch4 only. This workflow is for Arch4 product bugs, installation problems, documentation issues, and feature requests. If the request is about the user's own project rather than Arch4, explain that Arch4 can only file Arch4 product issues and stop.${userRequestSection}
+
+Follow this workflow:
+
+1. Decide whether this is a bug, installation problem, documentation issue, feature request, question, or other Arch4 product issue.
+2. If the report may include a private security vulnerability, do not create a public issue. Tell the user to use GitHub Security Advisories for P451M/Arch4.
+3. Collect only the Arch4 context needed to draft a useful issue:
+   - Arch4 version
+   - operating system and platform
+   - Cursor or VS Code version when available
+   - \`.arch4/bin/arch4 doctor\` output when the workspace is initialized
+   - relevant entries from \`.arch4/architecture/build/diagnostics.json\`
+   - small reproduction steps, workflow context, expected behavior, and actual behavior
+4. Sanitize all public issue content:
+   - do not include secrets, tokens, credentials, private paths, proprietary source, full repository dumps, or vulnerability details
+   - summarize diagnostics instead of pasting broad raw output
+   - ask before including repo-specific implementation details
+5. Draft the issue using the P451M/Arch4 issue template shape:
+   - Type
+   - Summary
+   - Steps to reproduce or feature workflow
+   - Expected behavior
+   - Actual behavior
+   - Environment
+   - arch4 doctor output
+   - Diagnostics
+   - Security check
+6. Show the user the title, type, sanitized summary, and the exact body that would be submitted.
+7. Ask exactly: \`Create this GitHub issue in P451M/Arch4?\`
+8. Create the GitHub issue only after explicit user confirmation. If GitHub access is unavailable, provide a ready-to-paste draft and this link: https://github.com/P451M/Arch4/issues/new/choose
+
+Do not edit architecture source files as part of this support workflow.`;
+}
+
+function fencedText(value: string): string {
+  return value.replace(/```/g, "` ` `");
 }

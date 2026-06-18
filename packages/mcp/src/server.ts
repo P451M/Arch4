@@ -20,7 +20,6 @@ import {
 } from "@arch4/workflows";
 
 const MAP_RESOURCE_URI = "ui://arch4/map.html";
-const CURSOR_MAP_RESOURCE_URI = "arch4://architecture-map";
 
 export type Arch4McpServerOptions = {
   projectRoot?: string;
@@ -77,46 +76,6 @@ export function createArch4McpServer(options: Arch4McpServerOptions = {}) {
       ],
     }),
   );
-  registerAppResource(
-    server,
-    "Arch4 Architecture Map",
-    CURSOR_MAP_RESOURCE_URI,
-    {
-      title: "Arch4 Architecture Map",
-      description:
-        "Cursor-compatible alias for the interactive Arch4 architecture map widget.",
-      _meta: {
-        ui: {
-          csp: {
-            connectDomains: [],
-            resourceDomains: [],
-          },
-          prefersBorder: false,
-        },
-        "openai/widgetDescription":
-          "An interactive C4 architecture map rendered from Arch4 artifacts.",
-      },
-    },
-    async () => ({
-      contents: [
-        {
-          uri: CURSOR_MAP_RESOURCE_URI,
-          mimeType: RESOURCE_MIME_TYPE,
-          text: readWidgetHtml(),
-          _meta: {
-            ui: {
-              csp: {
-                connectDomains: [],
-                resourceDomains: [],
-              },
-              prefersBorder: false,
-            },
-          },
-        },
-      ],
-    }),
-  );
-
   server.registerTool(
     "arch4_start_update",
     {

@@ -3,6 +3,7 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   writeFileSync,
 } from "node:fs";
@@ -113,6 +114,11 @@ describe("cursor extension development launcher", () => {
     expect(source).toContain('"arch4-mcp"');
     expect(source).toContain("server.args[2] === workspacePath");
     expect(source).toContain('server.env?.ELECTRON_RUN_AS_NODE === "1"');
+    expect(source).toContain('manifest.commands !== "commands"');
+    expect(source).toContain('manifest.skills !== "skills"');
+    expect(source).toContain("arch4PluginCommandPaths");
+    expect(source).toContain('"arch4-open-map.md"');
+    expect(source).toContain('"arch4-build-artifacts.md"');
     expect(source).toContain("valid Cursor local MCP plugin config");
     expect(source).toContain("Timed out waiting for");
     expect(source).not.toContain('"cursor-plugins"');
@@ -182,6 +188,17 @@ describe("release packaging", () => {
     expect(packageScript).toContain('"media/arch4-overview.png"');
     expect(packageScript).toContain('"mcp/index.js"');
     expect(packageScript).toContain('"mcp/widget/index.html"');
+    expect(packageScript).toContain("copyCursorPluginTemplate");
+    expect(packageScript).toContain('"plugins", "cursor", "arch4-mcp"');
+    expect(packageScript).toContain(
+      '"cursor-plugin-template/commands/arch4-open-map.md"',
+    );
+    expect(packageScript).toContain(
+      '"cursor-plugin-template/commands/arch4-build-artifacts.md"',
+    );
+    expect(packageScript).toContain(
+      '"cursor-plugin-template/skills/arch4-mcp/SKILL.md"',
+    );
     expect(packageScript).not.toContain("copyExtensionCursorPlugin");
     expect(packageScript).toContain('"cursor-plugins"');
     expect(packageScript).not.toContain("delete pluginManifest.mcpServers");
@@ -274,6 +291,7 @@ describe("cursor extension agent instructions", () => {
       "onCommand:arch4.openMap",
       "onCommand:arch4.buildArtifacts",
       "onCommand:arch4.updateModel",
+      "onCommand:arch4.createSupportRequest",
       "onCommand:arch4.removeArtifacts",
     ]);
     expect(manifest.activationEvents).toContain("onStartupFinished");
@@ -281,12 +299,14 @@ describe("cursor extension agent instructions", () => {
       "arch4.openMap",
       "arch4.buildArtifacts",
       "arch4.updateModel",
+      "arch4.createSupportRequest",
       "arch4.removeArtifacts",
     ]);
     expect(manifest.contributes.commands.map((item) => item.title)).toEqual([
       "Arch4: Open Architecture Map",
       "Arch4: Build Architecture Artifacts",
       "Arch4: Create/Update Architecture Model",
+      "Arch4: Create Feature Request or Report Issue",
       "Arch4: Remove Workspace Artifacts",
     ]);
   });
@@ -301,13 +321,42 @@ describe("cursor extension agent instructions", () => {
     expect(source).toContain("installWorkspaceLauncher");
     expect(source).toContain("If the model is empty or minimal");
     expect(source).toContain(
-      "same first-time seeding workflow as \\`/seed-arch4\\`",
+      "same first-time seeding workflow as \\`/arch4-seed\\`",
     );
     expect(source).toContain(
-      "same ongoing maintenance workflow as \\`/update-arch4\\`",
+      "same ongoing maintenance workflow as \\`/arch4-update\\`",
     );
     expect(source).not.toContain('command("arch4.seedModel"');
     expect(source).not.toContain('command("arch4.reviewModel"');
+  });
+
+  it("routes support requests through sanitized Cursor Agent issue drafting", () => {
+    const source = readFileSync(path.resolve("src/extension.ts"), "utf8");
+
+    expect(source).toContain('command("arch4.createSupportRequest"');
+    expect(source).toContain("Create Arch4 Feature Request or Report Issue");
+    expect(source).toContain("supportRequestPrompt(trimmedDescription)");
+    expect(source).toContain("installCursorContext({ notify: false })");
+    expect(source).toContain("P451M/Arch4");
+    expect(source).toContain("Arch4 product bugs");
+    expect(source).toContain("do not include secrets, tokens, credentials");
+    expect(source).toContain("private paths");
+    expect(source).toContain("proprietary source");
+    expect(source).toContain("GitHub Security Advisories");
+    expect(source).toContain("Create this GitHub issue in P451M/Arch4?");
+    expect(source).toContain(
+      "https://github.com/P451M/Arch4/issues/new/choose",
+    );
+    expect(source).toContain("Type");
+    expect(source).toContain("Summary");
+    expect(source).toContain("Steps to reproduce or feature workflow");
+    expect(source).toContain("Expected behavior");
+    expect(source).toContain("Actual behavior");
+    expect(source).toContain("Environment");
+    expect(source).toContain("arch4 doctor output");
+    expect(source).toContain("Diagnostics");
+    expect(source).toContain("Security check");
+    expect(source).not.toContain("arch4_create_issue");
   });
 
   it("generates local Arch4 launchers without hardcoded installed extension paths", () => {
@@ -351,6 +400,14 @@ describe("cursor extension agent instructions", () => {
     expect(source).toContain('"arch4-mcp"');
     expect(source).toContain('name: "arch4-mcp"');
     expect(source).toContain('mcpServers: "mcp.json"');
+    expect(source).toContain('skills: "skills"');
+    expect(source).toContain('commands: "commands"');
+    expect(source).toContain("installCursorMcpPluginTemplateFiles");
+    expect(source).toContain("cursorMcpPluginTemplatePath");
+    expect(source).toContain('"cursor-plugin-template"');
+    expect(source).toContain('"plugins",');
+    expect(source).toContain('"cursor",');
+    expect(source).toContain('"arch4-mcp"');
     expect(source).toContain("extensionMcpServerConfig(context, root)");
     expect(source).toContain('args: [resolveMcpPath(context), "--root", root]');
     expect(source).toContain('ELECTRON_RUN_AS_NODE: "1"');
@@ -360,6 +417,77 @@ describe("cursor extension agent instructions", () => {
     expect(source).not.toContain("api.removePlugin");
     expect(source).not.toContain('command("arch4.installMcp"');
     expect(source).not.toContain("writeWorkspaceMcpConfig");
+  });
+
+  it("keeps the standalone Cursor plugin command surface aligned with the generated local plugin", () => {
+    const pluginDir = path.resolve("../../plugins/cursor/arch4-mcp");
+    const commandDir = path.join(pluginDir, "commands");
+    const manifest = JSON.parse(
+      readFileSync(
+        path.join(pluginDir, ".cursor-plugin", "plugin.json"),
+        "utf8",
+      ),
+    ) as {
+      mcpServers?: unknown;
+      commands?: unknown;
+      skills?: unknown;
+    };
+    const expectedCommands = [
+      "arch4-build-artifacts.md",
+      "arch4-create-support-request.md",
+      "arch4-open-map.md",
+      "arch4-review.md",
+      "arch4-seed.md",
+      "arch4-update.md",
+    ];
+
+    expect(manifest.mcpServers).toBe("mcp.json");
+    expect(manifest.commands).toBe("commands");
+    expect(manifest.skills).toBe("skills");
+    expect(readdirSync(commandDir).sort()).toEqual(expectedCommands);
+    expect(expectedCommands).not.toContain("remove-arch4-artifacts.md");
+
+    const commandContents = Object.fromEntries(
+      expectedCommands.map((fileName) => [
+        fileName,
+        readFileSync(path.join(commandDir, fileName), "utf8"),
+      ]),
+    );
+    expect(commandContents["arch4-open-map.md"]).toContain("arch4_show_map");
+    expect(commandContents["arch4-open-map.md"]).toContain(
+      "Do not call `FetchMcpResource`, `readResource`, or any other MCP resource",
+    );
+    expect(commandContents["arch4-open-map.md"]).toContain(
+      "summarize only the `structuredContent`",
+    );
+    expect(commandContents["arch4-build-artifacts.md"]).toContain(
+      "arch4_build_artifacts",
+    );
+    expect(commandContents["arch4-update.md"]).toContain(
+      'arch4_start_update` with `mode: "auto"',
+    );
+    expect(commandContents["arch4-seed.md"]).toContain(
+      'arch4_start_update` with `mode: "seed"',
+    );
+    expect(commandContents["arch4-review.md"]).toContain(
+      'arch4_start_update` with `mode: "review"',
+    );
+    expect(commandContents["arch4-create-support-request.md"]).toContain(
+      "arch4_diagnostics",
+    );
+
+    const packageScript = readFileSync(
+      path.resolve("../../scripts/package-extension.mjs"),
+      "utf8",
+    );
+    for (const fileName of expectedCommands) {
+      expect(packageScript).toContain(
+        `cursor-plugin-template/commands/${fileName}`,
+      );
+    }
+    expect(packageScript).toContain('"plugins", "cursor", "arch4-mcp"');
+    expect(packageScript).toContain('"commands"');
+    expect(packageScript).toContain('"skills"');
   });
 
   it("does not register direct Cursor MCP servers from the VSIX install path", () => {
@@ -501,9 +629,14 @@ describe("cursor extension agent instructions", () => {
       ".cursor/rules/arch4.mdc",
       ".cursor/skills/c4",
       ".cursor/skills/arch4",
+      ".cursor/commands/arch4-seed.md",
+      ".cursor/commands/arch4-update.md",
+      ".cursor/commands/arch4-review.md",
+      ".cursor/commands/arch4-create-support-request.md",
       ".cursor/commands/seed-arch4.md",
       ".cursor/commands/update-arch4.md",
       ".cursor/commands/review-arch4.md",
+      ".cursor/commands/create-arch4-support-request.md",
     ]);
   });
 
