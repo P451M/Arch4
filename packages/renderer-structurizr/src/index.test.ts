@@ -262,6 +262,46 @@ describe("normalizeStructurizrWorkspace", () => {
     });
   });
 
+  it("keeps component-level dynamic view participants inside system boundaries", () => {
+    const model = normalizeStructurizrWorkspace(
+      dynamicComponentWorkspaceJson(),
+    );
+    const spec = model.specs.find((item) => item.type === "dynamic");
+
+    expect(spec?.nodes.map((node) => node.id).sort()).toEqual([
+      "neo4j",
+      "orchestrationSurface",
+      "webShell",
+      "workerStep",
+    ]);
+    expect(
+      spec?.boundaries?.find((boundary) => boundary.type === "softwareSystem"),
+    ).toMatchObject({
+      elementId: "knowledgeMiner",
+      children: ["neo4j", "orchestrationSurface", "webShell", "workerStep"],
+    });
+    expect(spec?.boundaries).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "container",
+          elementId: "api",
+          children: ["orchestrationSurface"],
+        }),
+        expect.objectContaining({
+          type: "container",
+          elementId: "worker",
+          children: ["workerStep"],
+        }),
+      ]),
+    );
+
+    const laidOut = layoutDiagramSpec(spec!);
+    laidOut.boundaries?.forEach((boundary) => {
+      expectFiniteLayout(boundary.layout);
+      expectBoundaryContainsChildren(boundary, laidOut.nodes);
+    });
+  });
+
   it("ignores placeholder Structurizr JSON layout coordinates", () => {
     const payload = officialWorkspaceJson();
     const view = payload.views.containerViews[0] as Record<string, unknown>;
@@ -606,6 +646,103 @@ process.exit(1);
     );
   });
 });
+
+function dynamicComponentWorkspaceJson(): Record<string, unknown> {
+  return {
+    name: "Dynamic Component Boundary",
+    model: {
+      people: [
+        {
+          id: "user",
+          name: "User",
+          tags: "Element,Person",
+        },
+      ],
+      softwareSystems: [
+        {
+          id: "knowledgeMiner",
+          name: "Knowledge Miner",
+          tags: "Element,Software System",
+          containers: [
+            {
+              id: "webShell",
+              name: "Web Shell",
+              tags: "Element,Container",
+            },
+            {
+              id: "api",
+              name: "API Service",
+              tags: "Element,Container",
+              components: [
+                {
+                  id: "orchestrationSurface",
+                  name: "Orchestration Surface",
+                  tags: "Element,Component",
+                },
+              ],
+            },
+            {
+              id: "worker",
+              name: "Worker Service",
+              tags: "Element,Container",
+              components: [
+                {
+                  id: "workerStep",
+                  name: "Worker Step",
+                  tags: "Element,Component",
+                },
+              ],
+            },
+            {
+              id: "neo4j",
+              name: "Neo4j",
+              tags: "Element,Container,Database",
+            },
+          ],
+        },
+      ],
+    },
+    views: {
+      dynamicViews: [
+        {
+          key: "InterviewEvidenceFlow",
+          name: "Dynamic View: Interview Evidence Flow",
+          elementId: "api",
+          automaticLayout: {
+            rankDirection: "LeftRight",
+            implementation: "Graphviz",
+          },
+          elements: [
+            { id: "webShell" },
+            { id: "orchestrationSurface" },
+            { id: "workerStep" },
+            { id: "neo4j" },
+          ],
+          relationships: [
+            {
+              sourceId: "webShell",
+              destinationId: "orchestrationSurface",
+              description: "Starts evidence capture",
+              order: "1",
+            },
+            {
+              sourceId: "orchestrationSurface",
+              destinationId: "workerStep",
+              description: "Queues extraction",
+              order: "2",
+            },
+            {
+              sourceId: "workerStep",
+              destinationId: "neo4j",
+              description: "Writes graph facts",
+              order: "3",
+            },
+          ],
+        },
+      ],
+    },
+  };
+}
 
 function renderProject(
   workspaceJson: Record<string, unknown>,

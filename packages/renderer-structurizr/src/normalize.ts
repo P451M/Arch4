@@ -437,18 +437,16 @@ function boundariesForNodes(
       : [];
   }
 
+  if (viewType === "dynamic") {
+    return dynamicBoundariesForNodes(nodes, elements);
+  }
+
   const groupBoundaries = groupBoundariesForNodes(nodes);
   const childrenByParent = new Map<string, string[]>();
   nodes.forEach((node) => {
     if (!node.parentId) return;
     if (
       viewType === "container" &&
-      elements.get(node.parentId)?.type !== "softwareSystem"
-    ) {
-      return;
-    }
-    if (
-      viewType === "dynamic" &&
       elements.get(node.parentId)?.type !== "softwareSystem"
     ) {
       return;
@@ -472,6 +470,76 @@ function boundariesForNodes(
     },
   );
   return [...parentBoundaries, ...groupBoundaries];
+}
+
+function dynamicBoundariesForNodes(
+  nodes: DiagramNode[],
+  elements: Map<string, ElementModel>,
+): DiagramBoundary[] {
+  const groupBoundaries = groupBoundariesForNodes(nodes);
+  const childrenBySystem = new Map<string, string[]>();
+  const childrenByContainer = new Map<string, string[]>();
+
+  nodes.forEach((node) => {
+    const systemId = nearestAncestorOfType(node.id, "softwareSystem", elements);
+    if (systemId) {
+      const children = childrenBySystem.get(systemId) ?? [];
+      children.push(node.id);
+      childrenBySystem.set(systemId, children);
+    }
+
+    if (node.parentId && elements.get(node.parentId)?.type === "container") {
+      const children = childrenByContainer.get(node.parentId) ?? [];
+      children.push(node.id);
+      childrenByContainer.set(node.parentId, children);
+    }
+  });
+
+  const systemBoundaries = [...childrenBySystem.entries()].map(
+    ([systemId, children]) =>
+      boundaryForParent(systemId, children, elements, nodes),
+  );
+  const containerBoundaries = [...childrenByContainer.entries()].map(
+    ([containerId, children]) =>
+      boundaryForParent(containerId, children, elements, nodes),
+  );
+  return [...systemBoundaries, ...containerBoundaries, ...groupBoundaries];
+}
+
+function nearestAncestorOfType(
+  elementId: string,
+  type: string,
+  elements: Map<string, ElementModel>,
+): string | undefined {
+  let current = elements.get(elementId)?.parentId;
+  const visited = new Set<string>();
+  while (current && !visited.has(current)) {
+    visited.add(current);
+    const element = elements.get(current);
+    if (!element) return undefined;
+    if (element.type === type) return element.id;
+    current = element.parentId ?? undefined;
+  }
+  return undefined;
+}
+
+function boundaryForParent(
+  parentId: string,
+  children: string[],
+  elements: Map<string, ElementModel>,
+  nodes: DiagramNode[],
+): DiagramBoundary {
+  const parent = elements.get(parentId);
+  const sortedChildren = children.sort();
+  return {
+    id: `${parent?.type === "softwareSystem" ? "system-boundary" : "boundary"}-${safeId(parentId)}`,
+    type: parent?.type ?? "group",
+    label: parent?.name ?? parentId,
+    elementId: parentId,
+    entityId: parent?.entityId,
+    children: sortedChildren,
+    layout: boundaryLayout(sortedChildren, nodes, parent?.type ?? "group"),
+  };
 }
 
 function groupBoundariesForNodes(nodes: DiagramNode[]): DiagramBoundary[] {
