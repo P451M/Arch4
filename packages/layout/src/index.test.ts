@@ -1,4 +1,8 @@
 import { describe, expect, it } from "vitest";
+import {
+  DEFAULT_DIAGRAM_NODE_HEIGHT,
+  DEFAULT_DIAGRAM_NODE_WIDTH,
+} from "@arch4/core/diagram-geometry";
 import type {
   DiagramBoundary,
   DiagramLayout,
@@ -29,6 +33,15 @@ describe("layoutDiagramSpec", () => {
           boundary.layout!.y + boundary.layout!.height,
         );
       });
+    });
+  });
+
+  it("uses the shared node dimensions for generated layouts", () => {
+    const spec = layoutDiagramSpec(sampleSpec());
+
+    spec.nodes.forEach((node) => {
+      expect(node.layout?.width).toBe(DEFAULT_DIAGRAM_NODE_WIDTH);
+      expect(node.layout?.height).toBe(DEFAULT_DIAGRAM_NODE_HEIGHT);
     });
   });
 

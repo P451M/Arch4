@@ -8,6 +8,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./diagram-geometry": {
+      "types": "./dist/diagram-geometry.d.ts",
+      "import": "./dist/diagram-geometry.js"
     }
   },
   "scripts": {

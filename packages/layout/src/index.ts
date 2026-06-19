@@ -1,4 +1,8 @@
 import { graphlib, layout as runDagreLayout } from "@dagrejs/dagre";
+import {
+  DEFAULT_DIAGRAM_NODE_HEIGHT,
+  DEFAULT_DIAGRAM_NODE_WIDTH,
+} from "@arch4/core/diagram-geometry";
 import type {
   DiagramBoundary,
   DiagramLayout,
@@ -7,8 +11,6 @@ import type {
   LayoutDirection,
 } from "@arch4/core";
 
-const DEFAULT_NODE_WIDTH = 260;
-const DEFAULT_NODE_HEIGHT = 140;
 const GRAPH_MARGIN = 80;
 const CLUSTER_GAP = 72;
 const MAX_CLUSTER_SEPARATION_PASSES = 24;
@@ -87,8 +89,8 @@ export function layoutDiagramSpec(
   const nodes = spec.nodes
     .map((node) => ({
       id: node.id,
-      width: node.layout?.width ?? DEFAULT_NODE_WIDTH,
-      height: node.layout?.height ?? DEFAULT_NODE_HEIGHT,
+      width: node.layout?.width ?? DEFAULT_DIAGRAM_NODE_WIDTH,
+      height: node.layout?.height ?? DEFAULT_DIAGRAM_NODE_HEIGHT,
     }))
     .sort((a, b) => a.id.localeCompare(b.id));
   const nodeIds = new Set(nodes.map((node) => node.id));
@@ -123,8 +125,8 @@ export function layoutDiagramSpec(
     layout: layouts.get(node.id) ?? {
       x: GRAPH_MARGIN,
       y: GRAPH_MARGIN,
-      width: DEFAULT_NODE_WIDTH,
-      height: DEFAULT_NODE_HEIGHT,
+      width: DEFAULT_DIAGRAM_NODE_WIDTH,
+      height: DEFAULT_DIAGRAM_NODE_HEIGHT,
     },
   }));
   const separatedNodes = separateOverlappingClusters(laidOutNodes, clusters);
@@ -195,8 +197,8 @@ export function layoutGraph(input: LayoutInput): Map<string, DiagramLayout> {
 
   for (const node of input.nodes) {
     graph.setNode(node.id, {
-      width: node.width ?? DEFAULT_NODE_WIDTH,
-      height: node.height ?? DEFAULT_NODE_HEIGHT,
+      width: node.width ?? DEFAULT_DIAGRAM_NODE_WIDTH,
+      height: node.height ?? DEFAULT_DIAGRAM_NODE_HEIGHT,
     });
     const parentId = smallestContainingCluster(node.id, clusters);
     if (parentId) graph.setParent(node.id, clusterNodeId(parentId));
@@ -212,8 +214,8 @@ export function layoutGraph(input: LayoutInput): Map<string, DiagramLayout> {
   const layouts = new Map<string, DiagramLayout>();
   for (const node of input.nodes) {
     const dagreNode = graph.node(node.id) as DagrePositionedNode | undefined;
-    const width = node.width ?? DEFAULT_NODE_WIDTH;
-    const height = node.height ?? DEFAULT_NODE_HEIGHT;
+    const width = node.width ?? DEFAULT_DIAGRAM_NODE_WIDTH;
+    const height = node.height ?? DEFAULT_DIAGRAM_NODE_HEIGHT;
     if (!dagreNode) {
       layouts.set(node.id, { x: GRAPH_MARGIN, y: GRAPH_MARGIN, width, height });
       continue;
@@ -244,8 +246,8 @@ function applyManualPositions(
     nodes.map((node) => [
       node.id,
       {
-        width: node.width ?? DEFAULT_NODE_WIDTH,
-        height: node.height ?? DEFAULT_NODE_HEIGHT,
+        width: node.width ?? DEFAULT_DIAGRAM_NODE_WIDTH,
+        height: node.height ?? DEFAULT_DIAGRAM_NODE_HEIGHT,
       },
     ]),
   );

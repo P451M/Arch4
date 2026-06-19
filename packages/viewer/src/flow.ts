@@ -1,9 +1,13 @@
 import { type Edge, type Node } from "@xyflow/react";
 import {
-  type ArchitectureIndex,
-  type DiagramLayout,
-  type DiagramNode,
-  type DiagramSpec,
+  DEFAULT_DIAGRAM_NODE_HEIGHT,
+  DEFAULT_DIAGRAM_NODE_WIDTH,
+} from "@arch4/core/diagram-geometry";
+import type {
+  ArchitectureIndex,
+  DiagramLayout,
+  DiagramNode,
+  DiagramSpec,
 } from "@arch4/core";
 import { deriveBoundaryLayouts } from "@arch4/layout";
 import { resolveRelatedNavigationTargets } from "./navigation.js";
@@ -29,19 +33,18 @@ export function toFlow(
   edges: Array<Edge<Arch4EdgeData>>;
 } {
   if (!spec) return { nodes: [], edges: [] };
-  const elementNodes = spec.nodes.map(
-    (node, index): Node<Arch4NodeData> => ({
+  const elementNodes = spec.nodes.map((node, index): Node<Arch4NodeData> => {
+    const size = elementNodeSize(node.layout);
+    return {
       id: node.id,
       type: "arch4Node",
       position: {
         x: node.layout?.x ?? 120 + (index % 4) * 360,
         y: node.layout?.y ?? 120 + Math.floor(index / 4) * 240,
       },
-      width: node.layout?.width,
-      height: node.layout?.height,
-      style: node.layout
-        ? { width: node.layout.width, height: node.layout.height }
-        : undefined,
+      width: size.width,
+      height: size.height,
+      style: size,
       draggable: true,
       zIndex: 20,
       data: {
@@ -58,8 +61,8 @@ export function toFlow(
           node,
         }),
       },
-    }),
-  );
+    };
+  });
   const boundaryNodes = (spec.boundaries ?? [])
     .filter((boundary) => Boolean(boundary.layout))
     .map((boundary): Node<Arch4NodeData> => {
@@ -130,8 +133,8 @@ function handleAssignments(
       {
         x: node.position.x,
         y: node.position.y,
-        width: nodeNumberSize(node, "width") ?? 260,
-        height: nodeNumberSize(node, "height") ?? 140,
+        width: nodeNumberSize(node, "width") ?? DEFAULT_DIAGRAM_NODE_WIDTH,
+        height: nodeNumberSize(node, "height") ?? DEFAULT_DIAGRAM_NODE_HEIGHT,
       },
     ]),
   );
@@ -272,8 +275,8 @@ export function rebuildBoundaryFlowNodes(
     layouts.set(node.id, {
       x: node.position.x,
       y: node.position.y,
-      width: nodeNumberSize(node, "width") ?? 260,
-      height: nodeNumberSize(node, "height") ?? 140,
+      width: nodeNumberSize(node, "width") ?? DEFAULT_DIAGRAM_NODE_WIDTH,
+      height: nodeNumberSize(node, "height") ?? DEFAULT_DIAGRAM_NODE_HEIGHT,
     });
   }
   const { affectedBoundaryIds, boundaries } = deriveBoundaryLayouts(
@@ -304,6 +307,16 @@ export function rebuildBoundaryFlowNodes(
       };
     });
   return [...boundaryNodes, ...elementNodes];
+}
+
+function elementNodeSize(layout: DiagramLayout | undefined): {
+  width: number;
+  height: number;
+} {
+  return {
+    width: Math.max(layout?.width ?? 0, DEFAULT_DIAGRAM_NODE_WIDTH),
+    height: Math.max(layout?.height ?? 0, DEFAULT_DIAGRAM_NODE_HEIGHT),
+  };
 }
 
 function nodeNumberSize(

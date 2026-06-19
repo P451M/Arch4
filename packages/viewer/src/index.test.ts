@@ -1,6 +1,10 @@
 import { readFileSync } from "node:fs";
 import { Position, type EdgeProps } from "@xyflow/react";
 import { describe, expect, it } from "vitest";
+import {
+  DEFAULT_DIAGRAM_NODE_HEIGHT,
+  DEFAULT_DIAGRAM_NODE_WIDTH,
+} from "@arch4/core/diagram-geometry";
 import type { ArchitectureIndex, DiagramSpec } from "@arch4/core";
 import { routedPath } from "./edge-routing.js";
 import {
@@ -108,6 +112,67 @@ describe("viewer navigation helpers", () => {
 
     expect(rebuiltEdges[0]?.sourceHandle).toBe("bottom-b-source");
     expect(rebuiltEdges[0]?.targetHandle).toBe("top-b-target");
+  });
+
+  it("normalizes legacy undersized element nodes before rendering", () => {
+    const flow = toFlow(sideSwitchDiagram(), new Map(), true, {
+      diagrams: [],
+      entityParentById: new Map(),
+      onNavigate: () => {},
+      onSelect: () => {},
+    });
+    const source = flow.nodes.find((node) => node.id === "source");
+
+    expect(source?.width).toBe(DEFAULT_DIAGRAM_NODE_WIDTH);
+    expect(source?.height).toBe(DEFAULT_DIAGRAM_NODE_HEIGHT);
+    expect(source?.style).toMatchObject({
+      width: DEFAULT_DIAGRAM_NODE_WIDTH,
+      height: DEFAULT_DIAGRAM_NODE_HEIGHT,
+    });
+  });
+
+  it("keeps CSS node dimensions, label capacity, and text height aligned", () => {
+    const styles = readFileSync(
+      new URL("./styles.css", import.meta.url),
+      "utf8",
+    );
+    const nodeHeight = cssPxVariable(styles, "--arch4-node-height");
+    const bodyBlock = cssBlock(styles, ".arch4-node-body");
+    const railBlock = cssBlock(styles, ".arch4-node-rail");
+    const textBlock = cssBlock(styles, ".arch4-node-text");
+    const titleBlock = cssBlock(styles, ".arch4-node h3");
+    const titleWithDescriptionBlock = cssBlock(styles, ".arch4-node:has(p) h3");
+    const descriptionBlock = cssBlock(styles, ".arch4-node p");
+    const footerBlock = cssBlock(styles, ".arch4-node-footer");
+    const railWidth = cssPxVariable(styles, "--arch4-node-rail-width");
+    const railInlinePadding = cssInlinePadding(railBlock);
+    const componentLabelWidthBudget = "COMPONENT".length * 9;
+    const bodyPadding = cssPadding(bodyBlock);
+    const verticalContentBudget =
+      bodyPadding.top +
+      cssNumberProperty(titleBlock, "font-size") *
+        cssNumberProperty(titleBlock, "line-height") *
+        2 +
+      cssNumberProperty(textBlock, "gap") +
+      cssNumberProperty(descriptionBlock, "font-size") *
+        cssNumberProperty(descriptionBlock, "line-height") *
+        3 +
+      cssNumberProperty(bodyBlock, "gap") +
+      cssFlexBasis(footerBlock) +
+      bodyPadding.bottom;
+
+    expect(cssPxVariable(styles, "--arch4-node-width")).toBe(
+      DEFAULT_DIAGRAM_NODE_WIDTH,
+    );
+    expect(nodeHeight).toBe(DEFAULT_DIAGRAM_NODE_HEIGHT);
+    expect(railWidth - railInlinePadding * 2).toBeGreaterThanOrEqual(
+      componentLabelWidthBudget,
+    );
+    expect(nodeHeight).toBeGreaterThanOrEqual(Math.ceil(verticalContentBudget));
+    expect(titleWithDescriptionBlock).toContain(
+      "max-height: calc(1.14em * 2 + 2px);",
+    );
+    expect(descriptionBlock).toContain("max-height: calc(1.36em * 3 + 2px);");
   });
 
   it("exposes the viewer layout settings control and callback wiring", () => {
@@ -851,4 +916,49 @@ function sideSwitchDiagram(): DiagramSpec {
     ],
     edges: [{ id: "source-target", source: "source", target: "target" }],
   };
+}
+
+function cssPxVariable(styles: string, name: string): number {
+  const match = new RegExp(`${escapeRegExp(name)}:\\s*(\\d+)px;`).exec(styles);
+  expect(match).toBeTruthy();
+  return Number(match![1]);
+}
+
+function cssBlock(styles: string, selector: string): string {
+  const match = new RegExp(
+    `^${escapeRegExp(selector)}\\s*\\{([\\s\\S]*?)\\n\\}`,
+    "m",
+  ).exec(styles);
+  expect(match).toBeTruthy();
+  return match![1]!;
+}
+
+function cssInlinePadding(block: string): number {
+  const match = /padding:\s*\d+px\s+(\d+)px;/.exec(block);
+  expect(match).toBeTruthy();
+  return Number(match![1]);
+}
+
+function cssPadding(block: string): { bottom: number; top: number } {
+  const match = /padding:\s*(\d+)px\s+\d+px\s+(\d+)px\s+\d+px;/.exec(block);
+  expect(match).toBeTruthy();
+  return { top: Number(match![1]), bottom: Number(match![2]) };
+}
+
+function cssNumberProperty(block: string, property: string): number {
+  const match = new RegExp(
+    `${escapeRegExp(property)}:\\s*([\\d.]+)(?:px)?;`,
+  ).exec(block);
+  expect(match).toBeTruthy();
+  return Number(match![1]);
+}
+
+function cssFlexBasis(block: string): number {
+  const match = /flex:\s*0\s+0\s+(\d+)px;/.exec(block);
+  expect(match).toBeTruthy();
+  return Number(match![1]);
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

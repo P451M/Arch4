@@ -54,6 +54,9 @@
   --arch4-infrastructure-accent: #64748b;
   --arch4-deployment-view-accent: #7c8da1;
   --arch4-dynamic-view-accent: #2f9f8f;
+  --arch4-node-width: 300px;
+  --arch4-node-height: 160px;
+  --arch4-node-rail-width: 104px;
   --arch4-control-inset: 12px;
   --arch4-control-right-inset: var(--arch4-control-inset);
   display: grid;
@@ -768,12 +771,12 @@
   );
   display: grid;
   position: relative;
-  grid-template-columns: 96px minmax(0, 1fr);
+  grid-template-columns: var(--arch4-node-rail-width) minmax(0, 1fr);
   align-items: stretch;
   width: 100%;
   height: 100%;
-  min-width: 292px;
-  min-height: 148px;
+  min-width: var(--arch4-node-width);
+  min-height: var(--arch4-node-height);
   overflow: hidden;
   border: 1px solid
     color-mix(in srgb, var(--arch4-node-accent) 42%, var(--arch4-node-border));
@@ -841,7 +844,7 @@
   font-weight: 850;
   letter-spacing: 0;
   line-height: 1.15;
-  padding: 16px 12px;
+  padding: 16px 10px;
   text-align: center;
   text-transform: uppercase;
 }
@@ -901,7 +904,7 @@
 .arch4-node h3 {
   display: -webkit-box;
   margin: 0;
-  max-height: calc(1.14em * 3);
+  max-height: calc(1.14em * 3 + 2px);
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
@@ -913,7 +916,7 @@
 }
 
 .arch4-node:has(p) h3 {
-  max-height: calc(1.14em * 2);
+  max-height: calc(1.14em * 2 + 2px);
   -webkit-line-clamp: 2;
 }
 
@@ -921,14 +924,14 @@
   display: -webkit-box;
   min-height: 0;
   margin: 0;
-  max-height: calc(1.34em * 3);
+  max-height: calc(1.36em * 3 + 2px);
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   color: var(--arch4-text-muted);
   font-size: 12.25px;
   font-weight: 580;
-  line-height: 1.34;
+  line-height: 1.36;
   overflow-wrap: anywhere;
 }
 
