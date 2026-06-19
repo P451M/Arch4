@@ -2,7 +2,7 @@
   "name": "arch4-cursor-extension",
   "displayName": "Arch4",
   "description": "Generated, enriched C4 architecture maps for your repo.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "arch4",
   "author": {
     "name": "Paul Stöckle"

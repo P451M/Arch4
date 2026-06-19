@@ -5,6 +5,22 @@ All notable changes to Arch4 will be documented in this file.
 The project follows semantic versioning for extension releases before `1.0`,
 with compatibility and breaking changes called out explicitly.
 
+## 0.1.4
+
+Cursor MCP integration and architecture map usability release.
+
+- Add the bundled Arch4 MCP server, MCP widget, and Cursor plugin packaging so
+  Cursor can show and update architecture maps through MCP tools.
+- Add Cursor commands and support-request workflow wiring for MCP-backed
+  architecture map operations.
+- Improve the architecture viewer tree, related-view navigation, layout
+  controls, and node detail interactions used by the Cursor extension and MCP
+  widget.
+- Fix node label sizing, text clipping, diagram geometry, and dynamic view
+  component boundaries in rendered maps.
+- Expand tests for viewer behavior, Structurizr normalization, workflow
+  orchestration, MCP server behavior, and Cursor extension integration.
+
 ## 0.1.3
 
 Maintenance release for the Cursor/OpenVSX extension.
